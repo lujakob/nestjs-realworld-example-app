@@ -1,0 +1,40 @@
+{
+  "name": "nestjs-realworld-example-app",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:watch": "nodemon",
+    "prestart:prod": "tsc",
+    "start:prod": "node dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lujakob/nestjs-realworld-example-app.git"
+  },
+  "author": "lu.jakob@googlemail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lujakob/nestjs-realworld-example-app/issues"
+  },
+  "homepage": "https://github.com/lujakob/nestjs-realworld-example-app#readme",
+  "dependencies": {
+    "@nestjs/common": "^4.6.3",
+    "@nestjs/core": "^4.6.3",
+    "@nestjs/microservices": "^4.6.1",
+    "@nestjs/testing": "^4.6.1",
+    "@nestjs/typeorm": "^2.0.0",
+    "@nestjs/websockets": "^4.5.8",
+    "mysql": "^2.15.0",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^5.5.6",
+    "typeorm": "^0.1.12",
+    "typescript": "^2.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^9.4.6",
+    "nodemon": "^1.15.0",
+    "ts-node": "^4.1.0"
+  }
+}
