@@ -17,4 +17,12 @@ export class ArticleService {
   async create(article: Article): Promise<Article> {
     return await this.articleRepository.save(article);
   }
+
+  async update(slug: string, articleData: any): Promise<Article> {
+    let toUpdate = await this.articleRepository.findOne({ slug: slug});
+    let updated = Object.assign(toUpdate, articleData);
+    return await this.articleRepository.save(updated);
+  }
+
+
 }
