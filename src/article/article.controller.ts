@@ -1,4 +1,4 @@
-import { Get, Post, Body, Put, Param, Controller } from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Param, Controller } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './article.entity';
 import { CreateArticleDto } from './create-article.dto';
@@ -27,7 +27,13 @@ export class ArticleController {
 
   @Put(':slug')
   async update(@Param() params, @Body() articleData: CreateArticleDto) {
+    // Todo: update slug also when title gets changed
     return this.articleService.update(params.slug, articleData);
+  }
+
+  @Delete(':slug')
+  async delete(@Param() params) {
+    return this.articleService.delete(params.slug);
   }
 
   slugify(title: string) {

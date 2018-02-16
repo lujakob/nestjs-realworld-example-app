@@ -24,5 +24,8 @@ export class ArticleService {
     return await this.articleRepository.save(updated);
   }
 
+  async delete(slug: string): Promise<void> {
+    return await this.articleRepository.delete({ slug: slug});
+  }
 
 }
