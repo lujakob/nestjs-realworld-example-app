@@ -11,7 +11,6 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
-  @UseGuards(RolesGuard)
   findAll(): Promise<Article[]> {
     return this.articleService.findAll();
   }
