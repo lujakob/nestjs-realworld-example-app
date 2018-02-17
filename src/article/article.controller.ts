@@ -1,15 +1,17 @@
-import { Get, Post, Body, Put, Delete, Param, Controller } from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, UseGuards, Param, Controller } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './article.entity';
 import { CreateArticleDto } from './create-article.dto';
+import { RolesGuard } from '../user/roles.guard';
 const slug = require('slug');
 
-@Controller('article')
+@Controller('api/articles')
 export class ArticleController {
 
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
+  @UseGuards(RolesGuard)
   findAll(): Promise<Article[]> {
     return this.articleService.findAll();
   }
