@@ -5,7 +5,7 @@ import { CreateArticleDto } from './create-article.dto';
 import { RolesGuard } from '../user/roles.guard';
 const slug = require('slug');
 
-@Controller('api/articles')
+@Controller('articles')
 export class ArticleController {
 
   constructor(private readonly articleService: ArticleService) {}

@@ -5,7 +5,7 @@ import { CreateUserDto, LoginUserDto } from './user.dto';
 import {HttpException} from "@nestjs/core";
 import * as crypto from "crypto";
 
-@Controller('api/users')
+@Controller('users')
 export class UserController {
 
   constructor(private readonly userService: UserService) {}
@@ -39,7 +39,7 @@ export class UserController {
         password: crypto.createHmac('sha256', userLoginData.password).digest('hex'),
       }
     );
-    
+
     if (!user) throw new HttpException('User not found.', 401);
 
     const payload = {
