@@ -1,7 +1,9 @@
 import { Get, Post, Body, Put, Delete, Param, Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserDto, LoginUserDto } from './user.dto';
+import {HttpException} from "@nestjs/core";
+import * as crypto from "crypto";
 
 @Controller('api/users')
 export class UserController {
@@ -27,5 +29,25 @@ export class UserController {
   @Delete(':slug')
   async delete(@Param() params) {
     return this.userService.delete(params.slug);
+  }
+
+  @Post('login')
+  async login(@Body('user') userLoginData: LoginUserDto): Promise<string> {
+    const user = await this.userService.findOne(
+      {
+        email: userLoginData.email,
+        password: crypto.createHmac('sha256', userLoginData.password).digest('hex'),
+      }
+    );
+    
+    if (!user) throw new HttpException('User not found.', 401);
+
+    const payload = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    };
+
+    return await this.userService.generateJWT(payload);
   }
 }

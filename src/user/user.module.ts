@@ -9,6 +9,7 @@ import { UserService } from './user.service';
   components: [UserService],
   controllers: [
     UserController
-  ]
+  ],
+  exports: [UserService]
 })
 export class UserModule {}

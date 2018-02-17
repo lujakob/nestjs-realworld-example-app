@@ -3,12 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './create-user.dto';
-const sha256 = require('crypto-js/sha256');
-const hmacSHA512 = require('crypto-js/hmac-sha512');
-const Base64 = require('crypto-js/enc-base64');
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
 import { UserRO } from './user.interface';
+import {FindOneOptions} from "typeorm/find-options/FindOneOptions";
+import {DeepPartial} from "typeorm/common/DeepPartial";
 
 @Component()
 export class UserService {
@@ -21,15 +20,16 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async create(userData: CreateUserDto): Promise<UserRO> {
+  async findOne(options?: DeepPartial<User>): Promise<User> {
+    return await this.userRepository.findOne(options);
+  }
 
-    const hashDigest = sha256(userData.password);
-    const hmacDigest = Base64.stringify(hmacSHA512(hashDigest, SECRET));
+  async create(userData: CreateUserDto): Promise<UserRO> {
 
     let user = new User();
     user.username = userData.username;
     user.email = userData.email;
-    user.password = hmacDigest;
+    user.password = userData.password;
 
     const savedUser = await this.userRepository.save(user);
     const userRO = {
@@ -53,8 +53,12 @@ export class UserService {
     return await this.userRepository.delete({ email: email});
   }
 
+  async findByEmail(email: string) {
+    return await this.userRepository.findOne( { email: email});
+  }
 
-  generateJWT(user) {
+
+  public generateJWT(user) {
     let today = new Date();
     let exp = new Date(today);
     exp.setDate(today.getDate() + 60);
@@ -62,6 +66,7 @@ export class UserService {
     return jwt.sign({
       id: user.id,
       username: user.username,
+      email: user.email,
       exp: exp.getTime() / 1000,
     }, SECRET);
   };
