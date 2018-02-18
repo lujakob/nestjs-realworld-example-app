@@ -4,11 +4,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { SECRET } from '../config';
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 @Middleware()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly userService: UserService) {}
 
   resolve(): (req: Request, res: Response, next: NextFunction) => void {
 
@@ -16,8 +16,9 @@ export class AuthMiddleware implements NestMiddleware {
       if (req.headers.authorization && (req.headers.authorization as string).split(' ')[0] === 'Token') {
         const token = (req.headers.authorization as string).split(' ')[1];
         const decoded: any = jwt.verify(token, SECRET);
+        const user = await this.userService.findByEmail(decoded.email);
 
-        if (! await this.authService.verifyAuthentication(decoded)) {
+        if (!user) {
           throw new HttpException('User not found.', 401);
         }
         next();
