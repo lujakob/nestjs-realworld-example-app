@@ -3,7 +3,7 @@ export interface UserData {
   email: string;
   token: string;
   bio: string;
-  image: string;
+  image?: string;
 }
 
 export interface UserRO {
