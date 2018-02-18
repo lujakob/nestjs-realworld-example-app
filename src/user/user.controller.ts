@@ -1,7 +1,7 @@
 import { Get, Post, Body, Put, Delete, Headers, Param, Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto, LoginUserDto } from './user.dto';
+import {CreateUserDto, UpdateUserDto, LoginUserDto} from './user.dto';
 import {HttpException} from '@nestjs/core';
 import * as crypto from 'crypto';
 import {SECRET} from '../config';
@@ -16,25 +16,25 @@ export class UserController {
   async findMe(@Headers('authorization') authorization: string): Promise<User> {
     const token = authorization.split(' ')[1];
     const decoded: any = jwt.verify(token, SECRET);
-    const user = await this.userService.findByEmail(decoded.email);
+    const user = await this.userService.findById(decoded.id);
     return user;
   }
 
-  
+  @Put('user')
+  async update(@Headers('authorization') authorization: string, @Body('user') userData: UpdateUserDto) {
+    const token = authorization.split(' ')[1];
+    const decoded: any = jwt.verify(token, SECRET);
+    return await this.userService.update(decoded.id, userData);
+  }
+
   @Post('users')
   async create(@Body('user') userData: CreateUserDto) {
     return this.userService.create(userData);
   }
 
-  @Put('users/:slug')
-  async update(@Param() params, @Body() userData: CreateUserDto) {
-    // Todo: update slug also when title gets changed
-    return this.userService.update(params.slug, userData);
-  }
-
   @Delete('users/:slug')
   async delete(@Param() params) {
-    return this.userService.delete(params.slug);
+    return await this.userService.delete(params.slug);
   }
 
   @Post('users/login')
