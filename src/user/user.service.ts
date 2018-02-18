@@ -64,7 +64,7 @@ export class UserService {
     return await this.userRepository.delete({ email: email});
   }
 
-  async findById(id: string): Promise<User>{
+  async findById(id: number): Promise<User>{
     const user = await this.userRepository.findOneById(id);
     if (user) delete user.password;
     return user;
