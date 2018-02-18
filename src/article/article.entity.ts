@@ -1,4 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Article {
@@ -15,4 +16,7 @@ export class Article {
   @Column()
   description: string;
 
+  @OneToOne(type => User)
+  @JoinColumn()
+  author: User;
 }

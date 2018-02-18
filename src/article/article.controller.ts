@@ -1,9 +1,9 @@
-import { Get, Post, Body, Put, Delete, UseGuards, Param, Controller } from '@nestjs/common';
+import {Get, Post, Body, Put, Delete, Param, Controller, Headers} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './article.entity';
 import { CreateArticleDto } from './create-article.dto';
-import { RolesGuard } from '../user/roles.guard';
-const slug = require('slug');
+import {SECRET} from "../config";
+import * as jwt from 'jsonwebtoken';
 
 @Controller('articles')
 export class ArticleController {
@@ -16,14 +16,10 @@ export class ArticleController {
   }
 
   @Post()
-  async create(@Body() articleData: CreateArticleDto) {
-
-    let article = new Article();
-    article.title = articleData.title;
-    article.description = articleData.description;
-    article.slug = this.slugify(articleData.title);
-
-    return this.articleService.create(article);
+  async create(@Headers('authorization') authorization: string, @Body('article') articleData: CreateArticleDto) {
+    const token = authorization.split(' ')[1];
+    const decoded: any = jwt.verify(token, SECRET);
+    return this.articleService.create(decoded.id, articleData);
   }
 
   @Put(':slug')
@@ -37,7 +33,4 @@ export class ArticleController {
     return this.articleService.delete(params.slug);
   }
 
-  slugify(title: string) {
-    return slug(title, {lower: true}) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36)
-  }
 }
