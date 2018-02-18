@@ -2,12 +2,11 @@ import { Component, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserDto } from './user.dto';
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
 import { UserRO } from './user.interface';
-import {FindOneOptions} from "typeorm/find-options/FindOneOptions";
-import {DeepPartial} from "typeorm/common/DeepPartial";
+import {DeepPartial} from 'typeorm/common/DeepPartial';
 
 @Component()
 export class UserService {
@@ -53,8 +52,10 @@ export class UserService {
     return await this.userRepository.delete({ email: email});
   }
 
-  async findByEmail(email: string) {
-    return await this.userRepository.findOne( { email: email});
+  async findByEmail(email: string): Promise<User>{
+    const user = await this.userRepository.findOne( { email: email});
+    if (user) delete user.password;
+    return user;
   }
 
 
