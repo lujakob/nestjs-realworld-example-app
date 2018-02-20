@@ -4,6 +4,7 @@ import { Article } from './article.entity';
 import { CreateArticleDto, CreateCommentDto } from './article.dto';
 import { SECRET } from "../config";
 import * as jwt from 'jsonwebtoken';
+import {CommentsRO} from "./article.interface";
 
 @Controller('articles')
 export class ArticleController {
@@ -16,7 +17,7 @@ export class ArticleController {
   }
 
   @Get(':slug/comments')
-  findComments(@Param('slug') slug): Promise<Comment[]> {
+  findComments(@Param('slug') slug): Promise<CommentsRO> {
     return this.articleService.findComments(slug);
   }
 
@@ -38,10 +39,15 @@ export class ArticleController {
     return this.articleService.delete(params.slug);
   }
 
-
   @Post(':slug/comments')
   async createComment(@Param('slug') slug, @Body('comment') commentData: CreateCommentDto) {
     return await this.articleService.addComment(slug, commentData);
+  }
+
+  @Delete(':slug/comments/:id')
+  async deleteComment(@Param() params) {
+    const {slug, id} = params;
+    return await this.articleService.deleteComment(slug, id);
   }
 
 }
