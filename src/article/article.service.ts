@@ -5,6 +5,7 @@ import { Article } from './article.entity';
 import { Comment } from './comment.entity';
 import { CreateArticleDto } from './article.dto';
 import { UserService } from '../user/user.service';
+import { CommentsRO } from './article.interface';
 const slug = require('slug');
 
 @Component()
@@ -32,10 +33,15 @@ export class ArticleService {
     const comment = new Comment();
     comment.body = commentData.body;
 
-    article.comments = [comment];
+    article.comments.push(comment);
 
     await this.commentRepository.save(comment);
     return await this.articleRepository.save(article);
+  }
+
+  async findComments(slug): Promise<CommentsRO> {
+    const article = await this.articleRepository.findOne({slug});
+    return {comments: article.comments};
   }
 
   async create(userId: number, articleData: CreateArticleDto): Promise<Article> {
