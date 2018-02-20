@@ -39,6 +39,22 @@ export class ArticleService {
     return await this.articleRepository.save(article);
   }
 
+  async deleteComment(slug, id): Promise<Article> {
+    let article = await this.articleRepository.findOne({slug});
+
+    const comment = await this.commentRepository.findOneById(id);
+    const deleteIndex = article.comments.findIndex(_comment => _comment.id === comment.id);
+
+    if (deleteIndex >= 0) {
+      const deleteComments = article.comments.splice(deleteIndex, 1);
+      await this.commentRepository.deleteById(deleteComments[0].id);
+      return await this.articleRepository.save(article);
+    } else {
+      return article;
+    }
+
+  }
+
   async findComments(slug): Promise<CommentsRO> {
     const article = await this.articleRepository.findOne({slug});
     return {comments: article.comments};
