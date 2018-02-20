@@ -15,6 +15,11 @@ export class ArticleController {
     return this.articleService.findAll();
   }
 
+  @Get(':slug/comments')
+  findComments(@Param('slug') slug): Promise<Comment[]> {
+    return this.articleService.findComments(slug);
+  }
+
   @Post()
   async create(@Headers('authorization') authorization: string, @Body('article') articleData: CreateArticleDto) {
     const token = authorization.split(' ')[1];
