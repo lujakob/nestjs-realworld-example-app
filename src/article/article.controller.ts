@@ -1,8 +1,8 @@
 import {Get, Post, Body, Put, Delete, Param, Controller, Headers} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './article.entity';
-import { CreateArticleDto } from './create-article.dto';
-import {SECRET} from "../config";
+import { CreateArticleDto, CreateCommentDto } from './article.dto';
+import { SECRET } from "../config";
 import * as jwt from 'jsonwebtoken';
 
 @Controller('articles')
@@ -31,6 +31,12 @@ export class ArticleController {
   @Delete(':slug')
   async delete(@Param() params) {
     return this.articleService.delete(params.slug);
+  }
+
+
+  @Post(':slug/comments')
+  async createComment(@Param('slug') slug, @Body('comment') commentData: CreateCommentDto) {
+    return await this.articleService.addComment(slug, commentData);
   }
 
 }
