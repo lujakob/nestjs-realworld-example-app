@@ -24,4 +24,7 @@ export class Article {
   @OneToMany(type => Comment, comment => comment.article, {eager: true})
   @JoinColumn()
   comments: Comment[];
+
+  @Column({default: 0})
+  favoriteCount: number;
 }
