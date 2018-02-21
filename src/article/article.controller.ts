@@ -23,9 +23,7 @@ export class ArticleController {
 
   @Post()
   async create(@Headers('authorization') authorization: string, @Body('article') articleData: CreateArticleDto) {
-    const token = authorization.split(' ')[1];
-    const decoded: any = jwt.verify(token, SECRET);
-    return this.articleService.create(decoded.id, articleData);
+    return this.articleService.create(this.getUserIdFromToken(authorization), articleData);
   }
 
   @Put(':slug')
@@ -50,4 +48,19 @@ export class ArticleController {
     return await this.articleService.deleteComment(slug, id);
   }
 
+  @Post(':slug/favorite')
+  async favorite(@Headers('authorization') authorization: string, @Param('slug') slug) {
+    return await this.articleService.favorite(this.getUserIdFromToken(authorization), slug);
+  }
+
+  @Delete(':slug/favorite')
+  async unFavorite(@Headers('authorization') authorization: string, @Param('slug') slug) {
+    return await this.articleService.unFavorite(this.getUserIdFromToken(authorization), slug);
+  }
+
+  getUserIdFromToken(authorization) {
+    const token = authorization.split(' ')[1];
+    const decoded: any = jwt.verify(token, SECRET);
+    return decoded.id;
+  }
 }

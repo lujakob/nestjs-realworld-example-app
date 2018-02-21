@@ -3,12 +3,13 @@ import { ArticleController } from './article.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Article } from './article.entity';
 import { Comment } from './comment.entity';
+import { User } from '../user/user.entity';
 import { ArticleService } from './article.service';
 import { AuthMiddleware } from '../user/auth.middleware';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Article, Comment]), UserModule],
+  imports: [TypeOrmModule.forFeature([Article, Comment, User]), UserModule],
   components: [ArticleService],
   controllers: [
     ArticleController
