@@ -20,6 +20,9 @@ export class User {
   @Column({default: ''})
   bio: string;
 
+  @Column({default: ''})
+  image: string;
+
   @Column()
   password: string;
 

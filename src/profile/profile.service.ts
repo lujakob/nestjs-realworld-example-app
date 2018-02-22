@@ -27,6 +27,27 @@ export class ProfileService {
     return {profile: user};
   }
 
+  async findProfile(id: number, followingUsername: string): Promise<ProfileRO> {
+    const _profile = await this.userRepository.findOne( {username: followingUsername});
+
+    if(!_profile) return;
+
+    let profile = {
+      username: _profile.username,
+      bio: _profile.bio,
+      image: _profile.image,
+      follows: false
+    };
+
+    const follows = await this.followsRepository.findOne( {followerId: id, followingId: _profile.id});
+
+    if (follows) {
+      profile.follows = true;
+    }
+
+    return {profile};
+  }
+
   async follow(followerId: number, username: string): Promise<ProfileRO> {
     const followingUser = await this.userRepository.findOne({username});
     delete followingUser.password;
