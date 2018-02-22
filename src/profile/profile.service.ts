@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { DeepPartial } from 'typeorm/common/DeepPartial';
-import { ProfileRO } from './profile.interface';
+import { ProfileRO, ProfileData } from './profile.interface';
 import {Follows} from "./follows.entity";
 import {HttpException} from "@nestjs/core";
 
@@ -32,17 +32,16 @@ export class ProfileService {
 
     if(!_profile) return;
 
-    let profile = {
+    let profile: ProfileData = {
       username: _profile.username,
       bio: _profile.bio,
-      image: _profile.image,
-      follows: false
+      image: _profile.image
     };
 
     const follows = await this.followsRepository.findOne( {followerId: id, followingId: _profile.id});
 
-    if (follows) {
-      profile.follows = true;
+    if (id) {
+      profile.following = !!follows;
     }
 
     return {profile};
@@ -50,19 +49,28 @@ export class ProfileService {
 
   async follow(followerId: number, username: string): Promise<ProfileRO> {
     const followingUser = await this.userRepository.findOne({username});
-    delete followingUser.password;
 
     if (followingUser.id === followerId) {
       throw new HttpException('FollowerId and FollowingId cannot be equal.', HttpStatus.BAD_REQUEST);
     }
 
-    const follows = new Follows();
-    follows.followerId = followerId;
-    follows.followingId = followingUser.id;
-    await this.followsRepository.save(follows);
+    const _follows = await this.followsRepository.findOne( {followerId, followingId: followingUser.id});
 
-    const profileRO = Object.assign({}, followingUser, {following: true});
-    return {profile: profileRO};
+    if (!_follows) {
+      const follows = new Follows();
+      follows.followerId = followerId;
+      follows.followingId = followingUser.id;
+      await this.followsRepository.save(follows);
+    }
+
+    let profile = {
+      username: followingUser.username,
+      bio: followingUser.bio,
+      image: followingUser.image,
+      follows: true
+    };
+
+    return {profile};
   }
 
   async unFollow(followerId: number, username: string): Promise<ProfileRO> {
