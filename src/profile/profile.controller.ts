@@ -12,8 +12,8 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get('profiles/:username')
-  async getProfile(@Param('username') username: string): Promise<ProfileRO> {
-    return await this.profileService.findOne({username});
+  async getProfile(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
+    return await this.profileService.findProfile(this.getUserIdFromToken(authorization), username);
   }
 
   @Post('profiles/:username/follow')
@@ -30,4 +30,10 @@ export class ProfileController {
     return await this.profileService.unFollow(decoded.id, username);
   }
 
+  getUserIdFromToken(authorization) {
+    if (!authorization) return null;
+    const token = authorization.split(' ')[1];
+    const decoded: any = jwt.verify(token, SECRET);
+    return decoded.id;
+  }
 }
