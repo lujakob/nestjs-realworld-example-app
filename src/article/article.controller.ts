@@ -58,7 +58,15 @@ export class ArticleController {
     return await this.articleService.unFavorite(this.getUserIdFromToken(authorization), slug);
   }
 
+  @Get('feed')
+  getFeed(@Headers('authorization') authorization: string): Promise<Article[]> {
+    return this.articleService.findFeed(this.getUserIdFromToken(authorization));
+  }
+
+
   getUserIdFromToken(authorization) {
+    if (!authorization) return null;
+
     const token = authorization.split(' ')[1];
     const decoded: any = jwt.verify(token, SECRET);
     return decoded.id;

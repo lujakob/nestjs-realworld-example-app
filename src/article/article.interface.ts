@@ -25,3 +25,7 @@ export interface ArticleRO {
   article: Article;
 }
 
+export interface ArticlesRO {
+  articles: Article[];
+}
+

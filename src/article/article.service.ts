@@ -1,12 +1,13 @@
 import { Component, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { Article } from './article.entity';
 import { Comment } from './comment.entity';
 import { User } from '../user/user.entity';
+import { Follows } from '../profile/follows.entity';
 import { CreateArticleDto } from './article.dto';
-import { UserService } from '../user/user.service';
-import {ArticleRO, CommentsRO} from './article.interface';
+
+import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
 const slug = require('slug');
 
 @Component()
@@ -17,19 +18,34 @@ export class ArticleService {
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Follows)
+    private readonly followsRepository: Repository<Follows>
   ) {}
 
-  async findAll(): Promise<Article[]> {
-    return await this.articleRepository.find();
+  async findAll(): Promise<ArticlesRO> {
+    const articles = await this.articleRepository.find();
+    return {articles};
+  }
+
+  async findFeed(userId: number): Promise<ArticlesRO> {
+    const _follows = await this.followsRepository.find( {followerId: userId});
+    const ids = _follows.map(el => el.followingId);
+
+    const articles = await getRepository(Article)
+      .createQueryBuilder('article')
+      .where('article.authorId IN (:ids)', { ids: ids })
+      .getMany();
+
+    return {articles};
   }
 
   async findOne(where): Promise<Article> {
     return await this.articleRepository.findOne(where);
   }
 
-  async addComment(slug: string, commentData): Promise<Article> {
-    const article = await this.articleRepository.findOne({slug});
+  async addComment(slug: string, commentData): Promise<ArticleRO> {
+    let article = await this.articleRepository.findOne({slug});
 
     const comment = new Comment();
     comment.body = commentData.body;
@@ -37,10 +53,11 @@ export class ArticleService {
     article.comments.push(comment);
 
     await this.commentRepository.save(comment);
-    return await this.articleRepository.save(article);
+    article = await this.articleRepository.save(article);
+    return {article}
   }
 
-  async deleteComment(slug: string, id: string): Promise<Article> {
+  async deleteComment(slug: string, id: string): Promise<ArticleRO> {
     let article = await this.articleRepository.findOne({slug});
 
     const comment = await this.commentRepository.findOneById(id);
@@ -49,9 +66,10 @@ export class ArticleService {
     if (deleteIndex >= 0) {
       const deleteComments = article.comments.splice(deleteIndex, 1);
       await this.commentRepository.deleteById(deleteComments[0].id);
-      return await this.articleRepository.save(article);
+      article =  await this.articleRepository.save(article);
+      return {article};
     } else {
-      return article;
+      return {article};
     }
 
   }
@@ -107,10 +125,11 @@ export class ArticleService {
     return await this.articleRepository.save(article);
   }
 
-  async update(slug: string, articleData: any): Promise<Article> {
+  async update(slug: string, articleData: any): Promise<ArticleRO> {
     let toUpdate = await this.articleRepository.findOne({ slug: slug});
     let updated = Object.assign(toUpdate, articleData);
-    return await this.articleRepository.save(updated);
+    const article = await this.articleRepository.save(updated);
+    return {article};
   }
 
   async delete(slug: string): Promise<void> {
