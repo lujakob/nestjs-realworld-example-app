@@ -63,11 +63,11 @@ export class ProfileService {
       await this.followsRepository.save(follows);
     }
 
-    let profile = {
+    let profile: ProfileData = {
       username: followingUser.username,
       bio: followingUser.bio,
       image: followingUser.image,
-      follows: true
+      following: true
     };
 
     return {profile};
@@ -75,7 +75,6 @@ export class ProfileService {
 
   async unFollow(followerId: number, username: string): Promise<ProfileRO> {
     const followingUser = await this.userRepository.findOne({username});
-    delete followingUser.password;
 
     if (followingUser.id === followerId) {
       throw new HttpException('FollowerId and FollowingId cannot be equal.', HttpStatus.BAD_REQUEST);
@@ -83,8 +82,14 @@ export class ProfileService {
     const followingId = followingUser.id;
     await this.followsRepository.delete({followerId, followingId});
 
-    const profileRO = Object.assign({}, followingUser, {following: false});
-    return {profile: profileRO};
+    let profile: ProfileData = {
+      username: followingUser.username,
+      bio: followingUser.bio,
+      image: followingUser.image,
+      following: false
+    };
+
+    return {profile};
   }
 
 }
