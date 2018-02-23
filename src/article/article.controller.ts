@@ -1,7 +1,7 @@
 import { Get, Post, Body, Put, Delete, Query, Param, Controller, Headers } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto, CreateCommentDto } from './article.dto';
-import { ArticlesRO} from './article.interface';
+import { ArticlesRO, ArticleRO } from './article.interface';
 import { CommentsRO } from './article.interface';
 import { BaseController } from '../shared/base.controller';
 
@@ -14,8 +14,12 @@ export class ArticleController extends BaseController{
 
   @Get()
   findAll(@Query() query): Promise<ArticlesRO> {
-    console.log("query", query);
     return this.articleService.findAll(query);
+  }
+
+  @Get(':slug')
+  findOne(@Param('slug') slug): Promise<ArticleRO> {
+    return this.articleService.findOne({slug});
   }
 
   @Get(':slug/comments')
@@ -29,7 +33,7 @@ export class ArticleController extends BaseController{
   }
 
   @Put(':slug')
-  async update(@Param() params, @Body() articleData: CreateArticleDto) {
+  async update(@Param() params, @Body('article') articleData: CreateArticleDto) {
     // Todo: update slug also when title gets changed
     return this.articleService.update(params.slug, articleData);
   }

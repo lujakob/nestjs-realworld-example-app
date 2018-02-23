@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn, AfterUpdate, BeforeUpdate } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
 
@@ -16,6 +16,20 @@ export class Article {
 
   @Column()
   description: string;
+
+  @Column()
+  body: string;
+
+  @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP"})
+  created: Date;
+
+  @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP"})
+  updated: Date;
+
+  @BeforeUpdate()
+  updateTimestamp() {
+    this.updated = new Date;
+  }
 
   @Column('simple-array')
   tagList: string[];
