@@ -24,7 +24,7 @@ export class ArticleService {
   ) {}
 
   async findAll(query): Promise<ArticlesRO> {
-    
+
     const qb = await getRepository(Article)
       .createQueryBuilder('article');
 
@@ -45,6 +45,8 @@ export class ArticleService {
       qb.andWhere("article.authorId IN (:ids)", { ids });
     }
 
+    qb.orderBy('article.created', 'DESC');
+
     const articles = await qb.getMany();
 
     return {articles};
@@ -62,8 +64,9 @@ export class ArticleService {
     return {articles};
   }
 
-  async findOne(where): Promise<Article> {
-    return await this.articleRepository.findOne(where);
+  async findOne(where): Promise<ArticleRO> {
+    const article = await this.articleRepository.findOne(where);
+    return {article};
   }
 
   async addComment(slug: string, commentData): Promise<ArticleRO> {
