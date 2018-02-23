@@ -13,18 +13,18 @@ export class ArticleController extends BaseController{
   }
 
   @Get()
-  findAll(@Query() query): Promise<ArticlesRO> {
-    return this.articleService.findAll(query);
+  async findAll(@Query() query): Promise<ArticlesRO> {
+    return await this.articleService.findAll(query);
   }
 
   @Get(':slug')
-  findOne(@Param('slug') slug): Promise<ArticleRO> {
-    return this.articleService.findOne({slug});
+  async findOne(@Param('slug') slug): Promise<ArticleRO> {
+    return await this.articleService.findOne({slug});
   }
 
   @Get(':slug/comments')
-  findComments(@Param('slug') slug): Promise<CommentsRO> {
-    return this.articleService.findComments(slug);
+  async findComments(@Param('slug') slug): Promise<CommentsRO> {
+    return await this.articleService.findComments(slug);
   }
 
   @Post()
@@ -65,8 +65,8 @@ export class ArticleController extends BaseController{
   }
 
   @Get('feed')
-  getFeed(@Headers('authorization') authorization: string): Promise<ArticlesRO> {
-    return this.articleService.findFeed(this.getUserIdFromToken(authorization));
+  async getFeed(@Query() query, @Headers('authorization') authorization: string): Promise<ArticlesRO> {
+    return await this.articleService.findFeed(this.getUserIdFromToken(authorization), query);
   }
 
 }
