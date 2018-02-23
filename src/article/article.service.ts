@@ -47,6 +47,15 @@ export class ArticleService {
 
     qb.orderBy('article.created', 'DESC');
 
+
+    if ('limit' in query) {
+      qb.limit(query.limit);
+    }
+
+    if ('offset' in query) {
+      qb.offset(query.offset);
+    }
+
     const articles = await qb.getMany();
 
     return {articles};
