@@ -24,19 +24,29 @@ export class ArticleService {
   ) {}
 
   async findAll(query): Promise<ArticlesRO> {
-
-console.log(query);
+    
     const qb = await getRepository(Article)
       .createQueryBuilder('article');
 
+    qb.where("1 = 1");
+
     if ('tag' in query) {
-      qb.where("article.tagList LIKE :tag", { tag: `%${query.tag}%` });
+      qb.andWhere("article.tagList LIKE :tag", { tag: `%${query.tag}%` });
     }
 
+    if ('author' in query) {
+      const author = await this.userRepository.findOne({username: query.author});
+      qb.andWhere("article.authorId = :id", { id: author.id });
+    }
+
+    if ('favorited' in query) {
+      const author = await this.userRepository.findOne({username: query.favorited});
+      const ids = author.favorites.map(el => el.id);
+      qb.andWhere("article.authorId IN (:ids)", { ids });
+    }
 
     const articles = await qb.getMany();
 
-    // const articles = await this.articleRepository.find();
     return {articles};
   }
 
@@ -46,7 +56,7 @@ console.log(query);
 
     const articles = await getRepository(Article)
       .createQueryBuilder('article')
-      .where('article.authorId IN (:ids)', { ids: ids })
+      .where('article.authorId IN (:ids)', { ids })
       .getMany();
 
     return {articles};
