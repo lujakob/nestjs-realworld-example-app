@@ -45,7 +45,7 @@ export class UserService {
         email: savedUser.email,
         bio: savedUser.bio,
         token: this.generateJWT(savedUser),
-        image: null
+        image: savedUser.image
       };
 
       return {user: userRO};
@@ -55,7 +55,10 @@ export class UserService {
 
   async update(id: string, userData: any): Promise<User> {
     let toUpdate = await this.userRepository.findOneById(id);
+    delete toUpdate.password;
+    delete toUpdate.favorites;
     if (userData.id) delete userData.id;
+
     let updated = Object.assign(toUpdate, userData);
     return await this.userRepository.save(updated);
   }
