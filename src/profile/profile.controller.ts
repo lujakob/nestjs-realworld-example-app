@@ -1,15 +1,14 @@
-import {Get, Post, Delete, Param, Controller, Headers} from '@nestjs/common';
-
-import { User } from '../user/user.entity';
+import { Get, Post, Delete, Param, Controller, Headers } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { ProfileRO } from './profile.interface';
-import { SECRET } from '../config';
-import * as jwt from 'jsonwebtoken';
+import { BaseController } from '../shared/base.controller';
 
 @Controller()
-export class ProfileController {
+export class ProfileController extends BaseController {
 
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService) {
+    super();
+  }
 
   @Get('profiles/:username')
   async getProfile(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
@@ -18,22 +17,12 @@ export class ProfileController {
 
   @Post('profiles/:username/follow')
   async follow(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
-    const token = authorization.split(' ')[1];
-    const decoded = jwt.verify(token, SECRET);
-    return await this.profileService.follow(decoded.id, username);
+    return await this.profileService.follow(this.getUserIdFromToken(authorization), username);
   }
 
   @Delete('profiles/:username/follow')
   async unFollow(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
-    const token = authorization.split(' ')[1];
-    const decoded = jwt.verify(token, SECRET);
-    return await this.profileService.unFollow(decoded.id, username);
+    return await this.profileService.unFollow(this.getUserIdFromToken(authorization), username);
   }
 
-  getUserIdFromToken(authorization) {
-    if (!authorization) return null;
-    const token = authorization.split(' ')[1];
-    const decoded: any = jwt.verify(token, SECRET);
-    return decoded.id;
-  }
 }

@@ -1,18 +1,19 @@
-import {Get, Post, Body, Put, Delete, Param, Controller, Headers} from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Param, Controller, Headers } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { Article } from './article.entity';
 import { CreateArticleDto, CreateCommentDto } from './article.dto';
-import { SECRET } from "../config";
-import * as jwt from 'jsonwebtoken';
-import {CommentsRO} from "./article.interface";
+import { ArticlesRO} from './article.interface';
+import { CommentsRO } from './article.interface';
+import { BaseController } from '../shared/base.controller';
 
 @Controller('articles')
-export class ArticleController {
+export class ArticleController extends BaseController{
 
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) {
+    super();
+  }
 
   @Get()
-  findAll(): Promise<Article[]> {
+  findAll(): Promise<ArticlesRO> {
     return this.articleService.findAll();
   }
 
@@ -59,16 +60,8 @@ export class ArticleController {
   }
 
   @Get('feed')
-  getFeed(@Headers('authorization') authorization: string): Promise<Article[]> {
+  getFeed(@Headers('authorization') authorization: string): Promise<ArticlesRO> {
     return this.articleService.findFeed(this.getUserIdFromToken(authorization));
   }
 
-
-  getUserIdFromToken(authorization) {
-    if (!authorization) return null;
-
-    const token = authorization.split(' ')[1];
-    const decoded: any = jwt.verify(token, SECRET);
-    return decoded.id;
-  }
 }

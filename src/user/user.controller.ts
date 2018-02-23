@@ -1,30 +1,27 @@
 import { Get, Post, Body, Put, Delete, Headers, Param, Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import {CreateUserDto, UpdateUserDto, LoginUserDto} from './user.dto';
-import {HttpException} from '@nestjs/core';
+import { UserRO } from './user.interface';
+import { CreateUserDto, UpdateUserDto, LoginUserDto } from './user.dto';
+import { HttpException } from '@nestjs/core';
 import * as crypto from 'crypto';
-import {SECRET} from '../config';
-import * as jwt from 'jsonwebtoken';
+import { BaseController } from '../shared/base.controller';
 
 @Controller()
-export class UserController {
+export class UserController extends BaseController {
 
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {
+    super();
+  }
 
   @Get('user')
   async findMe(@Headers('authorization') authorization: string): Promise<User> {
-    const token = authorization.split(' ')[1];
-    const decoded: any = jwt.verify(token, SECRET);
-    const user = await this.userService.findById(decoded.id);
-    return user;
+    return await this.userService.findById(this.getUserIdFromToken(authorization));
   }
 
   @Put('user')
   async update(@Headers('authorization') authorization: string, @Body('user') userData: UpdateUserDto) {
-    const token = authorization.split(' ')[1];
-    const decoded: any = jwt.verify(token, SECRET);
-    return await this.userService.update(decoded.id, userData);
+    return await this.userService.update(this.getUserIdFromToken(authorization), userData);
   }
 
   @Post('users')
@@ -38,22 +35,19 @@ export class UserController {
   }
 
   @Post('users/login')
-  async login(@Body('user') userLoginData: LoginUserDto): Promise<string> {
-    const user = await this.userService.findOne(
+  async login(@Body('user') userLoginData: LoginUserDto): Promise<UserRO> {
+    const _user = await this.userService.findOne(
       {
         email: userLoginData.email,
         password: crypto.createHmac('sha256', userLoginData.password).digest('hex'),
       }
     );
 
-    if (!user) throw new HttpException('User not found.', 401);
+    if (!_user) throw new HttpException('User not found.', 401);
 
-    const payload = {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
-
-    return await this.userService.generateJWT(payload);
+    const token = await this.userService.generateJWT(_user);
+    const {email, username, bio, image} = _user;
+    const user = {email, token, username, bio, image};
+    return {user}
   }
 }
