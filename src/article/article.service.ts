@@ -23,8 +23,20 @@ export class ArticleService {
     private readonly followsRepository: Repository<Follows>
   ) {}
 
-  async findAll(): Promise<ArticlesRO> {
-    const articles = await this.articleRepository.find();
+  async findAll(query): Promise<ArticlesRO> {
+
+console.log(query);
+    const qb = await getRepository(Article)
+      .createQueryBuilder('article');
+
+    if ('tag' in query) {
+      qb.where("article.tagList LIKE :tag", { tag: `%${query.tag}%` });
+    }
+
+
+    const articles = await qb.getMany();
+
+    // const articles = await this.articleRepository.find();
     return {articles};
   }
 
@@ -119,6 +131,7 @@ export class ArticleService {
     article.title = articleData.title;
     article.description = articleData.description;
     article.slug = this.slugify(articleData.title);
+    article.tagList = articleData.tagList || [];
     article.comments = [];
     article.author = author;
 

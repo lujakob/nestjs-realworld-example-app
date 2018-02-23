@@ -1,4 +1,4 @@
-import { Get, Post, Body, Put, Delete, Param, Controller, Headers } from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Query, Param, Controller, Headers } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto, CreateCommentDto } from './article.dto';
 import { ArticlesRO} from './article.interface';
@@ -13,8 +13,9 @@ export class ArticleController extends BaseController{
   }
 
   @Get()
-  findAll(): Promise<ArticlesRO> {
-    return this.articleService.findAll();
+  findAll(@Query() query): Promise<ArticlesRO> {
+    console.log("query", query);
+    return this.articleService.findAll(query);
   }
 
   @Get(':slug/comments')
