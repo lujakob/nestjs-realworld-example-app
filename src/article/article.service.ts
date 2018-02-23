@@ -47,7 +47,6 @@ export class ArticleService {
 
     qb.orderBy('article.created', 'DESC');
 
-
     if ('limit' in query) {
       qb.limit(query.limit);
     }
@@ -61,15 +60,25 @@ export class ArticleService {
     return {articles};
   }
 
-  async findFeed(userId: number): Promise<ArticlesRO> {
+  async findFeed(userId: number, query): Promise<ArticlesRO> {
     const _follows = await this.followsRepository.find( {followerId: userId});
     const ids = _follows.map(el => el.followingId);
 
-    const articles = await getRepository(Article)
+    const qb = await getRepository(Article)
       .createQueryBuilder('article')
-      .where('article.authorId IN (:ids)', { ids })
-      .getMany();
+      .where('article.authorId IN (:ids)', { ids });
 
+    qb.orderBy('article.created', 'DESC');
+
+    if ('limit' in query) {
+      qb.limit(query.limit);
+    }
+
+    if ('offset' in query) {
+      qb.offset(query.offset);
+    }
+    
+    const articles = await qb.getMany();
     return {articles};
   }
 
