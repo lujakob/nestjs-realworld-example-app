@@ -17,6 +17,9 @@ export class Article {
   @Column()
   description: string;
 
+  @Column('simple-array')
+  tagList: string[];
+
   @OneToOne(type => User)
   @JoinColumn()
   author: User;
