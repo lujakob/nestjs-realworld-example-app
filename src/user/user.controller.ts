@@ -1,27 +1,25 @@
-import { Get, Post, Body, Put, Delete, Headers, Param, Controller } from '@nestjs/common';
+import {Get, Post, Body, Put, Delete, Headers, Param, Controller, Req} from '@nestjs/common';
+import { Request } from 'express';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UserRO } from './user.interface';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './user.dto';
 import { HttpException } from '@nestjs/core';
 import * as crypto from 'crypto';
-import { BaseController } from '../shared/base.controller';
 
 @Controller()
-export class UserController extends BaseController {
+export class UserController {
 
-  constructor(private readonly userService: UserService) {
-    super();
-  }
+  constructor(private readonly userService: UserService) {}
 
   @Get('user')
-  async findMe(@Headers('authorization') authorization: string): Promise<User> {
-    return await this.userService.findById(this.getUserIdFromToken(authorization));
+  async findMe(@Req() {authUserId}: Request): Promise<User> {
+    return await this.userService.findById(authUserId);
   }
 
   @Put('user')
-  async update(@Headers('authorization') authorization: string, @Body('user') userData: UpdateUserDto) {
-    return await this.userService.update(this.getUserIdFromToken(authorization), userData);
+  async update(@Req() {authUserId}: Request, @Body('user') userData: UpdateUserDto) {
+    return await this.userService.update(authUserId, userData);
   }
 
   @Post('users')

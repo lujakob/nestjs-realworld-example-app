@@ -48,6 +48,10 @@ export class ProfileService {
   }
 
   async follow(followerId: number, username: string): Promise<ProfileRO> {
+    if (!followerId || !username) {
+      throw new HttpException('FollowerId and username not provided.', HttpStatus.BAD_REQUEST);
+    }
+
     const followingUser = await this.userRepository.findOne({username});
 
     if (followingUser.id === followerId) {
@@ -74,6 +78,10 @@ export class ProfileService {
   }
 
   async unFollow(followerId: number, username: string): Promise<ProfileRO> {
+    if (!followerId || !username) {
+      throw new HttpException('FollowerId and username not provided.', HttpStatus.BAD_REQUEST);
+    }
+
     const followingUser = await this.userRepository.findOne({username});
 
     if (followingUser.id === followerId) {

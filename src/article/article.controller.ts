@@ -1,4 +1,5 @@
-import { Get, Post, Body, Put, Delete, Query, Param, Controller, Headers } from '@nestjs/common';
+import {Get, Post, Body, Put, Delete, Query, Param, Controller, Req} from '@nestjs/common';
+import { Request } from 'express';
 import { ArticleService } from './article.service';
 import { CreateArticleDto, CreateCommentDto } from './article.dto';
 import { ArticlesRO, ArticleRO } from './article.interface';
@@ -6,11 +7,9 @@ import { CommentsRO } from './article.interface';
 import { BaseController } from '../shared/base.controller';
 
 @Controller('articles')
-export class ArticleController extends BaseController{
+export class ArticleController {
 
-  constructor(private readonly articleService: ArticleService) {
-    super();
-  }
+  constructor(private readonly articleService: ArticleService) {}
 
   @Get()
   async findAll(@Query() query): Promise<ArticlesRO> {
@@ -28,8 +27,8 @@ export class ArticleController extends BaseController{
   }
 
   @Post()
-  async create(@Headers('authorization') authorization: string, @Body('article') articleData: CreateArticleDto) {
-    return this.articleService.create(this.getUserIdFromToken(authorization), articleData);
+  async create(@Req() {authUserId}: Request, @Body('article') articleData: CreateArticleDto) {
+    return this.articleService.create(authUserId, articleData);
   }
 
   @Put(':slug')
@@ -55,18 +54,18 @@ export class ArticleController extends BaseController{
   }
 
   @Post(':slug/favorite')
-  async favorite(@Headers('authorization') authorization: string, @Param('slug') slug) {
-    return await this.articleService.favorite(this.getUserIdFromToken(authorization), slug);
+  async favorite(@Req() {authUserId}: Request, @Param('slug') slug) {
+    return await this.articleService.favorite(authUserId, slug);
   }
 
   @Delete(':slug/favorite')
-  async unFavorite(@Headers('authorization') authorization: string, @Param('slug') slug) {
-    return await this.articleService.unFavorite(this.getUserIdFromToken(authorization), slug);
+  async unFavorite(@Req() {authUserId}: Request, @Param('slug') slug) {
+    return await this.articleService.unFavorite(authUserId, slug);
   }
 
   @Get('feed')
-  async getFeed(@Query() query, @Headers('authorization') authorization: string): Promise<ArticlesRO> {
-    return await this.articleService.findFeed(this.getUserIdFromToken(authorization), query);
+  async getFeed(@Query() query, @Req() {authUserId}: Request,): Promise<ArticlesRO> {
+    return await this.articleService.findFeed(authUserId, query);
   }
 
 }
