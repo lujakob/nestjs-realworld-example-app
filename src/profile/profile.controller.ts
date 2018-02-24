@@ -1,28 +1,26 @@
-import { Get, Post, Delete, Param, Controller, Headers } from '@nestjs/common';
+import { Get, Post, Delete, Req, Param, Controller } from '@nestjs/common';
+import { Request } from 'express';
 import { ProfileService } from './profile.service';
 import { ProfileRO } from './profile.interface';
-import { BaseController } from '../shared/base.controller';
 
 @Controller()
-export class ProfileController extends BaseController {
+export class ProfileController {
 
-  constructor(private readonly profileService: ProfileService) {
-    super();
-  }
+  constructor(private readonly profileService: ProfileService) {}
 
   @Get('profiles/:username')
-  async getProfile(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
-    return await this.profileService.findProfile(this.getUserIdFromToken(authorization), username);
+  async getProfile(@Req() {authUserId}: Request, @Param('username') username: string): Promise<ProfileRO> {
+    return await this.profileService.findProfile(authUserId, username);
   }
 
   @Post('profiles/:username/follow')
-  async follow(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
-    return await this.profileService.follow(this.getUserIdFromToken(authorization), username);
+  async follow(@Req() {authUserId}: Request, @Param('username') username: string): Promise<ProfileRO> {
+    return await this.profileService.follow(authUserId, username);
   }
 
   @Delete('profiles/:username/follow')
-  async unFollow(@Headers('authorization') authorization: string, @Param('username') username: string): Promise<ProfileRO> {
-    return await this.profileService.unFollow(this.getUserIdFromToken(authorization), username);
+  async unFollow(@Req() {authUserId}: Request, @Param('username') username: string): Promise<ProfileRO> {
+    return await this.profileService.unFollow(authUserId, username);
   }
 
 }
