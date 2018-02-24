@@ -1,10 +1,10 @@
 import { Component, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository } from 'typeorm';
-import { Article } from './article.entity';
+import { ArticleEntity } from './article.entity';
 import { Comment } from './comment.entity';
-import { User } from '../user/user.entity';
-import { Follows } from '../profile/follows.entity';
+import { UserEntity } from '../user/user.entity';
+import { FollowsEntity } from '../profile/follows.entity';
 import { CreateArticleDto } from './article.dto';
 
 import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
@@ -13,19 +13,19 @@ const slug = require('slug');
 @Component()
 export class ArticleService {
   constructor(
-    @InjectRepository(Article)
-    private readonly articleRepository: Repository<Article>,
+    @InjectRepository(ArticleEntity)
+    private readonly articleRepository: Repository<ArticleEntity>,
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Follows)
-    private readonly followsRepository: Repository<Follows>
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(FollowsEntity)
+    private readonly followsRepository: Repository<FollowsEntity>
   ) {}
 
   async findAll(query): Promise<ArticlesRO> {
 
-    const qb = await getRepository(Article)
+    const qb = await getRepository(ArticleEntity)
       .createQueryBuilder('article');
 
     qb.where("1 = 1");
@@ -64,7 +64,7 @@ export class ArticleService {
     const _follows = await this.followsRepository.find( {followerId: userId});
     const ids = _follows.map(el => el.followingId);
 
-    const qb = await getRepository(Article)
+    const qb = await getRepository(ArticleEntity)
       .createQueryBuilder('article')
       .where('article.authorId IN (:ids)', { ids });
 
@@ -156,9 +156,9 @@ export class ArticleService {
     return {comments: article.comments};
   }
 
-  async create(userId: number, articleData: CreateArticleDto): Promise<Article> {
+  async create(userId: number, articleData: CreateArticleDto): Promise<ArticleEntity> {
     const author = await this.userRepository.findOneById(userId);
-    let article = new Article();
+    let article = new ArticleEntity();
     article.title = articleData.title;
     article.description = articleData.description;
     article.slug = this.slugify(articleData.title);

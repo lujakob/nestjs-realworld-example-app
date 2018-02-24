@@ -1,11 +1,12 @@
-import {Get, Post, Body, Put, Delete, Headers, Param, Controller, Req} from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Param, Controller } from '@nestjs/common';
 import { Request } from 'express';
 import { UserService } from './user.service';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { UserRO } from './user.interface';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './user.dto';
 import { HttpException } from '@nestjs/core';
 import * as crypto from 'crypto';
+import { User } from './user.decorator';
 
 @Controller()
 export class UserController {
@@ -13,13 +14,13 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('user')
-  async findMe(@Req() {authUserId}: Request): Promise<User> {
-    return await this.userService.findById(authUserId);
+  async findMe(@User('id') userId: number): Promise<UserEntity> {
+    return await this.userService.findById(userId);
   }
 
   @Put('user')
-  async update(@Req() {authUserId}: Request, @Body('user') userData: UpdateUserDto) {
-    return await this.userService.update(authUserId, userData);
+  async update(@User('id') userId: number, @Body('user') userData: UpdateUserDto) {
+    return await this.userService.update(userId, userData);
   }
 
   @Post('users')

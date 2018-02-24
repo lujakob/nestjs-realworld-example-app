@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn, AfterUpdate, BeforeUpdate } from 'typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { Comment } from './comment.entity';
 
-@Entity()
-export class Article {
+@Entity('article')
+export class ArticleEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -34,9 +34,9 @@ export class Article {
   @Column('simple-array')
   tagList: string[];
 
-  @OneToOne(type => User)
+  @OneToOne(type => UserEntity)
   @JoinColumn()
-  author: User;
+  author: UserEntity;
 
   @OneToMany(type => Comment, comment => comment.article, {eager: true})
   @JoinColumn()

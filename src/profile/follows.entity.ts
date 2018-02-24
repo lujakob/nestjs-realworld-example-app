@@ -1,10 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import {IsEmail, Validate} from "class-validator";
 import * as crypto from 'crypto';
 import { CustomEmail } from '../user/CustomEmail';
 
-@Entity()
-export class Follows {
+@Entity('follows')
+export class FollowsEntity {
 
   @PrimaryGeneratedColumn()
   id: number;

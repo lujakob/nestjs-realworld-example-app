@@ -1,5 +1,5 @@
 import { UserData } from '../user/user.interface';
-import { Article } from './article.entity';
+import { ArticleEntity } from './article.entity';
 interface Comment {
   body: string;
 }
@@ -22,10 +22,10 @@ export interface CommentsRO {
 }
 
 export interface ArticleRO {
-  article: Article;
+  article: ArticleEntity;
 }
 
 export interface ArticlesRO {
-  articles: Article[];
+  articles: ArticleEntity[];
 }
 

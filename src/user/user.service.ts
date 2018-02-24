@@ -1,7 +1,7 @@
 import { Component, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { CreateUserDto } from './user.dto';
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
@@ -14,21 +14,21 @@ import { HttpStatus } from '@nestjs/common';
 @Component()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.find();
   }
 
-  async findOne(options?: DeepPartial<User>): Promise<User> {
+  async findOne(options?: DeepPartial<UserEntity>): Promise<UserEntity> {
     return await this.userRepository.findOne(options);
   }
 
   async create(userData: CreateUserDto): Promise<UserRO> {
 
-    let user = new User();
+    let user = new UserEntity();
     user.username = userData.username;
     user.email = userData.email;
     user.password = userData.password;
@@ -53,7 +53,7 @@ export class UserService {
 
   }
 
-  async update(id: string, userData: any): Promise<User> {
+  async update(id: number, userData: any): Promise<UserEntity> {
     let toUpdate = await this.userRepository.findOneById(id);
     delete toUpdate.password;
     delete toUpdate.favorites;
@@ -67,13 +67,13 @@ export class UserService {
     return await this.userRepository.delete({ email: email});
   }
 
-  async findById(id: number): Promise<User>{
+  async findById(id: number): Promise<UserEntity>{
     const user = await this.userRepository.findOneById(id);
     if (user) delete user.password;
     return user;
   }
 
-  async findByEmail(email: string): Promise<User>{
+  async findByEmail(email: string): Promise<UserEntity>{
     const user = await this.userRepository.findOne({email: email});
     if (user) delete user.password;
     return user;

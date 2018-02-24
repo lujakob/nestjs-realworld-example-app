@@ -3,8 +3,8 @@ import {IsEmail, Validate} from "class-validator";
 import * as crypto from 'crypto';
 import { CustomEmail } from './CustomEmail';
 
-@Entity()
-export class Tag {
+@Entity('tag')
+export class TagEntity {
 
   @PrimaryGeneratedColumn()
   id: number;

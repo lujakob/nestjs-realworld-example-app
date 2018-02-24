@@ -3,12 +3,12 @@ import { ProfileController } from './profile.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfileService } from './profile.service';
 import { UserModule } from '../user/user.module';
-import {User} from "../user/user.entity";
-import {Follows} from "./follows.entity";
+import {UserEntity} from "../user/user.entity";
+import {FollowsEntity} from "./follows.entity";
 import {AuthMiddleware} from "../user/auth.middleware";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Follows]), UserModule],
+  imports: [TypeOrmModule.forFeature([UserEntity, FollowsEntity]), UserModule],
   components: [ProfileService],
   controllers: [
     ProfileController
