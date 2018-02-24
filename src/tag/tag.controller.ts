@@ -10,7 +10,7 @@ export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Get('tags')
-  async getTags(@Param('username') username: string): Promise<TagEntity[]> {
+  async findAll(): Promise<TagEntity[]> {
     return await this.tagService.findAll();
   }
 
