@@ -2,10 +2,10 @@ import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert, JoinTable, ManyToM
 import {IsEmail, Validate} from "class-validator";
 import * as crypto from 'crypto';
 import { CustomEmail } from './CustomEmail';
-import { Article } from '../article/article.entity';
+import { ArticleEntity } from '../article/article.entity';
 
-@Entity()
-export class User {
+@Entity('user')
+export class UserEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,8 +31,8 @@ export class User {
     this.password = crypto.createHmac('sha256', this.password).digest('hex');
   }
 
-  @ManyToMany(type => Article, {eager: true})
+  @ManyToMany(type => ArticleEntity, {eager: true})
   @JoinTable()
-  favorites: Article[]
+  favorites: ArticleEntity[]
 
 }

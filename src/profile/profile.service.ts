@@ -1,26 +1,26 @@
 import {Component, HttpStatus, Inject} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { DeepPartial } from 'typeorm/common/DeepPartial';
 import { ProfileRO, ProfileData } from './profile.interface';
-import {Follows} from "./follows.entity";
+import {FollowsEntity} from "./follows.entity";
 import {HttpException} from "@nestjs/core";
 
 @Component()
 export class ProfileService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Follows)
-    private readonly followsRepository: Repository<Follows>
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(FollowsEntity)
+    private readonly followsRepository: Repository<FollowsEntity>
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.find();
   }
 
-  async findOne(options?: DeepPartial<User>): Promise<ProfileRO> {
+  async findOne(options?: DeepPartial<UserEntity>): Promise<ProfileRO> {
     const user = await this.userRepository.findOne(options);
     delete user.id;
     if (user) delete user.password;
@@ -61,7 +61,7 @@ export class ProfileService {
     const _follows = await this.followsRepository.findOne( {followerId, followingId: followingUser.id});
 
     if (!_follows) {
-      const follows = new Follows();
+      const follows = new FollowsEntity();
       follows.followerId = followerId;
       follows.followingId = followingUser.id;
       await this.followsRepository.save(follows);

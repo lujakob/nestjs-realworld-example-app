@@ -4,7 +4,7 @@ import { ArticleService } from './article.service';
 import { CreateArticleDto, CreateCommentDto } from './article.dto';
 import { ArticlesRO, ArticleRO } from './article.interface';
 import { CommentsRO } from './article.interface';
-import { BaseController } from '../shared/base.controller';
+import { User } from '../user/user.decorator';
 
 @Controller('articles')
 export class ArticleController {
@@ -27,8 +27,8 @@ export class ArticleController {
   }
 
   @Post()
-  async create(@Req() {authUserId}: Request, @Body('article') articleData: CreateArticleDto) {
-    return this.articleService.create(authUserId, articleData);
+  async create(@User('id') userId: number, @Body('article') articleData: CreateArticleDto) {
+    return this.articleService.create(userId, articleData);
   }
 
   @Put(':slug')
@@ -54,18 +54,18 @@ export class ArticleController {
   }
 
   @Post(':slug/favorite')
-  async favorite(@Req() {authUserId}: Request, @Param('slug') slug) {
-    return await this.articleService.favorite(authUserId, slug);
+  async favorite(@User('id') userId: number, @Param('slug') slug) {
+    return await this.articleService.favorite(userId, slug);
   }
 
   @Delete(':slug/favorite')
-  async unFavorite(@Req() {authUserId}: Request, @Param('slug') slug) {
-    return await this.articleService.unFavorite(authUserId, slug);
+  async unFavorite(@User('id') userId: number, @Param('slug') slug) {
+    return await this.articleService.unFavorite(userId, slug);
   }
 
   @Get('feed')
-  async getFeed(@Query() query, @Req() {authUserId}: Request,): Promise<ArticlesRO> {
-    return await this.articleService.findFeed(authUserId, query);
+  async getFeed(@User('id') userId: number, @Query() query): Promise<ArticlesRO> {
+    return await this.articleService.findFeed(userId, query);
   }
 
 }
