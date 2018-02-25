@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/user/auth.middleware.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/user</a> auth.middleware.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/20</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/17</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { HttpException } from '@nestjs/core';</span>
+<span class="cstat-no" title="statement not covered" >import { Middleware, NestMiddleware, HttpStatus } from '@nestjs/common';</span>
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Request, Response, NextFunction } from 'express';
+<span class="cstat-no" title="statement not covered" >import * as jwt from 'jsonwebtoken';</span>
+<span class="cstat-no" title="statement not covered" >import { SECRET } from '../config';</span>
+<span class="cstat-no" title="statement not covered" >import { UserService } from './user.service';</span>
+&nbsp;
+@Middleware()
+<span class="cstat-no" title="statement not covered" >export class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >AuthMiddleware </span>implements NestMiddleware {</span></span>
+<span class="fstat-no" title="function not covered" >  constructor(private readonly <span class="cstat-no" title="statement not covered" ></span>userService: <span class="branch-0 cbranch-no" title="branch not covered" >UserService)</span> {}</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  resolve(): (req: Request, res: Response, next: NextFunction) =&gt; void {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return <span class="fstat-no" title="function not covered" >async (r</span>eq: Request, res: Response, <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >next: NextFunction) =&gt; {</span></span></span>
+<span class="cstat-no" title="statement not covered" >      if (req.headers.authorization &amp;&amp; (req.headers.authorization as string).split(' ')[0] === 'Token') {</span>
+        const token = (<span class="cstat-no" title="statement not covered" >req.headers.authorization as string).split(' ')[1</span>];
+        const decoded: any = <span class="cstat-no" title="statement not covered" >jwt.verify(token, SECRET)</span>;
+        const user = <span class="cstat-no" title="statement not covered" >await this.userService.findById(decoded.i</span>d);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (!user) {</span>
+<span class="cstat-no" title="statement not covered" >          throw new HttpException('User not found.', HttpStatus.U</span>NAUTHORIZED);
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        req.user = u</span>ser;
+<span class="cstat-no" title="statement not covered" >        next();</span>
+&nbsp;
+      } else {
+<span class="cstat-no" title="statement not covered" >        throw new HttpException('Not authorized.', HttpStatus.U</span>NAUTHORIZED);
+&nbsp;
+      }
+    };
+  }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Feb 25 2018 01:18:44 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

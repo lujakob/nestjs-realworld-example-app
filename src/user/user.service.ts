@@ -1,6 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Component } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CreateUserDto } from './user.dto';
 const jwt = require('jsonwebtoken');
@@ -10,12 +10,13 @@ import { DeepPartial } from 'typeorm/common/DeepPartial';
 import { validate } from 'class-validator';
 import { HttpException } from '@nestjs/core';
 import { HttpStatus } from '@nestjs/common';
+import {ArticleEntity} from "../article/article.entity";
 
 @Component()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    private readonly userRepository: Repository<UserEntity>
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
@@ -28,18 +29,31 @@ export class UserService {
 
   async create(userData: CreateUserDto): Promise<UserRO> {
 
-    let user = new UserEntity();
-    user.username = userData.username;
-    user.email = userData.email;
-    user.password = userData.password;
+    // check uniqueness of username/email
+    const {username, email, password} = userData;
+    const qb = await getRepository(UserEntity)
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username })
+      .orWhere('user.email = :email', { email });
 
-    const errors = await validate(user);
+    const user = await qb.getOne();
+
+    if (user) {
+      throw new HttpException('Username and email must be unique.', HttpStatus.BAD_REQUEST)
+    }
+
+    // create new user
+    let newUser = new UserEntity();
+    newUser.username = username;
+    newUser.email = email;
+    newUser.password = password;
+
+    const errors = await validate(newUser);
     if (errors.length > 0) {
-      console.log(errors);
       throw new HttpException('Data not valid', HttpStatus.BAD_REQUEST)
+
     } else {
-      // Todo: handle email unique validator better
-      const savedUser = await this.userRepository.save(user);
+      const savedUser = await this.userRepository.save(newUser);
       const userRO = {
         username: savedUser.username,
         email: savedUser.email,

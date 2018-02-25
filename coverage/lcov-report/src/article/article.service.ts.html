@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/article/article.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/article</a> article.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/101</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/40</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/18</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/94</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186</td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { Component, Inject } from '@nestjs/common';</span>
+<span class="cstat-no" title="statement not covered" >import { InjectRepository } from '@nestjs/typeorm';</span>
+<span class="cstat-no" title="statement not covered" >import { Repository, getRepository } from 'typeorm';</span>
+<span class="cstat-no" title="statement not covered" >import { ArticleEntity } from './article.entity';</span>
+<span class="cstat-no" title="statement not covered" >import { Comment } from './comment.entity';</span>
+<span class="cstat-no" title="statement not covered" >import { UserEntity } from '../user/user.entity';</span>
+<span class="cstat-no" title="statement not covered" >import { FollowsEntity } from '../profile/follows.entity';</span>
+import { CreateArticleDto } from './article.dto';
+&nbsp;
+import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
+const slug = <span class="cstat-no" title="statement not covered" >require('</span>slug');
+&nbsp;
+@Component()
+<span class="cstat-no" title="statement not covered" >export class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >ArticleService </span>{</span></span>
+<span class="fstat-no" title="function not covered" >  constructor(</span>
+    @InjectRepository(ArticleEntity)
+    private readonly <span class="cstat-no" title="statement not covered" >articleRepository: <span class="branch-0 cbranch-no" title="branch not covered" >Repository&lt;</span>ArticleEntity&gt;,</span>
+    @InjectRepository(Comment)
+    private readonly <span class="cstat-no" title="statement not covered" >commentRepository: Repository&lt;Comment&gt;,</span>
+    @InjectRepository(UserEntity)
+    private readonly <span class="cstat-no" title="statement not covered" >userRepository: Repository&lt;UserEntity&gt;,</span>
+    @InjectRepository(FollowsEntity)
+    private readonly <span class="cstat-no" title="statement not covered" >followsRepository: Repository&lt;FollowsEntity&gt;</span>
+  ) {}
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findAll(</span>query): Promise&lt;ArticlesRO&gt; {
+&nbsp;
+    const qb = <span class="cstat-no" title="statement not covered" >await getRepository(ArticleEntity)</span>
+      .createQueryBuilder('article');
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    qb.where("</span>1 = 1");
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('tag' in query) {</span>
+<span class="cstat-no" title="statement not covered" >      qb.andWhere("article.tagList LIKE :tag", { tag: `%${query.tag}%` </span>});
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('author' in query) {</span>
+      const author = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOne({username: query.a</span>uthor});
+<span class="cstat-no" title="statement not covered" >      qb.andWhere("article.authorId = :id", { id: author.i</span>d });
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('favorited' in query) {</span>
+      const author = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOne({username: query.f</span>avorited});
+      const ids = <span class="cstat-no" title="statement not covered" >author.favorites.map(<span class="fstat-no" title="function not covered" >el =&gt; <span class="cstat-no" title="statement not covered" ></span>el.i</span></span>d);
+<span class="cstat-no" title="statement not covered" >      qb.andWhere("article.authorId IN (:ids)", { i</span>ds });
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    qb.orderBy('article.created', '</span>DESC');
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('limit' in query) {</span>
+<span class="cstat-no" title="statement not covered" >      qb.limit(query.l</span>imit);
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('offset' in query) {</span>
+<span class="cstat-no" title="statement not covered" >      qb.offset(query.o</span>ffset);
+    }
+&nbsp;
+    const articles = <span class="cstat-no" title="statement not covered" >await qb.g</span>etMany();
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticles};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findFeed(</span>userId: number, query): Promise&lt;ArticlesRO&gt; {
+    const _follows = <span class="cstat-no" title="statement not covered" >await this.followsRepository.find( {followerId: u</span>serId});
+    const ids = <span class="cstat-no" title="statement not covered" >_follows.map(<span class="fstat-no" title="function not covered" >el =&gt; <span class="cstat-no" title="statement not covered" ></span>el.f</span></span>ollowingId);
+&nbsp;
+    const qb = <span class="cstat-no" title="statement not covered" >await getRepository(ArticleEntity)</span>
+      .createQueryBuilder('article')
+      .where('article.authorId IN (:ids)', { ids });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    qb.orderBy('article.created', '</span>DESC');
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('limit' in query) {</span>
+<span class="cstat-no" title="statement not covered" >      qb.limit(query.l</span>imit);
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ('offset' in query) {</span>
+<span class="cstat-no" title="statement not covered" >      qb.offset(query.o</span>ffset);
+    }
+    
+    const articles = <span class="cstat-no" title="statement not covered" >await qb.g</span>etMany();
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticles};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findOne(</span>where): Promise&lt;ArticleRO&gt; {
+    const article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne(w</span>here);
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticle};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >addComment(</span>slug: string, commentData): Promise&lt;ArticleRO&gt; {
+    let article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne({s</span>lug});
+&nbsp;
+    const comment = <span class="cstat-no" title="statement not covered" >new Comment(</span>);
+<span class="cstat-no" title="statement not covered" >    comment.body = commentData.b</span>ody;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    article.comments.push(c</span>omment);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    await this.commentRepository.save(c</span>omment);
+<span class="cstat-no" title="statement not covered" >    article = await this.articleRepository.save(a</span>rticle);
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticle}
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >deleteComment(</span>slug: string, id: string): Promise&lt;ArticleRO&gt; {
+    let article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne({s</span>lug});
+&nbsp;
+    const comment = <span class="cstat-no" title="statement not covered" >await this.commentRepository.findOneById(i</span>d);
+    const deleteIndex = <span class="cstat-no" title="statement not covered" >article.comments.findIndex(<span class="fstat-no" title="function not covered" >_comment =&gt; <span class="cstat-no" title="statement not covered" ></span>_comment.id === comment.i</span></span>d);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (deleteIndex &gt;= 0) {</span>
+      const deleteComments = <span class="cstat-no" title="statement not covered" >article.comments.splice(deleteIndex, 1</span>);
+<span class="cstat-no" title="statement not covered" >      await this.commentRepository.deleteById(deleteComments[0].i</span>d);
+<span class="cstat-no" title="statement not covered" >      article =  await this.articleRepository.save(a</span>rticle);
+<span class="cstat-no" title="statement not covered" >      return {a</span>rticle};
+    } else {
+<span class="cstat-no" title="statement not covered" >      return {a</span>rticle};
+    }
+&nbsp;
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >favorite(</span>id: number, slug: string): Promise&lt;ArticleRO&gt; {
+    let article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne({s</span>lug});
+    const user = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOneById(i</span>d);
+&nbsp;
+    const isNewFavorite = <span class="cstat-no" title="statement not covered" >user.favorites.findIndex(<span class="fstat-no" title="function not covered" >_article =&gt; <span class="cstat-no" title="statement not covered" ></span>_article.id === article.i</span>d) &lt; 0</span>;
+<span class="cstat-no" title="statement not covered" >    if (isNewFavorite) {</span>
+<span class="cstat-no" title="statement not covered" >      user.favorites.push(a</span>rticle);
+<span class="cstat-no" title="statement not covered" >      article.f</span>avoriteCount++;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      await this.userRepository.save(u</span>ser);
+<span class="cstat-no" title="statement not covered" >      article = await this.articleRepository.save(a</span>rticle);
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticle};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >unFavorite(</span>id: number, slug: string): Promise&lt;ArticleRO&gt; {
+    let article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne({s</span>lug});
+    const user = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOneById(i</span>d);
+&nbsp;
+    const deleteIndex = <span class="cstat-no" title="statement not covered" >user.favorites.findIndex(<span class="fstat-no" title="function not covered" >_article =&gt; <span class="cstat-no" title="statement not covered" ></span>_article.id === article.i</span></span>d);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (deleteIndex &gt;= 0) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      user.favorites.splice(deleteIndex, 1</span>);
+<span class="cstat-no" title="statement not covered" >      article.f</span>avoriteCount--;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      await this.userRepository.save(u</span>ser);
+<span class="cstat-no" title="statement not covered" >      article = await this.articleRepository.save(a</span>rticle);
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticle};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findComments(</span>slug: string): Promise&lt;CommentsRO&gt; {
+    const article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne({s</span>lug});
+<span class="cstat-no" title="statement not covered" >    return {comments: article.c</span>omments};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >create(</span>userId: number, articleData: CreateArticleDto): Promise&lt;ArticleEntity&gt; {
+    const author = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOneById(u</span>serId);
+    let article = <span class="cstat-no" title="statement not covered" >new ArticleEntity(</span>);
+<span class="cstat-no" title="statement not covered" >    article.title = articleData.t</span>itle;
+<span class="cstat-no" title="statement not covered" >    article.description = articleData.d</span>escription;
+<span class="cstat-no" title="statement not covered" >    article.slug = this.slugify(articleData.t</span>itle);
+<span class="cstat-no" title="statement not covered" >    article.tagList = articleData.tagList || [</span>];
+<span class="cstat-no" title="statement not covered" >    article.comments = [</span>];
+<span class="cstat-no" title="statement not covered" >    article.author = a</span>uthor;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return await this.articleRepository.save(a</span>rticle);
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >update(</span>slug: string, articleData: any): Promise&lt;ArticleRO&gt; {
+    let toUpdate = <span class="cstat-no" title="statement not covered" >await this.articleRepository.findOne({ slug: s</span>lug});
+    let updated = <span class="cstat-no" title="statement not covered" >Object.assign(toUpdate, a</span>rticleData);
+    const article = <span class="cstat-no" title="statement not covered" >await this.articleRepository.save(u</span>pdated);
+<span class="cstat-no" title="statement not covered" >    return {a</span>rticle};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >delete(</span>slug: string): Promise&lt;void&gt; {
+<span class="cstat-no" title="statement not covered" >    return await this.articleRepository.delete({ slug: s</span>lug});
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  slugify(</span>title: string) {
+<span class="cstat-no" title="statement not covered" >    return slug(title, {lower: true}) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(3</span>6)
+  }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Feb 25 2018 01:18:44 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

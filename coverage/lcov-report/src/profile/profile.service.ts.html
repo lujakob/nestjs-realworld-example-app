@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/profile/profile.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/profile</a> profile.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/47</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/28</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/43</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103</td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import {Component, HttpStatus, Inject} from '@nestjs/common';</span>
+<span class="cstat-no" title="statement not covered" >import { InjectRepository } from '@nestjs/typeorm';</span>
+<span class="cstat-no" title="statement not covered" >import { Repository } from 'typeorm';</span>
+<span class="cstat-no" title="statement not covered" >import { UserEntity } from '../user/user.entity';</span>
+import { DeepPartial } from 'typeorm/common/DeepPartial';
+import { ProfileRO, ProfileData } from './profile.interface';
+<span class="cstat-no" title="statement not covered" >import {FollowsEntity} from "./follows.entity";</span>
+<span class="cstat-no" title="statement not covered" >import {HttpException} from "@nestjs/core";</span>
+&nbsp;
+@Component()
+<span class="cstat-no" title="statement not covered" >export class <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >ProfileService </span>{</span></span>
+<span class="fstat-no" title="function not covered" >  constructor(</span>
+    @InjectRepository(UserEntity)
+    private readonly <span class="cstat-no" title="statement not covered" >userRepository: <span class="branch-0 cbranch-no" title="branch not covered" >Repository&lt;</span>UserEntity&gt;,</span>
+    @InjectRepository(FollowsEntity)
+    private readonly <span class="cstat-no" title="statement not covered" >followsRepository: Repository&lt;FollowsEntity&gt;</span>
+  ) {}
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findAll(): Promise&lt;UserEntity[]&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    return await this.userRepository.f</span>ind();
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findOne(</span>options?: DeepPartial&lt;UserEntity&gt;): Promise&lt;ProfileRO&gt; {
+    const user = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOne(o</span>ptions);
+<span class="cstat-no" title="statement not covered" >    delete user.i</span>d;
+<span class="cstat-no" title="statement not covered" >    if (user) <span class="cstat-no" title="statement not covered" >delete user.p</span></span>assword;
+<span class="cstat-no" title="statement not covered" >    return {profile: u</span>ser};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >findProfile(</span>id: number, followingUsername: string): Promise&lt;ProfileRO&gt; {
+    const _profile = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOne( {username: f</span>ollowingUsername});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if(!_profile) <span class="cstat-no" title="statement not covered" >r</span>eturn;</span>
+&nbsp;
+    let profile: ProfileData = <span class="cstat-no" title="statement not covered" >{</span>
+      username: _profile.username,
+      bio: _profile.bio,
+      image: _profile.image
+    };
+&nbsp;
+    const follows = <span class="cstat-no" title="statement not covered" >await this.followsRepository.findOne( {followerId: id, followingId: _profile.i</span>d});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (id) {</span>
+<span class="cstat-no" title="statement not covered" >      profile.following = !!f</span>ollows;
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return {p</span>rofile};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >follow(</span>followerId: number, username: string): Promise&lt;ProfileRO&gt; {
+<span class="cstat-no" title="statement not covered" >    if (!followerId || !username) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new HttpException('FollowerId and username not provided.', HttpStatus.B</span>AD_REQUEST);
+    }
+&nbsp;
+    const followingUser = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOne({u</span>sername});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (followingUser.id === followerId) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new HttpException('FollowerId and FollowingId cannot be equal.', HttpStatus.B</span>AD_REQUEST);
+    }
+&nbsp;
+    const _follows = <span class="cstat-no" title="statement not covered" >await this.followsRepository.findOne( {followerId, followingId: followingUser.i</span>d});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (!_follows) {</span>
+      const follows = <span class="cstat-no" title="statement not covered" >new FollowsEntity(</span>);
+<span class="cstat-no" title="statement not covered" >      follows.followerId = f</span>ollowerId;
+<span class="cstat-no" title="statement not covered" >      follows.followingId = followingUser.i</span>d;
+<span class="cstat-no" title="statement not covered" >      await this.followsRepository.save(f</span>ollows);
+    }
+&nbsp;
+    let profile: ProfileData = <span class="cstat-no" title="statement not covered" >{</span>
+      username: followingUser.username,
+      bio: followingUser.bio,
+      image: followingUser.image,
+      following: true
+    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return {p</span>rofile};
+  }
+&nbsp;
+  async <span class="fstat-no" title="function not covered" >unFollow(</span>followerId: number, username: string): Promise&lt;ProfileRO&gt; {
+<span class="cstat-no" title="statement not covered" >    if (!followerId || !username) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new HttpException('FollowerId and username not provided.', HttpStatus.B</span>AD_REQUEST);
+    }
+&nbsp;
+    const followingUser = <span class="cstat-no" title="statement not covered" >await this.userRepository.findOne({u</span>sername});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (followingUser.id === followerId) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new HttpException('FollowerId and FollowingId cannot be equal.', HttpStatus.B</span>AD_REQUEST);
+    }
+    const followingId = <span class="cstat-no" title="statement not covered" >followingUser.i</span>d;
+<span class="cstat-no" title="statement not covered" >    await this.followsRepository.delete({followerId, f</span>ollowingId});
+&nbsp;
+    let profile: ProfileData = <span class="cstat-no" title="statement not covered" >{</span>
+      username: followingUser.username,
+      bio: followingUser.bio,
+      image: followingUser.image,
+      following: false
+    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return {p</span>rofile};
+  }
+&nbsp;
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Feb 25 2018 01:18:44 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
