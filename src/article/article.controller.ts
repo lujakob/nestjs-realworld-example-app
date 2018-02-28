@@ -1,7 +1,7 @@
 import {Get, Post, Body, Put, Delete, Query, Param, Controller, Req} from '@nestjs/common';
 import { Request } from 'express';
 import { ArticleService } from './article.service';
-import { CreateArticleDto, CreateCommentDto } from './article.dto';
+import { CreateArticleDto, CreateCommentDto } from './dto';
 import { ArticlesRO, ArticleRO } from './article.interface';
 import { CommentsRO } from './article.interface';
 import { User } from '../user/user.decorator';

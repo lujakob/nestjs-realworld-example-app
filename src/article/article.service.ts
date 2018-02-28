@@ -5,7 +5,7 @@ import { ArticleEntity } from './article.entity';
 import { Comment } from './comment.entity';
 import { UserEntity } from '../user/user.entity';
 import { FollowsEntity } from '../profile/follows.entity';
-import { CreateArticleDto } from './article.dto';
+import { CreateArticleDto } from './dto';
 
 import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
 const slug = require('slug');

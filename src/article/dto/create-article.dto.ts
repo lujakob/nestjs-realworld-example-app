@@ -4,7 +4,3 @@ export class CreateArticleDto {
   readonly body: string;
   readonly tagList: string[];
 }
-
-export class CreateCommentDto {
-  readonly body: string;
-}
