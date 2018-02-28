@@ -2,7 +2,7 @@ import { Component } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
 import { UserRO } from './user.interface';
@@ -10,7 +10,6 @@ import { DeepPartial } from 'typeorm/common/DeepPartial';
 import { validate } from 'class-validator';
 import { HttpException } from '@nestjs/core';
 import { HttpStatus } from '@nestjs/common';
-import {ArticleEntity} from "../article/article.entity";
 
 @Component()
 export class UserService {
@@ -27,10 +26,10 @@ export class UserService {
     return await this.userRepository.findOne(options);
   }
 
-  async create(userData: CreateUserDto): Promise<UserRO> {
+  async create(dto: CreateUserDto): Promise<UserRO> {
 
     // check uniqueness of username/email
-    const {username, email, password} = userData;
+    const {username, email, password} = dto;
     const qb = await getRepository(UserEntity)
       .createQueryBuilder('user')
       .where('user.username = :username', { username })
@@ -67,13 +66,12 @@ export class UserService {
 
   }
 
-  async update(id: number, userData: any): Promise<UserEntity> {
+  async update(id: number, dto: UpdateUserDto): Promise<UserEntity> {
     let toUpdate = await this.userRepository.findOneById(id);
     delete toUpdate.password;
     delete toUpdate.favorites;
-    if (userData.id) delete userData.id;
 
-    let updated = Object.assign(toUpdate, userData);
+    let updated = Object.assign(toUpdate, dto);
     return await this.userRepository.save(updated);
   }
 

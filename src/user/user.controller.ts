@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { UserRO } from './user.interface';
-import { CreateUserDto, UpdateUserDto, LoginUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import { HttpException } from '@nestjs/core';
 import * as crypto from 'crypto';
 import { User } from './user.decorator';
