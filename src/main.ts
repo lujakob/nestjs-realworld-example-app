@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('NestJS Realworld Example App')
     .setDescription('The Realworld API description')
     .setVersion('1.0')
+    .setBasePath('api')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
