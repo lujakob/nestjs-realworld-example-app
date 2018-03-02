@@ -8,6 +8,13 @@ import { HttpException } from '@nestjs/core';
 import * as crypto from 'crypto';
 import { User } from './user.decorator';
 
+import {
+  ApiUseTags,
+  ApiBearerAuth
+} from '@nestjs/swagger';
+
+@ApiBearerAuth()
+@ApiUseTags('user')
 @Controller()
 export class UserController {
 
