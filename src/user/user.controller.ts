@@ -44,6 +44,7 @@ export class UserController {
   @UsePipes(new ValidationPipe())
   @Post('users/login')
   async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserRO> {
+    console.log("loginUserDto", loginUserDto);
     const _user = await this.userService.findOne(loginUserDto);
 
     if (!_user) throw new HttpException('User not found.', 401);
