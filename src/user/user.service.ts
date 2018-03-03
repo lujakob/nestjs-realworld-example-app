@@ -43,7 +43,9 @@ export class UserService {
     const user = await qb.getOne();
 
     if (user) {
-      throw new HttpException('Username and email must be unique.', HttpStatus.BAD_REQUEST)
+      const errors = {username: 'Username and email must be unique.'};
+      throw new HttpException({message: 'Input data validation failed', errors}, HttpStatus.BAD_REQUEST);
+
     }
 
     // create new user
@@ -54,7 +56,8 @@ export class UserService {
 
     const errors = await validate(newUser);
     if (errors.length > 0) {
-      throw new HttpException('Data not valid', HttpStatus.BAD_REQUEST)
+      const _errors = {username: 'Userinput is not valid.'};
+      throw new HttpException({message: 'Input data validation failed', _errors}, HttpStatus.BAD_REQUEST);
 
     } else {
       const savedUser = await this.userRepository.save(newUser);
