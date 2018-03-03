@@ -1,12 +1,12 @@
-import { Get, Post, Body, Put, Delete, Param, Controller } from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Param, Controller, UsePipes } from '@nestjs/common';
 import { Request } from 'express';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { UserRO } from './user.interface';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import { HttpException } from '@nestjs/core';
-import * as crypto from 'crypto';
 import { User } from './user.decorator';
+import { ValidationPipe } from '../shared/pipes/validation.pipe';
 
 import {
   ApiUseTags,
@@ -30,6 +30,7 @@ export class UserController {
     return await this.userService.update(userId, userData);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('users')
   async create(@Body('user') userData: CreateUserDto) {
     return this.userService.create(userData);
@@ -40,14 +41,10 @@ export class UserController {
     return await this.userService.delete(params.slug);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('users/login')
-  async login(@Body('user') userLoginData: LoginUserDto): Promise<UserRO> {
-    const _user = await this.userService.findOne(
-      {
-        email: userLoginData.email,
-        password: crypto.createHmac('sha256', userLoginData.password).digest('hex'),
-      }
-    );
+  async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserRO> {
+    const _user = await this.userService.findOne(loginUserDto);
 
     if (!_user) throw new HttpException('User not found.', 401);
 

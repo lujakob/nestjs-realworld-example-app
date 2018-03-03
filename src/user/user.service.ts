@@ -2,14 +2,14 @@ import { Component } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto';
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
 import { UserRO } from './user.interface';
-import { DeepPartial } from 'typeorm/common/DeepPartial';
 import { validate } from 'class-validator';
 import { HttpException } from '@nestjs/core';
 import { HttpStatus } from '@nestjs/common';
+import * as crypto from 'crypto';
 
 @Component()
 export class UserService {
@@ -22,8 +22,13 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async findOne(options?: DeepPartial<UserEntity>): Promise<UserEntity> {
-    return await this.userRepository.findOne(options);
+  async findOne(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const findOneOptions = {
+      email: loginUserDto.email,
+      password: crypto.createHmac('sha256', loginUserDto.password).digest('hex'),
+    };
+
+    return await this.userRepository.findOne(findOneOptions);
   }
 
   async create(dto: CreateUserDto): Promise<UserRO> {
