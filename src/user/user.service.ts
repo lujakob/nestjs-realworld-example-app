@@ -61,15 +61,7 @@ export class UserService {
 
     } else {
       const savedUser = await this.userRepository.save(newUser);
-      const userRO = {
-        username: savedUser.username,
-        email: savedUser.email,
-        bio: savedUser.bio,
-        token: this.generateJWT(savedUser),
-        image: savedUser.image
-      };
-
-      return {user: userRO};
+      return this.buildUserRO(savedUser);
     }
 
   }
@@ -87,16 +79,20 @@ export class UserService {
     return await this.userRepository.delete({ email: email});
   }
 
-  async findById(id: number): Promise<UserEntity>{
+  async findById(id: number): Promise<UserRO>{
     const user = await this.userRepository.findOneById(id);
-    if (user) delete user.password;
-    return user;
+
+    if (!user) {
+      const errors = {User: ' not found'};
+      throw new HttpException({errors}, 401);
+    };
+
+    return this.buildUserRO(user);
   }
 
-  async findByEmail(email: string): Promise<UserEntity>{
+  async findByEmail(email: string): Promise<UserRO>{
     const user = await this.userRepository.findOne({email: email});
-    if (user) delete user.password;
-    return user;
+    return this.buildUserRO(user);
   }
 
   public generateJWT(user) {
@@ -111,4 +107,16 @@ export class UserService {
       exp: exp.getTime() / 1000,
     }, SECRET);
   };
+
+  private buildUserRO(user: UserEntity) {
+    const userRO = {
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      token: this.generateJWT(user),
+      image: user.image
+    };
+
+    return {user: userRO};
+  }
 }

@@ -21,8 +21,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('user')
-  async findMe(@User('id') userId: number): Promise<UserEntity> {
-    return await this.userService.findById(userId);
+  async findMe(@User('email') email: string): Promise<UserRO> {
+    return await this.userService.findByEmail(email);
   }
 
   @Put('user')
@@ -44,10 +44,10 @@ export class UserController {
   @UsePipes(new ValidationPipe())
   @Post('users/login')
   async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserRO> {
-    console.log("loginUserDto", loginUserDto);
     const _user = await this.userService.findOne(loginUserDto);
 
-    if (!_user) throw new HttpException('User not found.', 401);
+    const errors = {User: ' not found'};
+    if (!_user) throw new HttpException({errors}, 401);
 
     const token = await this.userService.generateJWT(_user);
     const {email, username, bio, image} = _user;
