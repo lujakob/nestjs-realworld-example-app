@@ -47,22 +47,23 @@ export class ProfileService {
     return {profile};
   }
 
-  async follow(followerId: number, username: string): Promise<ProfileRO> {
-    if (!followerId || !username) {
-      throw new HttpException('FollowerId and username not provided.', HttpStatus.BAD_REQUEST);
+  async follow(followerEmail: string, username: string): Promise<ProfileRO> {
+    if (!followerEmail || !username) {
+      throw new HttpException('Follower email and username not provided.', HttpStatus.BAD_REQUEST);
     }
 
     const followingUser = await this.userRepository.findOne({username});
+    const followerUser = await this.userRepository.findOne({email: followerEmail});
 
-    if (followingUser.id === followerId) {
-      throw new HttpException('FollowerId and FollowingId cannot be equal.', HttpStatus.BAD_REQUEST);
+    if (followingUser.email === followerEmail) {
+      throw new HttpException('FollowerEmail and FollowingId cannot be equal.', HttpStatus.BAD_REQUEST);
     }
 
-    const _follows = await this.followsRepository.findOne( {followerId, followingId: followingUser.id});
+    const _follows = await this.followsRepository.findOne( {followerId: followerUser.id, followingId: followingUser.id});
 
     if (!_follows) {
       const follows = new FollowsEntity();
-      follows.followerId = followerId;
+      follows.followerId = followerUser.id;
       follows.followingId = followingUser.id;
       await this.followsRepository.save(follows);
     }

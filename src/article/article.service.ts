@@ -26,7 +26,8 @@ export class ArticleService {
   async findAll(query): Promise<ArticlesRO> {
 
     const qb = await getRepository(ArticleEntity)
-      .createQueryBuilder('article');
+      .createQueryBuilder('article')
+      .leftJoinAndSelect('article.author', 'author');
 
     qb.where("1 = 1");
 
@@ -83,7 +84,7 @@ export class ArticleService {
     }
     
     const articles = await qb.getMany();
-    
+
     return {articles, articlesCount};
   }
 
@@ -162,16 +163,28 @@ export class ArticleService {
   }
 
   async create(userId: number, articleData: CreateArticleDto): Promise<ArticleEntity> {
-    const author = await this.userRepository.findOneById(userId);
+
     let article = new ArticleEntity();
     article.title = articleData.title;
     article.description = articleData.description;
     article.slug = this.slugify(articleData.title);
     article.tagList = articleData.tagList || [];
     article.comments = [];
-    article.author = author;
 
-    return await this.articleRepository.save(article);
+    const newArticle = await this.articleRepository.save(article);
+
+    const author = await this.userRepository.findOneById(userId);
+
+    if (Array.isArray(author.articles)) {
+      author.articles.push(article);
+    } else {
+      author.articles = [article];
+    }
+
+    await this.userRepository.save(author);
+
+    return newArticle;
+
   }
 
   async update(slug: string, articleData: any): Promise<ArticleRO> {

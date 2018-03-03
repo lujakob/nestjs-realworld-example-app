@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn, AfterUpdate, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, OneToMany, JoinColumn, AfterUpdate, BeforeUpdate } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { Comment } from './comment.entity';
 
@@ -14,10 +14,10 @@ export class ArticleEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column({default: ''})
   description: string;
 
-  @Column()
+  @Column({default: ''})
   body: string;
 
   @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP"})
@@ -34,8 +34,7 @@ export class ArticleEntity {
   @Column('simple-array')
   tagList: string[];
 
-  @OneToOne(type => UserEntity)
-  @JoinColumn()
+  @ManyToOne(type => UserEntity, user => user.articles)
   author: UserEntity;
 
   @OneToMany(type => Comment, comment => comment.article, {eager: true})
