@@ -47,6 +47,8 @@ export class ArticleService {
 
     qb.orderBy('article.created', 'DESC');
 
+    const articlesCount = await qb.getCount();
+
     if ('limit' in query) {
       qb.limit(query.limit);
     }
@@ -57,7 +59,7 @@ export class ArticleService {
 
     const articles = await qb.getMany();
 
-    return {articles};
+    return {articles, articlesCount};
   }
 
   async findFeed(userId: number, query): Promise<ArticlesRO> {
@@ -70,6 +72,8 @@ export class ArticleService {
 
     qb.orderBy('article.created', 'DESC');
 
+    const articlesCount = await qb.getCount();
+
     if ('limit' in query) {
       qb.limit(query.limit);
     }
@@ -79,7 +83,8 @@ export class ArticleService {
     }
     
     const articles = await qb.getMany();
-    return {articles};
+    
+    return {articles, articlesCount};
   }
 
   async findOne(where): Promise<ArticleRO> {
