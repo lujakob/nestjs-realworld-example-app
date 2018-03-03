@@ -53,6 +53,7 @@ export class UserService {
     newUser.username = username;
     newUser.email = email;
     newUser.password = password;
+    newUser.articles = [];
 
     const errors = await validate(newUser);
     if (errors.length > 0) {

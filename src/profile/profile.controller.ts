@@ -22,8 +22,8 @@ export class ProfileController {
   }
 
   @Post(':username/follow')
-  async follow(@User('id') userId: number, @Param('username') username: string): Promise<ProfileRO> {
-    return await this.profileService.follow(userId, username);
+  async follow(@User('email') email: string, @Param('username') username: string): Promise<ProfileRO> {
+    return await this.profileService.follow(email, username);
   }
 
   @Delete(':username/follow')
