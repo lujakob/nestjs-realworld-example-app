@@ -89,8 +89,21 @@ export class ArticleService {
   }
 
   async findOne(where): Promise<ArticleRO> {
-    const article = await this.articleRepository.findOne(where);
-    return {article};
+    const qb = await getRepository(ArticleEntity)
+      .createQueryBuilder('article')
+      .leftJoinAndSelect('article.author', 'author');
+
+    qb.where('1 = 1');
+
+    if ('author' in where) {
+      const author = await this.userRepository.findOne({
+        username: where.author
+      });
+      qb.andWhere('article.authorId = :id', { id: author.id });
+    }
+
+    const article = await qb.getOne();
+    return { article };
   }
 
   async addComment(slug: string, commentData): Promise<ArticleRO> {
