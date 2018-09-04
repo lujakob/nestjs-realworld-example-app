@@ -22,6 +22,10 @@ Switch to the repo folder
 Install dependencies
     
     npm install
+
+Copy config file and set JsonWebToken secret key
+
+    cp src/config.ts.example src/config.ts
     
 ----------
 
