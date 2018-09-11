@@ -33,11 +33,11 @@ Copy config file and set JsonWebToken secret key
 
 The example codebase uses [Typeorm](http://typeorm.io/) with a mySQL database.
 
-Create a new mysql database with the name 'nestjsrealworld'
+Create a new mysql database with the name `nestjsrealworld` (or the name you specified in the ormconfig.json)
 
 Copy Typeorm config example file for database settings
 
-    cp ormconfig.json.example ormconfig.json
+    cp ormconfig.json.example ``
     
 Set mysql database settings in ormconfig.json
 
@@ -81,6 +81,8 @@ More information regarding the project can be found here https://github.com/goth
 
 - `npm start`
 - Test api with `http://localhost:3000/api/articles` in your favourite browser
+
+----------
 
 # Authentication
  
