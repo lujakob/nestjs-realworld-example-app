@@ -68,8 +68,11 @@ export class ArticleService {
     const ids = _follows.map(el => el.followingId);
 
     const qb = await getRepository(ArticleEntity)
-      .createQueryBuilder('article')
-      .where('article.authorId IN (:ids)', { ids });
+      .createQueryBuilder('article');
+
+    if (ids.length > 0) {
+      qb.where('article.authorId IN (:ids)', { ids });
+    }
 
     qb.orderBy('article.created', 'DESC');
 
@@ -82,7 +85,7 @@ export class ArticleService {
     if ('offset' in query) {
       qb.offset(query.offset);
     }
-    
+
     const articles = await qb.getMany();
 
     return {articles, articlesCount};
