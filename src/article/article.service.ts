@@ -74,6 +74,8 @@ export class ArticleService {
       qb.where('article.authorId IN (:ids)', { ids });
     }
 
+    qb.innerJoinAndSelect('article.author', 'author');
+
     qb.orderBy('article.created', 'DESC');
 
     const articlesCount = await qb.getCount();

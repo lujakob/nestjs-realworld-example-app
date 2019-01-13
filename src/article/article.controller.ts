@@ -37,7 +37,7 @@ export class ArticleController {
 
   @Get(':slug')
   async findOne(@Param('slug') slug): Promise<ArticleRO> {
-    return await this.articleService.findOne({slug});
+    return await this.articleService.findOne({slug, relations: ['author']});
   }
 
   @Get(':slug/comments')
