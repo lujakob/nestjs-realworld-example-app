@@ -172,6 +172,7 @@ export class ArticleService {
     let article = new ArticleEntity();
     article.title = articleData.title;
     article.description = articleData.description;
+    article.body = articleData.body;
     article.slug = this.slugify(articleData.title);
     article.tagList = articleData.tagList || [];
     article.comments = [];
