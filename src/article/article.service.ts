@@ -179,7 +179,7 @@ export class ArticleService {
 
     const newArticle = await this.articleRepository.save(article);
 
-    const author = await this.userRepository.findOneById(userId);
+    const author = await this.userRepository.findOneById(userId, {relations: ['articles']});
 
     if (Array.isArray(author.articles)) {
       author.articles.push(article);
