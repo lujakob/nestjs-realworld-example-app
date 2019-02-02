@@ -1,8 +1,8 @@
-import { createRouteParamDecorator } from '@nestjs/common';
+import { createParamDecorator } from '@nestjs/common';
 import { SECRET } from '../config';
 import * as jwt from 'jsonwebtoken';
 
-export const User = createRouteParamDecorator((data, req) => {
+export const User = createParamDecorator((data, req) => {
 
   // if route is protected, there is a user set in auth.middleware
   if (!!req.user) {
