@@ -1,17 +1,17 @@
-import { Component } from '@nestjs/common';
+import { Component, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, DeleteResult } from 'typeorm';
 import { UserEntity } from './user.entity';
 import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto';
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
 import { UserRO } from './user.interface';
 import { validate } from 'class-validator';
-import { HttpException } from '@nestjs/core';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { HttpStatus } from '@nestjs/common';
 import * as crypto from 'crypto';
 
-@Component()
+@Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
@@ -68,7 +68,7 @@ export class UserService {
   }
 
   async update(id: number, dto: UpdateUserDto): Promise<UserEntity> {
-    let toUpdate = await this.userRepository.findOneById(id);
+    let toUpdate = await this.userRepository.findOne(id);
     delete toUpdate.password;
     delete toUpdate.favorites;
 
@@ -76,12 +76,12 @@ export class UserService {
     return await this.userRepository.save(updated);
   }
 
-  async delete(email: string): Promise<void> {
+  async delete(email: string): Promise<DeleteResult> {
     return await this.userRepository.delete({ email: email});
   }
 
   async findById(id: number): Promise<UserRO>{
-    const user = await this.userRepository.findOneById(id);
+    const user = await this.userRepository.findOne(id);
 
     if (!user) {
       const errors = {User: ' not found'};

@@ -1,6 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Component, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, DeleteResult } from 'typeorm';
 import { ArticleEntity } from './article.entity';
 import { Comment } from './comment.entity';
 import { UserEntity } from '../user/user.entity';
@@ -10,7 +10,7 @@ import { CreateArticleDto } from './dto';
 import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
 const slug = require('slug');
 
-@Component()
+@Injectable()
 export class ArticleService {
   constructor(
     @InjectRepository(ArticleEntity)
@@ -82,7 +82,7 @@ export class ArticleService {
     if ('offset' in query) {
       qb.offset(query.offset);
     }
-    
+
     const articles = await qb.getMany();
 
     return {articles, articlesCount};
@@ -109,12 +109,12 @@ export class ArticleService {
   async deleteComment(slug: string, id: string): Promise<ArticleRO> {
     let article = await this.articleRepository.findOne({slug});
 
-    const comment = await this.commentRepository.findOneById(id);
+    const comment = await this.commentRepository.findOne(id);
     const deleteIndex = article.comments.findIndex(_comment => _comment.id === comment.id);
 
     if (deleteIndex >= 0) {
       const deleteComments = article.comments.splice(deleteIndex, 1);
-      await this.commentRepository.deleteById(deleteComments[0].id);
+      await this.commentRepository.delete(deleteComments[0].id);
       article =  await this.articleRepository.save(article);
       return {article};
     } else {
@@ -125,7 +125,7 @@ export class ArticleService {
 
   async favorite(id: number, slug: string): Promise<ArticleRO> {
     let article = await this.articleRepository.findOne({slug});
-    const user = await this.userRepository.findOneById(id);
+    const user = await this.userRepository.findOne(id);
 
     const isNewFavorite = user.favorites.findIndex(_article => _article.id === article.id) < 0;
     if (isNewFavorite) {
@@ -141,7 +141,7 @@ export class ArticleService {
 
   async unFavorite(id: number, slug: string): Promise<ArticleRO> {
     let article = await this.articleRepository.findOne({slug});
-    const user = await this.userRepository.findOneById(id);
+    const user = await this.userRepository.findOne(id);
 
     const deleteIndex = user.favorites.findIndex(_article => _article.id === article.id);
 
@@ -173,7 +173,7 @@ export class ArticleService {
 
     const newArticle = await this.articleRepository.save(article);
 
-    const author = await this.userRepository.findOneById(userId);
+    const author = await this.userRepository.findOne(userId);
 
     if (Array.isArray(author.articles)) {
       author.articles.push(article);
@@ -194,7 +194,7 @@ export class ArticleService {
     return {article};
   }
 
-  async delete(slug: string): Promise<void> {
+  async delete(slug: string): Promise<DeleteResult> {
     return await this.articleRepository.delete({ slug: slug});
   }
 
