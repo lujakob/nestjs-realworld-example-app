@@ -1,4 +1,4 @@
-import { MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ArticleController } from './article.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleEntity } from './article.entity';
@@ -11,13 +11,13 @@ import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArticleEntity, Comment, UserEntity, FollowsEntity]), UserModule],
-  components: [ArticleService],
+  providers: [ArticleService],
   controllers: [
     ArticleController
   ]
 })
 export class ArticleModule implements NestModule {
-  public configure(consumer: MiddlewaresConsumer) {
+  public configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
       .forRoutes(
