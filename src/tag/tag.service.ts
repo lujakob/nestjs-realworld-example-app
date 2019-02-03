@@ -1,9 +1,9 @@
-import {Component, HttpStatus, Inject} from '@nestjs/common';
+import {Component, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TagEntity } from './tag.entity';
 
-@Component()
+@Injectable()
 export class TagService {
   constructor(
     @InjectRepository(TagEntity)

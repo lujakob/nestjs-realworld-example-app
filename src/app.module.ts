@@ -18,7 +18,7 @@ import { TagModule } from './tag/tag.module';
   controllers: [
     AppController
   ],
-  components: []
+  providers: []
 })
 export class ApplicationModule {
   constructor(private readonly connection: Connection) {}
