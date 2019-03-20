@@ -12,7 +12,7 @@ describe('TagController', () => {
     const module = await Test.createTestingModule({
       imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([TagEntity])],
       controllers: [TagController],
-      components: [TagService],
+      providers: [TagService],
     }).compile();
 
     tagService = module.get<TagService>(TagService);

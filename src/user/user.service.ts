@@ -1,4 +1,4 @@
-import { Component, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository, DeleteResult } from 'typeorm';
 import { UserEntity } from './user.entity';
