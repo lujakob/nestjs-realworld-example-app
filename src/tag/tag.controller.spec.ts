@@ -21,10 +21,20 @@ describe('TagController', () => {
 
   describe('findAll', () => {
     it('should return an array of tags', async () => {
-      const result = ['angularjs', 'reactjs'];
-      jest.spyOn(tagService, 'findAll').mockImplementation(() => result);
+      const tags : TagEntity[] = [];
+      const createTag = (id, name) => {
+        const tag = new TagEntity();
+        tag.id = id;
+        tag.tag = name;
+        return tag;
+      }
+      tags.push(createTag(1, 'angularjs'));
+      tags.push(createTag(2, 'reactjs'));
 
-      expect(await tagController.findAll()).toBe(result);
+      jest.spyOn(tagService, 'findAll').mockImplementation(() => Promise.resolve(tags));
+      
+      const findAllResult = await tagController.findAll();
+      expect(findAllResult).toBe(tags);
     });
   });
 });
