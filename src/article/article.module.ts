@@ -21,10 +21,10 @@ export class ArticleModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes(
-        {path: 'aticles/feed', method: RequestMethod.GET},
-        {path: 'aticles', method: RequestMethod.POST},
-        {path: 'aticles/:slug', method: RequestMethod.DELETE},
-        {path: 'aticles/:slug', method: RequestMethod.PUT},
+        {path: 'articles/feed', method: RequestMethod.GET},
+        {path: 'articles', method: RequestMethod.POST},
+        {path: 'articles/:slug', method: RequestMethod.DELETE},
+        {path: 'articles/:slug', method: RequestMethod.PUT},
         {path: 'articles/:slug/comments', method: RequestMethod.POST},
         {path: 'articles/:slug/comments/:id', method: RequestMethod.DELETE},
         {path: 'articles/:slug/favorite', method: RequestMethod.POST},
