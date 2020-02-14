@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert, JoinTable, ManyToMany, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert, JoinTable, ManyToMany, OneToMany} from 'typeorm';
 import { IsEmail } from 'class-validator';
 import * as argon2 from 'argon2';
 import { ArticleEntity } from '../article/article.entity';
