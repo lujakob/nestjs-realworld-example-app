@@ -1,6 +1,6 @@
 {
   "name": "nestjs-realworld-example-app",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "[![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)",
   "main": "index.js",
   "scripts": {

@@ -178,13 +178,8 @@ export class ArticleService {
 
     const newArticle = await this.articleRepository.save(article);
 
-    const author = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (Array.isArray(author.articles)) {
-      author.articles.push(article);
-    } else {
-      author.articles = [article];
-    }
+    const author = await this.userRepository.findOne({ where: { id: userId }, relations: ['articles'] });
+    author.articles.push(article);
 
     await this.userRepository.save(author);
 
