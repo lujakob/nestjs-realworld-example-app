@@ -65,6 +65,11 @@ export class ArticleService {
 
   async findFeed(userId: number, query): Promise<ArticlesRO> {
     const _follows = await this.followsRepository.find( {followerId: userId});
+
+    if (!(Array.isArray(_follows) && _follows.length > 0)) {
+      return {articles: [], articlesCount: 0};
+    }
+
     const ids = _follows.map(el => el.followingId);
 
     const qb = await getRepository(ArticleEntity)

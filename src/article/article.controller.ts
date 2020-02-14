@@ -27,6 +27,15 @@ export class ArticleController {
     return await this.articleService.findAll(query);
   }
 
+
+  @ApiOperation({ title: 'Get article feed' })
+  @ApiResponse({ status: 200, description: 'Return article feed.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @Get('feed')
+  async getFeed(@User('id') userId: number, @Query() query): Promise<ArticlesRO> {
+    return await this.articleService.findFeed(userId, query);
+  }
+
   @Get(':slug')
   async findOne(@Param('slug') slug): Promise<ArticleRO> {
     return await this.articleService.findOne({slug});
@@ -93,14 +102,6 @@ export class ArticleController {
   @Delete(':slug/favorite')
   async unFavorite(@User('id') userId: number, @Param('slug') slug) {
     return await this.articleService.unFavorite(userId, slug);
-  }
-
-  @ApiOperation({ title: 'Get article feed' })
-  @ApiResponse({ status: 200, description: 'Return article feed.'})
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @Get('feed')
-  async getFeed(@User('id') userId: number, @Query() query): Promise<ArticlesRO> {
-    return await this.articleService.findFeed(userId, query);
   }
 
 }

@@ -90,7 +90,7 @@ export class UserService {
     if (!user) {
       const errors = {User: ' not found'};
       throw new HttpException({errors}, 401);
-    };
+    }
 
     return this.buildUserRO(user);
   }
@@ -115,6 +115,7 @@ export class UserService {
 
   private buildUserRO(user: UserEntity) {
     const userRO = {
+      id: user.id,
       username: user.username,
       email: user.email,
       bio: user.bio,
