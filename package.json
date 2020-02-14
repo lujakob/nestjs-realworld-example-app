@@ -1,6 +1,6 @@
 {
   "name": "nestjs-realworld-example-app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "[![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "@nestjs/testing": "^6.0.1",
     "@nestjs/typeorm": "^6.0.0",
     "@nestjs/websockets": "^6.0.1",
+    "argon2": "^0.26.0",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "crypto": "^1.0.1",
