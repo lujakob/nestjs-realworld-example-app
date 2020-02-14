@@ -1,7 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert} from "typeorm";
-import {IsEmail, Validate} from "class-validator";
-import * as crypto from 'crypto';
-// import { CustomEmail } from './CustomEmail';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('tag')
 export class TagEntity {
