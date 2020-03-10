@@ -9,7 +9,7 @@ import { UserRO } from './user.interface';
 import { validate } from 'class-validator';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { HttpStatus } from '@nestjs/common';
-import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -22,17 +22,13 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async findOne({email, password}: LoginUserDto): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({email});
-    if (!user) {
-      return null;
-    }
+  async findOne(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const findOneOptions = {
+      email: loginUserDto.email,
+      password: crypto.createHmac('sha256', loginUserDto.password).digest('hex'),
+    };
 
-    if (await argon2.verify(user.password, password)) {
-      return user;
-    }
-
-    return null;
+    return await this.userRepository.findOne(findOneOptions);
   }
 
   async create(dto: CreateUserDto): Promise<UserRO> {

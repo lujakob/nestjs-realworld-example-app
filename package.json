@@ -31,7 +31,6 @@
     "@nestjs/testing": "^6.11.7",
     "@nestjs/typeorm": "^6.3.1",
     "@nestjs/websockets": "^6.11.7",
-    "argon2": "^0.26.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
     "crypto": "^1.0.1",
