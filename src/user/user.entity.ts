@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert, JoinTable, ManyToMany, OneToMany} from 'typeorm';
 import { IsEmail } from 'class-validator';
-import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 import { ArticleEntity } from '../article/article.entity';
 
 @Entity('user')
@@ -26,8 +26,8 @@ export class UserEntity {
   password: string;
 
   @BeforeInsert()
-  async hashPassword() {
-    this.password = await argon2.hash(this.password);
+  hashPassword() {
+    this.password = crypto.createHmac('sha256', this.password).digest('hex');
   }
 
   @ManyToMany(type => ArticleEntity)
