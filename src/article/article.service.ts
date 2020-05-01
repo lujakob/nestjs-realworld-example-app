@@ -1,201 +1,205 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository, DeleteResult } from 'typeorm';
-import { ArticleEntity } from './article.entity';
-import { Comment } from './comment.entity';
-import { UserEntity } from '../user/user.entity';
-import { FollowsEntity } from '../profile/follows.entity';
 import { CreateArticleDto } from './dto';
 
 import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
+import { PrismaService } from '../shared/services/prisma.service';
 const slug = require('slug');
+import { ArticleWhereInput, Enumerable } from '@prisma/client'
+
+const articleAuthorSelect = {
+  email: true,
+  username: true,
+  bio: true,
+  image: true
+};
 
 @Injectable()
 export class ArticleService {
-  constructor(
-    @InjectRepository(ArticleEntity)
-    private readonly articleRepository: Repository<ArticleEntity>,
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(FollowsEntity)
-    private readonly followsRepository: Repository<FollowsEntity>
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async findAll(query): Promise<ArticlesRO> {
+    const andQueries = this.buildFindAllQuery(query);
+    const articles = await this.prisma.article.findMany({
+      where: { AND: andQueries },
+      orderBy: { createdAt: 'desc' },
+      include: { author: { select: articleAuthorSelect } },
+      ...('limit' in query ? {first: +query.limit} : {}),
+      ...('offset' in query ? {skip: +query.offset} : {}),
+    });
+    const articlesCount = await this.prisma.article.count({
+      where: { AND: andQueries },
+      orderBy: { createdAt: 'desc' },
+    });
 
-    const qb = await getRepository(ArticleEntity)
-      .createQueryBuilder('article')
-      .leftJoinAndSelect('article.author', 'author');
+    return { articles, articlesCount };
+  }
 
-    qb.where("1 = 1");
+  private buildFindAllQuery(query): Enumerable<ArticleWhereInput> {
+    const queries = [];
 
     if ('tag' in query) {
-      qb.andWhere("article.tagList LIKE :tag", { tag: `%${query.tag}%` });
+      queries.push({
+        tagList: {
+          contains: query.tag
+        }
+      });
     }
 
     if ('author' in query) {
-      const author = await this.userRepository.findOne({username: query.author});
-      qb.andWhere("article.authorId = :id", { id: author.id });
+      queries.push({
+        author: {
+          username: {
+            equals: query.author
+          }
+        }
+      });
     }
 
     if ('favorited' in query) {
-      const author = await this.userRepository.findOne({username: query.favorited});
-      const ids = author.favorites.map(el => el.id);
-      qb.andWhere("article.authorId IN (:ids)", { ids });
+      queries.push({
+        favoritedBy: {
+          some: {
+            username: {
+              equals: query.favorited
+            }
+          }
+        }
+      });
     }
 
-    qb.orderBy('article.created', 'DESC');
-
-    const articlesCount = await qb.getCount();
-
-    if ('limit' in query) {
-      qb.limit(query.limit);
-    }
-
-    if ('offset' in query) {
-      qb.offset(query.offset);
-    }
-
-    const articles = await qb.getMany();
-
-    return {articles, articlesCount};
+    return queries;
   }
 
-  async findFeed(userId: number, query): Promise<ArticlesRO> {
-    const _follows = await this.followsRepository.find( {followerId: userId});
+  async findFeed(userId: number, query): Promise<any> {
+    const where = {
+      author: {
+        followedBy: { some: { id: +userId } }
+      }
+    };
+    const articles = await this.prisma.article.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: { author: { select: articleAuthorSelect } },
+      ...('limit' in query ? {first: +query.limit} : {}),
+      ...('offset' in query ? {skip: +query.offset} : {}),
+    });
+    const articlesCount = await this.prisma.article.count({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
 
-    if (!(Array.isArray(_follows) && _follows.length > 0)) {
-      return {articles: [], articlesCount: 0};
-    }
-
-    const ids = _follows.map(el => el.followingId);
-
-    const qb = await getRepository(ArticleEntity)
-      .createQueryBuilder('article')
-      .where('article.authorId IN (:ids)', { ids });
-
-    qb.orderBy('article.created', 'DESC');
-
-    const articlesCount = await qb.getCount();
-
-    if ('limit' in query) {
-      qb.limit(query.limit);
-    }
-
-    if ('offset' in query) {
-      qb.offset(query.offset);
-    }
-
-    const articles = await qb.getMany();
-
-    return {articles, articlesCount};
+    return { articles, articlesCount };
   }
 
-  async findOne(where): Promise<ArticleRO> {
-    const article = await this.articleRepository.findOne(where);
-    return {article};
+  async findOne(slug: string): Promise<any> {
+    const article = await this.prisma.article.findOne({
+      where: { slug },
+      include: { author: { select: articleAuthorSelect } },
+    });
+
+    return { article };
   }
 
   async addComment(slug: string, commentData): Promise<ArticleRO> {
-    let article = await this.articleRepository.findOne({slug});
+    return null;
 
-    const comment = new Comment();
-    comment.body = commentData.body;
-
-    article.comments.push(comment);
-
-    await this.commentRepository.save(comment);
-    article = await this.articleRepository.save(article);
-    return {article}
+    // let article = await this.articleRepository.findOne({slug});
+    //
+    // const comment = new Comment();
+    // comment.body = commentData.body;
+    //
+    // article.comments.push(comment);
+    //
+    // await this.commentRepository.save(comment);
+    // article = await this.articleRepository.save(article);
+    // return {article}
   }
 
   async deleteComment(slug: string, id: string): Promise<ArticleRO> {
-    let article = await this.articleRepository.findOne({slug});
+    return null;
 
-    const comment = await this.commentRepository.findOne(id);
-    const deleteIndex = article.comments.findIndex(_comment => _comment.id === comment.id);
-
-    if (deleteIndex >= 0) {
-      const deleteComments = article.comments.splice(deleteIndex, 1);
-      await this.commentRepository.delete(deleteComments[0].id);
-      article =  await this.articleRepository.save(article);
-      return {article};
-    } else {
-      return {article};
-    }
+    // let article = await this.articleRepository.findOne({slug});
+    //
+    // const comment = await this.commentRepository.findOne(id);
+    // const deleteIndex = article.comments.findIndex(_comment => _comment.id === comment.id);
+    //
+    // if (deleteIndex >= 0) {
+    //   const deleteComments = article.comments.splice(deleteIndex, 1);
+    //   await this.commentRepository.delete(deleteComments[0].id);
+    //   article =  await this.articleRepository.save(article);
+    //   return {article};
+    // } else {
+    //   return {article};
+    // }
 
   }
 
-  async favorite(id: number, slug: string): Promise<ArticleRO> {
-    let article = await this.articleRepository.findOne({slug});
-    const user = await this.userRepository.findOne(id);
-
-    const isNewFavorite = user.favorites.findIndex(_article => _article.id === article.id) < 0;
-    if (isNewFavorite) {
-      user.favorites.push(article);
-      article.favoriteCount++;
-
-      await this.userRepository.save(user);
-      article = await this.articleRepository.save(article);
-    }
-
-    return {article};
+  async favorite(id: number, slug: string): Promise<any> {
+    // @Todo: handle favoriteCount
+    const article = await this.prisma.article.update(
+      {
+        where: { slug },
+        data: {
+          favoritedBy: {
+            connect: { id }
+          }
+        },
+        include: { author: { select: articleAuthorSelect } }
+      }
+    );
+    return { article };
   }
 
-  async unFavorite(id: number, slug: string): Promise<ArticleRO> {
-    let article = await this.articleRepository.findOne({slug});
-    const user = await this.userRepository.findOne(id);
-
-    const deleteIndex = user.favorites.findIndex(_article => _article.id === article.id);
-
-    if (deleteIndex >= 0) {
-
-      user.favorites.splice(deleteIndex, 1);
-      article.favoriteCount--;
-
-      await this.userRepository.save(user);
-      article = await this.articleRepository.save(article);
-    }
-
-    return {article};
+  async unFavorite(id: number, slug: string): Promise<any> {
+    // @Todo: handle favoriteCount
+    const article = await this.prisma.article.update(
+      {
+        where: { slug },
+        data: {
+          favoritedBy: {
+            disconnect: { id }
+          }
+        },
+        include: { author: { select: articleAuthorSelect } }
+      }
+    );
+    return { article };
   }
 
   async findComments(slug: string): Promise<CommentsRO> {
-    const article = await this.articleRepository.findOne({slug});
-    return {comments: article.comments};
+    return null;
+
+    // const article = await this.articleRepository.findOne({slug});
+    // return {comments: article.comments};
   }
 
-  async create(userId: number, articleData: CreateArticleDto): Promise<ArticleEntity> {
+  async create(userId: number, payload: CreateArticleDto): Promise<any> {
+    const data = {
+      ...payload,
+      slug: this.slugify(payload.title),
+      // @Todo: handle favoriteCount
+      favoriteCount: 0,
+      tagList: payload.tagList.join(','),
+      author: {
+        connect: { id: userId }
+      }
+    };
+    const article = await this.prisma.article.create({ data });
 
-    let article = new ArticleEntity();
-    article.title = articleData.title;
-    article.description = articleData.description;
-    article.slug = this.slugify(articleData.title);
-    article.tagList = articleData.tagList || [];
-    article.comments = [];
-
-    const newArticle = await this.articleRepository.save(article);
-
-    const author = await this.userRepository.findOne({ where: { id: userId }, relations: ['articles'] });
-    author.articles.push(article);
-
-    await this.userRepository.save(author);
-
-    return newArticle;
-
+    return { article };
   }
 
-  async update(slug: string, articleData: any): Promise<ArticleRO> {
-    let toUpdate = await this.articleRepository.findOne({ slug: slug});
-    let updated = Object.assign(toUpdate, articleData);
-    const article = await this.articleRepository.save(updated);
-    return {article};
+  async update(slug: string, data: any): Promise<any> {
+    const article = await this.prisma.article.update({
+      where: { slug },
+      data,
+      include: { author: { select: articleAuthorSelect } },
+    });
+    return { article };
   }
 
-  async delete(slug: string): Promise<DeleteResult> {
-    return await this.articleRepository.delete({ slug: slug});
+  async delete(slug: string): Promise<void> {
+    await this.prisma.article.delete({ where: { slug } });
   }
 
   slugify(title: string) {

@@ -8,10 +8,17 @@ import { FollowsEntity } from '../profile/follows.entity';
 import { ArticleService } from './article.service';
 import { AuthMiddleware } from '../user/auth.middleware';
 import { UserModule } from '../user/user.module';
+import { PrismaService } from '../shared/services/prisma.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ArticleEntity, Comment, UserEntity, FollowsEntity]), UserModule],
-  providers: [ArticleService],
+  imports: [
+    // TypeOrmModule.forFeature([ArticleEntity, Comment, UserEntity, FollowsEntity]),
+    UserModule
+  ],
+  providers: [
+    ArticleService,
+    PrismaService
+  ],
   controllers: [
     ArticleController
   ]

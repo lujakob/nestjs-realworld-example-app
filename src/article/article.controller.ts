@@ -1,4 +1,4 @@
-import {Get, Post, Body, Put, Delete, Query, Param, Controller} from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Query, Param, Controller, HttpCode } from '@nestjs/common';
 import { Request } from 'express';
 import { ArticleService } from './article.service';
 import { CreateArticleDto, CreateCommentDto } from './dto';
@@ -37,7 +37,7 @@ export class ArticleController {
 
   @Get(':slug')
   async findOne(@Param('slug') slug): Promise<ArticleRO> {
-    return await this.articleService.findOne({slug});
+    return await this.articleService.findOne(slug);
   }
 
   @Get(':slug/comments')
@@ -63,7 +63,8 @@ export class ArticleController {
   }
 
   @ApiOperation({ summary: 'Delete article' })
-  @ApiResponse({ status: 201, description: 'The article has been successfully deleted.'})
+  @HttpCode(204)
+  @ApiResponse({ status: 204, description: 'The article has been successfully deleted.'})
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Delete(':slug')
   async delete(@Param() params) {

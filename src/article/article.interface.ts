@@ -26,7 +26,7 @@ export interface ArticleRO {
 }
 
 export interface ArticlesRO {
-  articles: ArticleEntity[];
+  articles: any[];
   articlesCount: number;
 }
 

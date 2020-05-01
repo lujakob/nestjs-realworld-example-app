@@ -10,9 +10,9 @@ import { TagModule } from './tag/tag.module';
 @Module({
   imports: [
     // TypeOrmModule.forRoot(),
-    // ArticleModule,
+    ArticleModule,
     UserModule,
-    // ProfileModule,
+    ProfileModule,
     // TagModule
   ],
   controllers: [

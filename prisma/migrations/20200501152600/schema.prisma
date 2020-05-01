@@ -11,13 +11,14 @@ generator client {
 }
 
 model User {
-  bio       String?
-  email     String  @unique
-  id        Int     @default(autoincrement()) @id
-  image     String?
-  password  String?
-  username  String? @unique
-  articles  Article[]
+  bio           String?
+  email         String      @unique
+  id            Int         @default(autoincrement()) @id
+  image         String?
+  password      String?
+  username      String?     @unique
+  articles      Article[]   @relation("UserArticles")
+  favorites     Article[]   @relation("UserFavorites", references: [id])
 }
 
 model Article {
@@ -30,6 +31,7 @@ model Article {
   updatedAt     DateTime @default(now())
   tagList       String
   favoriteCount Int
-  author        User    @relation(fields: [authorId], references: [id])
+  author        User    @relation("UserArticles", fields: [authorId], references: [id])
   authorId      Int
+  favoritedBy   User[]  @relation("UserFavorites", references: [id])
 }

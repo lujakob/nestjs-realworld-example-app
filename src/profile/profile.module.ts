@@ -6,10 +6,16 @@ import { UserModule } from '../user/user.module';
 import {UserEntity} from "../user/user.entity";
 import {FollowsEntity} from "./follows.entity";
 import {AuthMiddleware} from "../user/auth.middleware";
+import { PrismaService } from '../shared/services/prisma.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, FollowsEntity]), UserModule],
-  providers: [ProfileService],
+  imports: [
+    UserModule
+  ],
+  providers: [
+    ProfileService,
+    PrismaService
+  ],
   controllers: [
     ProfileController
   ],
