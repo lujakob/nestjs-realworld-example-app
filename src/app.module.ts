@@ -9,11 +9,11 @@ import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
-    ArticleModule,
+    // TypeOrmModule.forRoot(),
+    // ArticleModule,
     UserModule,
-    ProfileModule,
-    TagModule
+    // ProfileModule,
+    // TagModule
   ],
   controllers: [
     AppController
@@ -21,5 +21,5 @@ import { TagModule } from './tag/tag.module';
   providers: []
 })
 export class ApplicationModule {
-  constructor(private readonly connection: Connection) {}
+  // constructor(private readonly connection: Connection) {}
 }

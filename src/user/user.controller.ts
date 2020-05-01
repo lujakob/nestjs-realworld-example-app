@@ -12,7 +12,7 @@ import {
 } from '@nestjs/swagger';
 
 @ApiBearerAuth()
-@ApiTags('user')
+@ApiTags('users')
 @Controller()
 export class UserController {
 
@@ -34,22 +34,15 @@ export class UserController {
     return this.userService.create(userData);
   }
 
-  @Delete('users/:slug')
+  @Delete('user/:slug')
   async delete(@Param() params) {
+    console.log(params);
     return await this.userService.delete(params.slug);
   }
 
   @UsePipes(new ValidationPipe())
   @Post('users/login')
   async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserRO> {
-    const _user = await this.userService.findOne(loginUserDto);
-
-    const errors = {User: ' not found'};
-    if (!_user) throw new HttpException({errors}, 401);
-
-    const token = await this.userService.generateJWT(_user);
-    const {email, username, bio, image} = _user;
-    const user = {email, token, username, bio, image};
-    return {user}
+    return await this.userService.login(loginUserDto);
   }
 }
