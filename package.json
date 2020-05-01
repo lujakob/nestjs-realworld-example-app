@@ -31,7 +31,7 @@
     "@nestjs/testing": "^7.0.5",
     "@nestjs/typeorm": "^7.0.0",
     "@nestjs/websockets": "^7.0.5",
-    "argon2": "^0.26.1",
+    "argon2": "^0.26.2",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.1",
     "crypto": "^1.0.1",
@@ -40,22 +40,22 @@
     "mysql": "^2.18.1",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.4",
+    "rxjs": "^6.5.5",
     "slug": "^1.1.0",
     "swagger-ui-express": "^4.1.4",
     "typeorm": "^0.2.24",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
-    "@types/node": "^13.9.3",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.4",
     "atob": ">=2.1.0",
     "deep-extend": ">=0.5.1",
     "extend": ">=3.0.2",
-    "jest": "^25.1.0",
+    "jest": "^25.5.3",
     "nodemon": "^1.19.4",
     "supertest": "^3.4.2",
-    "ts-jest": "^25.2.1",
-    "ts-node": "^8.8.1"
+    "ts-jest": "^25.4.0",
+    "ts-node": "^8.9.1"
   }
 }
