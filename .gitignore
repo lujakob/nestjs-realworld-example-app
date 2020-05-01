@@ -17,6 +17,7 @@ node_modules
 #config files
 ormconfig.json
 src/config.ts
+prisma/.env
 
 # code testing coverage
 coverage

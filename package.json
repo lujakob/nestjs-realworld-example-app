@@ -31,6 +31,7 @@
     "@nestjs/testing": "^7.0.5",
     "@nestjs/typeorm": "^7.0.0",
     "@nestjs/websockets": "^7.0.5",
+    "@prisma/client": "^2.0.0-beta.4",
     "argon2": "^0.26.2",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.1",
@@ -47,6 +48,7 @@
     "typescript": "^3.8.3"
   },
   "devDependencies": {
+    "@prisma/cli": "^2.0.0-beta.4",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
     "atob": ">=2.1.0",

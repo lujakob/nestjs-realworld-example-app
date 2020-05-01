@@ -10,12 +10,14 @@ import { validate } from 'class-validator';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { HttpStatus } from '@nestjs/common';
 import * as argon2 from 'argon2';
+import { PrismaService } from '../shared/services/prisma.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
+    private readonly prisma: PrismaService,
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
@@ -39,35 +41,57 @@ export class UserService {
 
     // check uniqueness of username/email
     const {username, email, password} = dto;
-    const qb = await getRepository(UserEntity)
-      .createQueryBuilder('user')
-      .where('user.username = :username', { username })
-      .orWhere('user.email = :email', { email });
 
-    const user = await qb.getOne();
+    const userNotUnique = await this.prisma.user.findOne({
+      where: {email}
+    });
 
-    if (user) {
+    if (userNotUnique) {
       const errors = {username: 'Username and email must be unique.'};
       throw new HttpException({message: 'Input data validation failed', errors}, HttpStatus.BAD_REQUEST);
-
     }
 
-    // create new user
-    let newUser = new UserEntity();
-    newUser.username = username;
-    newUser.email = email;
-    newUser.password = password;
-    newUser.articles = [];
 
-    const errors = await validate(newUser);
-    if (errors.length > 0) {
-      const _errors = {username: 'Userinput is not valid.'};
-      throw new HttpException({message: 'Input data validation failed', _errors}, HttpStatus.BAD_REQUEST);
+    const user = await this.prisma.user.create({
+      data: {
+        username,
+        email,
+        password,
+      }
+    });
 
-    } else {
-      const savedUser = await this.userRepository.save(newUser);
-      return this.buildUserRO(savedUser);
-    }
+    return {user};
+
+
+    // const qb = await getRepository(UserEntity)
+    //   .createQueryBuilder('user')
+    //   .where('user.username = :username', { username })
+    //   .orWhere('user.email = :email', { email });
+    //
+    // const user = await qb.getOne();
+    //
+    // if (user) {
+    //   const errors = {username: 'Username and email must be unique.'};
+    //   throw new HttpException({message: 'Input data validation failed', errors}, HttpStatus.BAD_REQUEST);
+    //
+    // }
+    //
+    // // create new user
+    // let newUser = new UserEntity();
+    // newUser.username = username;
+    // newUser.email = email;
+    // newUser.password = password;
+    // newUser.articles = [];
+    //
+    // const errors = await validate(newUser);
+    // if (errors.length > 0) {
+    //   const _errors = {username: 'Userinput is not valid.'};
+    //   throw new HttpException({message: 'Input data validation failed', _errors}, HttpStatus.BAD_REQUEST);
+    //
+    // } else {
+    //   const savedUser = await this.userRepository.save(newUser);
+    //   return this.buildUserRO(savedUser);
+    // }
 
   }
 

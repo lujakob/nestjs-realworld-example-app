@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = "***"
+}
+
+model User {
+  bio       String?
+  email     String  @unique
+  id        Int     @default(autoincrement()) @id
+  image     String?
+  password  String?
+  username  String? @unique
+  articles  Article[]
+}
+
+model Article {
+  id            Int     @default(autoincrement()) @id
+  slug          String   @unique
+  title         String
+  description   String
+  body          String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  tagList       String
+  favoriteCount Int
+  author        User    @relation(fields: [authorId], references: [id])
+  authorId      Int
+}
