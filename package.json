@@ -29,7 +29,6 @@
     "@nestjs/platform-express": "^7.0.5",
     "@nestjs/swagger": "^4.4.0",
     "@nestjs/testing": "^7.0.5",
-    "@nestjs/typeorm": "^7.0.0",
     "@nestjs/websockets": "^7.0.5",
     "@prisma/client": "^2.0.0-beta.4",
     "argon2": "^0.26.2",
@@ -44,7 +43,6 @@
     "rxjs": "^6.5.5",
     "slug": "^1.1.0",
     "swagger-ui-express": "^4.1.4",
-    "typeorm": "^0.2.24",
     "typescript": "^3.8.3"
   },
   "devDependencies": {

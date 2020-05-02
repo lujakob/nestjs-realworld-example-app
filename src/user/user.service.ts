@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto';
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
 const jwt = require('jsonwebtoken');
 import { SECRET } from '../config';
 import { UserRO } from './user.interface';

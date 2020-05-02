@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserModule } from '../user/user.module';
 import { TagService } from './tag.service';
 import { TagController } from './tag.controller';
