@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto';
-
-import {ArticleRO, ArticlesRO, CommentsRO} from './article.interface';
 import { PrismaService } from '../shared/services/prisma.service';
 const slug = require('slug');
 import { ArticleWhereInput, Enumerable } from '@prisma/client'
@@ -13,11 +11,19 @@ const articleAuthorSelect = {
   image: true
 };
 
+const commentSelect = {
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  body: true,
+  author: { select: articleAuthorSelect }
+};
+
 @Injectable()
 export class ArticleService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(query): Promise<ArticlesRO> {
+  async findAll(query): Promise<any> {
     const andQueries = this.buildFindAllQuery(query);
     const articles = await this.prisma.article.findMany({
       where: { AND: andQueries },
@@ -100,38 +106,26 @@ export class ArticleService {
     return { article };
   }
 
-  async addComment(slug: string, commentData): Promise<ArticleRO> {
-    return null;
+  async addComment(userId: number, slug: string, {body}): Promise<any> {
+    const comment = await this.prisma.comment.create({
+      data: {
+        body,
+        article: {
+          connect: { slug }
+        },
+        author: {
+          connect: { id: userId }
+        }
+      },
+      select: commentSelect
+    });
 
-    // let article = await this.articleRepository.findOne({slug});
-    //
-    // const comment = new Comment();
-    // comment.body = commentData.body;
-    //
-    // article.comments.push(comment);
-    //
-    // await this.commentRepository.save(comment);
-    // article = await this.articleRepository.save(article);
-    // return {article}
+    return { comment };
   }
 
-  async deleteComment(slug: string, id: string): Promise<ArticleRO> {
-    return null;
-
-    // let article = await this.articleRepository.findOne({slug});
-    //
-    // const comment = await this.commentRepository.findOne(id);
-    // const deleteIndex = article.comments.findIndex(_comment => _comment.id === comment.id);
-    //
-    // if (deleteIndex >= 0) {
-    //   const deleteComments = article.comments.splice(deleteIndex, 1);
-    //   await this.commentRepository.delete(deleteComments[0].id);
-    //   article =  await this.articleRepository.save(article);
-    //   return {article};
-    // } else {
-    //   return {article};
-    // }
-
+  async deleteComment(slug: string, id: string): Promise<any> {
+    // @Todo: no clue why API specs require a slug if the comment id is unique?!
+    await this.prisma.comment.delete({ where: { id: +id }});
   }
 
   async favorite(id: number, slug: string): Promise<any> {
@@ -166,11 +160,13 @@ export class ArticleService {
     return { article };
   }
 
-  async findComments(slug: string): Promise<CommentsRO> {
-    return null;
-
-    // const article = await this.articleRepository.findOne({slug});
-    // return {comments: article.comments};
+  async findComments(slug: string): Promise<any> {
+    const comments = await this.prisma.comment.findMany({
+      where: { article: { slug } },
+      orderBy: { createdAt: 'desc' },
+      select: commentSelect
+    });
+    return { comments };
   }
 
   async create(userId: number, payload: CreateArticleDto): Promise<any> {

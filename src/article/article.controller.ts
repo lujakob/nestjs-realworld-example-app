@@ -62,8 +62,8 @@ export class ArticleController {
     return this.articleService.update(params.slug, articleData);
   }
 
-  @ApiOperation({ summary: 'Delete article' })
   @HttpCode(204)
+  @ApiOperation({ summary: 'Delete article' })
   @ApiResponse({ status: 204, description: 'The article has been successfully deleted.'})
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Delete(':slug')
@@ -75,12 +75,13 @@ export class ArticleController {
   @ApiResponse({ status: 201, description: 'The comment has been successfully created.'})
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Post(':slug/comments')
-  async createComment(@Param('slug') slug, @Body('comment') commentData: CreateCommentDto) {
-    return await this.articleService.addComment(slug, commentData);
+  async createComment(@User('id') userId: number, @Param('slug') slug, @Body('comment') payload: CreateCommentDto) {
+    return await this.articleService.addComment(userId, slug, payload);
   }
 
+  @HttpCode(204)
   @ApiOperation({ summary: 'Delete comment' })
-  @ApiResponse({ status: 201, description: 'The article has been successfully deleted.'})
+  @ApiResponse({ status: 204, description: 'The comment has been successfully deleted.'})
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Delete(':slug/comments/:id')
   async deleteComment(@Param() params) {

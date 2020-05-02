@@ -1,32 +1,15 @@
-import { UserData } from '../user/user.interface';
-import { ArticleEntity } from './article.entity';
-interface Comment {
-  body: string;
-}
-
-interface ArticleData {
-  slug: string;
-  title: string;
-  description: string;
-  body?: string;
-  tagList?: string[];
-  createdAt?: Date
-  updatedAt?: Date
-  favorited?: boolean;
-  favoritesCount?: number;
-  author?: UserData;
-}
+import { Comment, Article } from '@prisma/client'
 
 export interface CommentsRO {
   comments: Comment[];
 }
 
 export interface ArticleRO {
-  article: ArticleEntity;
+  article: Article;
 }
 
 export interface ArticlesRO {
-  articles: any[];
+  articles: Article[];
   articlesCount: number;
 }
 
