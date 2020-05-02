@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -32,6 +32,7 @@ model Article {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now())
   tagList       String
+  favoriteCount Int
   author        User        @relation("UserArticles", fields: [authorId], references: [id])
   authorId      Int
   favoritedBy   User[]      @relation("UserFavorites", references: [id])

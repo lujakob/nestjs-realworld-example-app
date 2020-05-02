@@ -1,11 +1,6 @@
 import { HttpStatus, Injectable} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { DeepPartial } from 'typeorm/common/DeepPartial';
-import { ProfileRO, ProfileData } from './profile.interface';
-import {FollowsEntity} from "./follows.entity";
-import {HttpException} from "@nestjs/common/exceptions/http.exception";
+import { ProfileRO } from './profile.interface';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { PrismaService } from '../shared/services/prisma.service';
 
 const profileSelect = {
@@ -18,21 +13,6 @@ const profileSelect = {
 @Injectable()
 export class ProfileService {
   constructor(private prisma: PrismaService) {}
-
-
-  async findAll(): Promise<UserEntity[]> {
-    // return await this.userRepository.find();
-    return null;
-  }
-
-  async findOne(options?: DeepPartial<UserEntity>): Promise<any> {
-    // const user = await this.userRepository.findOne(options);
-    // delete user.id;
-    // if (user) delete user.password;
-    // return {profile: user};
-
-    return null;
-  }
 
   async findProfile(userId: number, followingUsername: string): Promise<any> {
     const followed = await this.prisma.user.findOne({
@@ -52,9 +32,7 @@ export class ProfileService {
           },
           {
             followedBy: {
-              some: {
-                id: +userId
-              }
+              some: { id: +userId }
             }
           }
         ]

@@ -29,5 +29,4 @@ export class ProfileController {
   async unFollow(@User('id') userId: number,  @Param('username') username: string): Promise<ProfileRO> {
     return await this.profileService.unFollow(userId, username);
   }
-
 }

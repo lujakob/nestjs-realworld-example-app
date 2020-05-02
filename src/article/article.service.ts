@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto';
 import { PrismaService } from '../shared/services/prisma.service';
 const slug = require('slug');
-import { ArticleWhereInput, Enumerable } from '@prisma/client'
+import { ArticleWhereInput, Enumerable } from '@prisma/client';
 
 const articleAuthorSelect = {
   email: true,
   username: true,
   bio: true,
-  image: true
+  image: true,
+  followedBy: { select: { id: true } }
 };
 
 const commentSelect = {
@@ -19,16 +20,34 @@ const commentSelect = {
   author: { select: articleAuthorSelect }
 };
 
+const articleInclude = {
+  author: { select: articleAuthorSelect },
+  favoritedBy: { select: { id: true }},
+};
+
+// map dynamic value "following" (is the current user following this author)
+const mapAuthorFollowing = (userId, {followedBy, ...rest}) => ({
+  ...rest,
+  following: Array.isArray(followedBy) && followedBy.map(f => f.id).includes(userId),
+});
+
+// map dynamic values "following" and "favorited" (from favoritedBy)
+const mapDynamicValues = (userId, {favoritedBy, author, ...rest}) => ({
+  ...rest,
+  favorited: Array.isArray(favoritedBy) && favoritedBy.map(f => f.id).includes(userId),
+  author: mapAuthorFollowing(userId, author),
+});
+
 @Injectable()
 export class ArticleService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(query): Promise<any> {
+  async findAll(userId: number, query): Promise<any> {
     const andQueries = this.buildFindAllQuery(query);
-    const articles = await this.prisma.article.findMany({
+    let articles = await this.prisma.article.findMany({
       where: { AND: andQueries },
       orderBy: { createdAt: 'desc' },
-      include: { author: { select: articleAuthorSelect } },
+      include: articleInclude,
       ...('limit' in query ? {first: +query.limit} : {}),
       ...('offset' in query ? {skip: +query.offset} : {}),
     });
@@ -37,8 +56,11 @@ export class ArticleService {
       orderBy: { createdAt: 'desc' },
     });
 
+    articles = (articles as any).map((a) => mapDynamicValues(userId, a));
+
     return { articles, articlesCount };
   }
+
 
   private buildFindAllQuery(query): Enumerable<ArticleWhereInput> {
     const queries = [];
@@ -82,10 +104,10 @@ export class ArticleService {
         followedBy: { some: { id: +userId } }
       }
     };
-    const articles = await this.prisma.article.findMany({
+    let articles = await this.prisma.article.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      include: { author: { select: articleAuthorSelect } },
+      include: articleInclude,
       ...('limit' in query ? {first: +query.limit} : {}),
       ...('offset' in query ? {skip: +query.offset} : {}),
     });
@@ -94,14 +116,18 @@ export class ArticleService {
       orderBy: { createdAt: 'desc' },
     });
 
+    articles = (articles as any).map((a) => mapDynamicValues(userId, a));
+
     return { articles, articlesCount };
   }
 
-  async findOne(slug: string): Promise<any> {
-    const article = await this.prisma.article.findOne({
+  async findOne(userId: number, slug: string): Promise<any> {
+    let article: any = await this.prisma.article.findOne({
       where: { slug },
-      include: { author: { select: articleAuthorSelect } },
+      include: articleInclude,
     });
+
+    article = mapDynamicValues(userId, article);
 
     return { article };
   }
@@ -128,35 +154,39 @@ export class ArticleService {
     await this.prisma.comment.delete({ where: { id: +id }});
   }
 
-  async favorite(id: number, slug: string): Promise<any> {
-    // @Todo: handle favoriteCount
-    const article = await this.prisma.article.update(
+  async favorite(userId: number, slug: string): Promise<any> {
+    let article: any = await this.prisma.article.update(
       {
         where: { slug },
         data: {
           favoritedBy: {
-            connect: { id }
+            connect: { id: userId }
           }
         },
-        include: { author: { select: articleAuthorSelect } }
+        include: articleInclude
       }
     );
+
+    article = mapDynamicValues(userId, article);
+
     return { article };
   }
 
-  async unFavorite(id: number, slug: string): Promise<any> {
-    // @Todo: handle favoriteCount
-    const article = await this.prisma.article.update(
+  async unFavorite(userId: number, slug: string): Promise<any> {
+    let article: any = await this.prisma.article.update(
       {
         where: { slug },
         data: {
           favoritedBy: {
-            disconnect: { id }
+            disconnect: { id: userId }
           }
         },
-        include: { author: { select: articleAuthorSelect } }
+        include: articleInclude
       }
     );
+
+    article = mapDynamicValues(userId, article);
+
     return { article };
   }
 
@@ -173,24 +203,33 @@ export class ArticleService {
     const data = {
       ...payload,
       slug: this.slugify(payload.title),
-      // @Todo: handle favoriteCount
-      favoriteCount: 0,
       tagList: payload.tagList.join(','),
       author: {
         connect: { id: userId }
       }
     };
-    const article = await this.prisma.article.create({ data });
+    let article: any = await this.prisma.article.create({
+      data,
+      include: articleInclude
+    });
+
+    article = mapDynamicValues(userId, article);
 
     return { article };
   }
 
-  async update(slug: string, data: any): Promise<any> {
-    const article = await this.prisma.article.update({
+  async update(userId: number, slug: string, data: any): Promise<any> {
+    let article: any = await this.prisma.article.update({
       where: { slug },
-      data,
-      include: { author: { select: articleAuthorSelect } },
+      data: {
+        ...data,
+        updatedAt: new Date()
+      },
+      include: articleInclude,
     });
+
+    article = mapDynamicValues(userId, article);
+
     return { article };
   }
 

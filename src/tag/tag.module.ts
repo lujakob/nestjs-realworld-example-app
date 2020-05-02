@@ -1,13 +1,17 @@
-import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import { UserModule } from '../user/user.module';
 import { TagService } from './tag.service';
-import { TagEntity } from './tag.entity';
 import { TagController } from './tag.controller';
+import { PrismaService } from '../shared/services/prisma.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TagEntity]), UserModule],
-  providers: [TagService],
+  imports: [
+    UserModule
+  ],
+  providers: [
+    TagService,
+    PrismaService,
+  ],
   controllers: [
     TagController
   ],
