@@ -31,13 +31,24 @@ Copy config file and set JsonWebToken secret key
 
 ## Database
 
-The example codebase uses [Typeorm](http://typeorm.io/) with a mySQL database.
+The codebase contains examples of two different database abstractions, namely [TypeORM](http://typeorm.io/) and [Prisma](https://www.prisma.io/). 
+    
+The branch `master` implements TypeORM with a mySQL database.
 
-Create a new mysql database with the name `nestjsrealworld` (or the name you specified in the ormconfig.json)
+The branch `prisma` implements Prisma with a mySQL database.
 
-Copy Typeorm config example file for database settings
+----------
 
-    cp ormconfig.json.example ``
+##### TypeORM
+
+----------
+
+Create a new mysql database with the name `nestjsrealworld`\
+(or the name you specified in the ormconfig.json)
+
+Copy TypeORM config example file for database settings
+
+    cp ormconfig.json.example
     
 Set mysql database settings in ormconfig.json
 
@@ -55,6 +66,38 @@ Set mysql database settings in ormconfig.json
 Start local mysql server and create new database 'nestjsrealworld'
 
 On application start, tables for all entities will be created.
+
+----------
+
+##### Prisma
+
+----------
+
+To run the example with Prisma checkout branch `prisma`, remove the node_modules and run `npm install`
+
+Create a new mysql database with the name `nestjsrealworld-prisma` (or the name you specified in `prisma/.env`)
+
+Copy prisma config example file for database settings
+
+    cp prisma/.env.example prisma/.env
+
+Set mysql database settings in prisma/.env
+
+    DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+
+To create all tables in the new database make the database migration from the prisma schema defined in prisma/schema.prisma
+
+    npx prisma migrate save --experimental
+    npx prisma migrate up --experimental
+
+Now generate the prisma client from the migrated database with the following command
+
+    npx prisma generate
+
+The database tables are now set up and the prisma client is generated. For more information see the docs:
+
+- https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project-typescript-mysql
+
 
 ----------
 
