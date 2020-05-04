@@ -6,7 +6,7 @@ export class UserDataDto extends UpdateUserDto {
   token: string;
 }
 
-export class UserRo {
+export class UserRO {
   @ApiProperty()
   user: UserDataDto;
 }

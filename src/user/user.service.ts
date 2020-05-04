@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, getRepository, DeleteResult } from "typeorm";
 import { UserEntity } from "./user.entity";
-import { CreateUserDto, LoginUserDto, UpdateUserDto, UserRo } from "./dto";
+import { CreateUserDto, LoginUserDto, UpdateUserDto, UserRO } from "./dto";
 const jwt = require("jsonwebtoken");
 import { SECRET } from "../config";
 import { validate } from "class-validator";
@@ -34,7 +34,7 @@ export class UserService {
     return null;
   }
 
-  async create(dto: CreateUserDto): Promise<UserRo> {
+  async create(dto: CreateUserDto): Promise<UserRO> {
     // check uniqueness of username/email
     const { username, email, password } = dto;
     const qb = await getRepository(UserEntity)
@@ -72,7 +72,7 @@ export class UserService {
     }
   }
 
-  async update(id: number, dto: UpdateUserDto): Promise<UserRo> {
+  async update(id: number, dto: UpdateUserDto): Promise<UserRO> {
     let toUpdate = await this.userRepository.findOne(id);
     delete toUpdate.password;
     delete toUpdate.favorites;
@@ -86,7 +86,7 @@ export class UserService {
     return await this.userRepository.delete({ email: email });
   }
 
-  async findById(id: number): Promise<UserRo> {
+  async findById(id: number): Promise<UserRO> {
     const user = await this.userRepository.findOne(id);
 
     if (!user) {
@@ -97,7 +97,7 @@ export class UserService {
     return this.buildUserRO(user);
   }
 
-  async findByEmail(email: string): Promise<UserRo> {
+  async findByEmail(email: string): Promise<UserRO> {
     const user = await this.userRepository.findOne({ email: email });
     return this.buildUserRO(user);
   }
@@ -118,7 +118,7 @@ export class UserService {
     );
   }
 
-  private buildUserRO(user: UserEntity): UserRo {
+  private buildUserRO(user: UserEntity): UserRO {
     const userRO = {
       username: user.username,
       email: user.email,

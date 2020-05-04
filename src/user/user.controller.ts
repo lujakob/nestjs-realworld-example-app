@@ -16,7 +16,7 @@ import {
   CreateUserBodyDto,
   LoginUserBodyDto,
   UpdateUserBodyDto,
-  UserRo,
+  UserRO,
 } from "./dto";
 import { HttpException } from "@nestjs/common/exceptions/http.exception";
 import { User } from "./user.decorator";
@@ -36,7 +36,7 @@ import {
 @ApiTags("auth")
 // TODO: ApiResponse should write for every route
 @ApiResponse({
-  type: UserRo,
+  type: UserRO,
 })
 @Controller()
 export class UserController {
@@ -47,7 +47,7 @@ export class UserController {
     summary: "Get Current User",
     operationId: "GetCurrentUser",
   })
-  async findMe(@User("email") email: string): Promise<UserRo> {
+  async findMe(@User("email") email: string): Promise<UserRO> {
     return await this.userService.findByEmail(email);
   }
 
@@ -102,7 +102,7 @@ export class UserController {
     summary: "Login User",
     operationId: "Login",
   })
-  async login(@Body("user") loginUserDto: LoginUserDto): Promise<UserRo> {
+  async login(@Body("user") loginUserDto: LoginUserDto): Promise<UserRO> {
     const _user = await this.userService.findOne(loginUserDto);
 
     const errors = { User: " not found" };
