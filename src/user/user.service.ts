@@ -86,7 +86,7 @@ export class UserService {
     return await this.userRepository.delete({ email: email });
   }
 
-  async findById(id: number): Promise<UserRO> {
+  async findById(id: number): Promise<UserEntity> {
     const user = await this.userRepository.findOne(id);
 
     if (!user) {
@@ -94,7 +94,7 @@ export class UserService {
       throw new HttpException({ errors }, 401);
     }
 
-    return this.buildUserRO(user);
+    return user;
   }
 
   async findByEmail(email: string): Promise<UserRO> {
