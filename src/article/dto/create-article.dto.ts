@@ -3,4 +3,6 @@ export class CreateArticleDto {
   readonly description: string;
   readonly body: string;
   readonly tagList: string[];
+  readonly createAt: Date;
+  readonly updateAt: Date;
 }

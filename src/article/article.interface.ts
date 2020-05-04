@@ -1,5 +1,5 @@
-import { UserData } from '../user/user.interface';
-import { ArticleEntity } from './article.entity';
+import { ArticleEntity } from "./article.entity";
+import { UserDataDto } from "../user/dto";
 interface Comment {
   body: string;
 }
@@ -10,11 +10,11 @@ interface ArticleData {
   description: string;
   body?: string;
   tagList?: string[];
-  createdAt?: Date
-  updatedAt?: Date
+  createdAt?: Date;
+  updatedAt?: Date;
   favorited?: boolean;
   favoritesCount?: number;
-  author?: UserData;
+  author?: UserDataDto;
 }
 
 export interface CommentsRO {
@@ -29,4 +29,3 @@ export interface ArticlesRO {
   articles: ArticleEntity[];
   articlesCount: number;
 }
-

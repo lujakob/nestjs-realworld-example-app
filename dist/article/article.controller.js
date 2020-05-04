@@ -12,10 +12,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -87,7 +88,7 @@ let ArticleController = class ArticleController {
     }
 };
 __decorate([
-    swagger_1.ApiOperation({ title: 'Get all articles' }),
+    swagger_1.ApiOperation({ summary: 'Get all articles' }),
     swagger_1.ApiResponse({ status: 200, description: 'Return all articles.' }),
     common_1.Get(),
     __param(0, common_1.Query()),
@@ -96,7 +97,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "findAll", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Get article feed' }),
+    swagger_1.ApiOperation({ summary: 'Get article feed' }),
     swagger_1.ApiResponse({ status: 200, description: 'Return article feed.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Get('feed'),
@@ -120,7 +121,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "findComments", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Create article' }),
+    swagger_1.ApiOperation({ summary: 'Create article' }),
     swagger_1.ApiResponse({ status: 201, description: 'The article has been successfully created.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Post(),
@@ -130,7 +131,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "create", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Update article' }),
+    swagger_1.ApiOperation({ summary: 'Update article' }),
     swagger_1.ApiResponse({ status: 201, description: 'The article has been successfully updated.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Put(':slug'),
@@ -140,7 +141,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "update", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Delete article' }),
+    swagger_1.ApiOperation({ summary: 'Delete article' }),
     swagger_1.ApiResponse({ status: 201, description: 'The article has been successfully deleted.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Delete(':slug'),
@@ -150,7 +151,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "delete", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Create comment' }),
+    swagger_1.ApiOperation({ summary: 'Create comment' }),
     swagger_1.ApiResponse({ status: 201, description: 'The comment has been successfully created.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Post(':slug/comments'),
@@ -160,7 +161,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "createComment", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Delete comment' }),
+    swagger_1.ApiOperation({ summary: 'Delete comment' }),
     swagger_1.ApiResponse({ status: 201, description: 'The article has been successfully deleted.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Delete(':slug/comments/:id'),
@@ -170,7 +171,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "deleteComment", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Favorite article' }),
+    swagger_1.ApiOperation({ summary: 'Favorite article' }),
     swagger_1.ApiResponse({ status: 201, description: 'The article has been successfully favorited.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Post(':slug/favorite'),
@@ -180,7 +181,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticleController.prototype, "favorite", null);
 __decorate([
-    swagger_1.ApiOperation({ title: 'Unfavorite article' }),
+    swagger_1.ApiOperation({ summary: 'Unfavorite article' }),
     swagger_1.ApiResponse({ status: 201, description: 'The article has been successfully unfavorited.' }),
     swagger_1.ApiResponse({ status: 403, description: 'Forbidden.' }),
     common_1.Delete(':slug/favorite'),
@@ -191,7 +192,7 @@ __decorate([
 ], ArticleController.prototype, "unFavorite", null);
 ArticleController = __decorate([
     swagger_1.ApiBearerAuth(),
-    swagger_1.ApiUseTags('articles'),
+    swagger_1.ApiTags('articles'),
     common_1.Controller('articles'),
     __metadata("design:paramtypes", [article_service_1.ArticleService])
 ], ArticleController);

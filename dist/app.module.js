@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
 const article_module_1 = require("./article/article.module");
 const user_module_1 = require("./user/user.module");
 const typeorm_1 = require("@nestjs/typeorm");
@@ -29,12 +28,9 @@ ApplicationModule = __decorate([
             article_module_1.ArticleModule,
             user_module_1.UserModule,
             profile_module_1.ProfileModule,
-            tag_module_1.TagModule
+            tag_module_1.TagModule,
         ],
-        controllers: [
-            app_controller_1.AppController
-        ],
-        providers: []
+        providers: [],
     }),
     __metadata("design:paramtypes", [typeorm_2.Connection])
 ], ApplicationModule);

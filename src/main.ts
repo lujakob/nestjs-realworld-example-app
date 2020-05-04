@@ -13,7 +13,7 @@ async function bootstrap() {
     .setVersion("1.0")
     .setBasePath("/")
     .addBearerAuth()
-    .addTag("user")
+    .addTag("auth")
     .addTag("tags")
     .addTag("articles")
     .addTag("profiles")

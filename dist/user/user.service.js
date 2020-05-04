@@ -12,10 +12,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -24,7 +25,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const user_entity_1 = require("./user.entity");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const config_1 = require("../config");
 const class_validator_1 = require("class-validator");
 const http_exception_1 = require("@nestjs/common/exceptions/http.exception");
@@ -55,13 +56,13 @@ let UserService = class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             const { username, email, password } = dto;
             const qb = yield typeorm_2.getRepository(user_entity_1.UserEntity)
-                .createQueryBuilder('user')
-                .where('user.username = :username', { username })
-                .orWhere('user.email = :email', { email });
+                .createQueryBuilder("user")
+                .where("user.username = :username", { username })
+                .orWhere("user.email = :email", { email });
             const user = yield qb.getOne();
             if (user) {
-                const errors = { username: 'Username and email must be unique.' };
-                throw new http_exception_1.HttpException({ message: 'Input data validation failed', errors }, common_2.HttpStatus.BAD_REQUEST);
+                const errors = { username: "Username and email must be unique." };
+                throw new http_exception_1.HttpException({ message: "Input data validation failed", errors }, common_2.HttpStatus.BAD_REQUEST);
             }
             let newUser = new user_entity_1.UserEntity();
             newUser.username = username;
@@ -70,8 +71,8 @@ let UserService = class UserService {
             newUser.articles = [];
             const errors = yield class_validator_1.validate(newUser);
             if (errors.length > 0) {
-                const _errors = { username: 'Userinput is not valid.' };
-                throw new http_exception_1.HttpException({ message: 'Input data validation failed', _errors }, common_2.HttpStatus.BAD_REQUEST);
+                const _errors = { username: "Userinput is not valid." };
+                throw new http_exception_1.HttpException({ message: "Input data validation failed", _errors }, common_2.HttpStatus.BAD_REQUEST);
             }
             else {
                 const savedUser = yield this.userRepository.save(newUser);
@@ -85,7 +86,8 @@ let UserService = class UserService {
             delete toUpdate.password;
             delete toUpdate.favorites;
             let updated = Object.assign(toUpdate, dto);
-            return yield this.userRepository.save(updated);
+            const savedUser = yield this.userRepository.save(updated);
+            return this.buildUserRO(savedUser);
         });
     }
     delete(email) {
@@ -97,7 +99,7 @@ let UserService = class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield this.userRepository.findOne(id);
             if (!user) {
-                const errors = { User: ' not found' };
+                const errors = { User: " not found" };
                 throw new http_exception_1.HttpException({ errors }, 401);
             }
             return this.buildUserRO(user);
@@ -120,7 +122,6 @@ let UserService = class UserService {
             exp: exp.getTime() / 1000,
         }, config_1.SECRET);
     }
-    ;
     buildUserRO(user) {
         const userRO = {
             id: user.id,
@@ -128,7 +129,7 @@ let UserService = class UserService {
             email: user.email,
             bio: user.bio,
             token: this.generateJWT(user),
-            image: user.image
+            image: user.image,
         };
         return { user: userRO };
     }

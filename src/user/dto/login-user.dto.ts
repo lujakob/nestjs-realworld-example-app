@@ -1,10 +1,11 @@
-import { IsNotEmpty } from 'class-validator';
+import { OmitType, ApiProperty } from "@nestjs/swagger";
+import { CreateUserDto } from "./create-user.dto";
+import { IsNotEmpty } from "class-validator";
 
-export class LoginUserDto {
+export class LoginUserDto extends OmitType(CreateUserDto, ["username"]) {}
 
+export class LoginUserBodyDto {
   @IsNotEmpty()
-  readonly email: string;
-
-  @IsNotEmpty()
-  readonly password: string;
+  @ApiProperty()
+  user: LoginUserDto;
 }
