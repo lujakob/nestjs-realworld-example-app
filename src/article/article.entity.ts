@@ -7,6 +7,8 @@ import {
   JoinColumn,
   AfterUpdate,
   BeforeUpdate,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { UserEntity } from "../user/user.entity";
 import { CommentEntity } from "./comment.entity";
@@ -28,10 +30,10 @@ export class ArticleEntity {
   @Column({ default: "" })
   body: string;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @BeforeUpdate()

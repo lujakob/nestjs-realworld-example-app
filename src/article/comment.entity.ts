@@ -5,6 +5,8 @@ import {
   ManyToOne,
   BeforeUpdate,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { ArticleEntity } from "./article.entity";
 import { UserEntity } from "../user/user.entity";
@@ -17,24 +19,19 @@ export class CommentEntity {
   @Column()
   body: string;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn()
   updatedAt: Date;
-
-  @BeforeUpdate()
-  updateTimestamp() {
-    this.updatedAt = new Date();
-  }
 
   @ManyToOne((type) => ArticleEntity, (article) => article.comments, {
     cascade: true,
-    onDelete: "CASCADE",
   })
   article: ArticleEntity;
 
-  @ManyToOne((type) => UserEntity, (user) => user.comments)
-  @JoinColumn()
+  @ManyToOne((type) => UserEntity, (user) => user.comments, {
+    cascade: true,
+  })
   author: UserEntity;
 }

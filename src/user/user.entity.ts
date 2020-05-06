@@ -11,7 +11,6 @@ import {
 import { IsEmail } from "class-validator";
 import * as argon2 from "argon2";
 import { ArticleEntity } from "../article/article.entity";
-import { FollowsEntity } from "../profile/follows.entity";
 import { CommentEntity } from "../article/comment.entity";
 
 @Entity("user")
@@ -42,8 +41,6 @@ export class UserEntity {
 
   @ManyToMany((type) => ArticleEntity, (article) => article, {
     cascade: true,
-    onDelete: "CASCADE",
-    eager: true,
   })
   @JoinTable()
   favorites: ArticleEntity[];
@@ -53,4 +50,21 @@ export class UserEntity {
 
   @OneToMany((type) => CommentEntity, (comment) => comment.author)
   comments: CommentEntity[];
+
+  @ManyToMany((type) => UserEntity, (user) => user.following)
+  @JoinTable({
+    name: "follower_following", // 此关系的联结表的表名
+    joinColumn: {
+      name: "followerId",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "followingId",
+      referencedColumnName: "id",
+    },
+  })
+  follower: UserEntity[];
+
+  @ManyToMany((type) => UserEntity, (user) => user.follower)
+  following: UserEntity[];
 }

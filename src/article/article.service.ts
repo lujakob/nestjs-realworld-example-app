@@ -4,7 +4,6 @@ import { Repository, getRepository, DeleteResult } from "typeorm";
 import { ArticleEntity } from "./article.entity";
 import { CommentEntity } from "./comment.entity";
 import { UserEntity } from "../user/user.entity";
-import { FollowsEntity } from "../profile/follows.entity";
 import {
   CreateArticleDto,
   ArticlesRO,
@@ -13,7 +12,6 @@ import {
   CommentsRO,
 } from "./dto";
 import { ProfileDataDto } from "../profile/profile.dto";
-import { ProfileService } from "../profile/profile.service";
 import { UserDataDto } from "../user/dto";
 
 const slug = require("slug");
@@ -26,9 +24,7 @@ export class ArticleService {
     @InjectRepository(CommentEntity)
     private readonly commentRepository: Repository<CommentEntity>,
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(FollowsEntity)
-    private readonly followsRepository: Repository<FollowsEntity>
+    private readonly userRepository: Repository<UserEntity>
   ) {}
 
   async findAll(query): Promise<ArticlesRO> {
@@ -80,13 +76,15 @@ export class ArticleService {
   }
 
   async findFeed(userId: number, query): Promise<ArticlesRO> {
-    const _follows = await this.followsRepository.find({ followerId: userId });
+    const user = await this.userRepository.findOne({ id: userId });
+
+    const _follows: UserEntity[] = user.following;
 
     if (!(Array.isArray(_follows) && _follows.length > 0)) {
       return { articles: [], articlesCount: 0 };
     }
 
-    const ids = _follows.map((el) => el.followingId);
+    const ids = _follows.map((el) => el.id);
 
     const qb = await getRepository(ArticleEntity)
       .createQueryBuilder("article")
