@@ -18,3 +18,8 @@ export class CreateArticleDto {
   @ApiPropertyOptional()
   readonly updatedAt?: Date;
 }
+
+export class CreateArticleBodyDto {
+  @ApiProperty()
+  article: CreateArticleDto;
+}

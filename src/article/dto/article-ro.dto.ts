@@ -27,7 +27,7 @@ export class ArticleRO {
 }
 
 export class ArticlesRO {
-  @ApiProperty()
+  @ApiProperty({ isArray: true, type: ArticleDataDto })
   articles: ArticleDataDto[];
 
   @ApiProperty()

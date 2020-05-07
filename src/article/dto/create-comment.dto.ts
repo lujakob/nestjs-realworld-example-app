@@ -1,16 +1,44 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, IntersectionType } from "@nestjs/swagger";
+import { ProfileDataDto } from "../../profile/profile.dto";
+
+class CommentExtraDataDto {
+  @ApiProperty()
+  id: Number;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
+
+  @ApiProperty()
+  author: ProfileDataDto;
+}
 
 export class CreateCommentDto {
   @ApiProperty()
   readonly body: string;
 }
 
-export class CommentsRO {
+export class CommentDataDto extends IntersectionType(
+  CreateCommentDto,
+  CommentExtraDataDto
+) {}
+
+export class CommentDataBodyDto {
   @ApiProperty()
-  comments: CreateCommentDto[];
+  comment: CreateCommentDto;
+}
+
+export class CommentsRO {
+  @ApiProperty({
+    isArray: true,
+    type: CommentDataDto,
+  })
+  comments: CommentDataDto[];
 }
 
 export class CommentRO {
   @ApiProperty()
-  comment: CreateCommentDto;
+  comment: CommentDataDto;
 }
