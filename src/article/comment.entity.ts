@@ -32,6 +32,8 @@ export class CommentEntity {
 
   @ManyToOne((type) => UserEntity, (user) => user.comments, {
     cascade: true,
+    eager: true,
   })
+  @JoinColumn()
   author: UserEntity;
 }

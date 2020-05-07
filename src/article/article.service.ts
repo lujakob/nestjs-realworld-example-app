@@ -70,7 +70,9 @@ export class ArticleService {
 
     const _articles = await qb.getMany();
 
-    const articles = _articles.map(this.ArticleEntity2ArticleData);
+    const articles = _articles.map((article) =>
+      this.ArticleEntity2ArticleData(article)
+    );
 
     return { articles, articlesCount };
   }
@@ -104,7 +106,9 @@ export class ArticleService {
 
     const _articles = await qb.getMany();
 
-    const articles = _articles.map(this.ArticleEntity2ArticleData);
+    const articles = _articles.map((article) =>
+      this.ArticleEntity2ArticleData(article)
+    );
 
     return { articles, articlesCount };
   }
@@ -118,25 +122,32 @@ export class ArticleService {
     return _article;
   }
 
-  async addComment(slug: string, commentData): Promise<unknown> {
+  async addComment(userId, slug: string, commentData): Promise<unknown> {
+    const user = await this.userRepository.findOne({ id: userId });
     let _article = await this.articleRepository.findOne({ slug });
 
     const comment = new CommentEntity();
     comment.body = commentData.body;
+    comment.author = user;
 
     _article.comments.push(comment);
 
     const { id } = await this.commentRepository.save(comment);
     await this.articleRepository.save(_article);
 
-    const _comment = await this.commentRepository.findOne(
-      { id },
-      {
-        loadEagerRelations: true,
-      }
-    );
+    const _comment = await this.commentRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
 
-    return { comment: _comment };
+    const author = this.User2Profile(_comment.author);
+
+    return {
+      comment: {
+        ..._comment,
+        author,
+      },
+    };
   }
 
   async deleteComment(slug: string, id: string): Promise<ArticleRO> {
@@ -161,9 +172,12 @@ export class ArticleService {
     let _article = await this.findOne({ slug });
     const author: UserEntity = _article.author;
     delete _article.author;
-    const user = await this.userRepository.findOne(id, {
-      loadEagerRelations: true,
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ["favorites", "following"],
     });
+
+    const following = user.following.some((item) => item.id === id);
 
     const isNewFavorite =
       user.favorites.findIndex((_article) => _article.id === _article.id) < 0;
@@ -177,15 +191,16 @@ export class ArticleService {
 
     _article.author = author;
 
-    return { article: this.ArticleEntity2ArticleData(_article) };
+    return { article: this.ArticleEntity2ArticleData(_article, following) };
   }
 
   async unFavorite(id: number, slug: string): Promise<ArticleRO> {
     let _article = await this.findOne({ slug });
     const author: UserEntity = _article.author;
     delete _article.author;
-    const user = await this.userRepository.findOne(id, {
-      loadEagerRelations: true,
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ["favorites"],
     });
 
     const deleteIndex = user.favorites.findIndex(
@@ -207,7 +222,14 @@ export class ArticleService {
 
   async findComments(slug: string): Promise<CommentsRO> {
     const article = await this.articleRepository.findOne({ slug });
-    return { comments: article.comments };
+    const comments = article.comments.map((comment) => {
+      const author: ProfileDataDto = this.User2Profile(comment.author);
+      return {
+        ...comment,
+        author,
+      };
+    });
+    return { comments: comments };
   }
 
   async create(
@@ -258,15 +280,12 @@ export class ArticleService {
     );
   }
 
-  ArticleEntity2ArticleData(_article: ArticleEntity): ArticleDataDto {
-    const _author = _article.author || ({} as UserDataDto);
-    const profile: ProfileDataDto = {
-      username: _author.username,
-      image: _author.image,
-      bio: _author.bio,
-      // TODO: following is wrong
-      following: false,
-    };
+  ArticleEntity2ArticleData(
+    _article: ArticleEntity,
+    following: boolean = false
+  ): ArticleDataDto {
+    const _author = _article.author || ({} as UserEntity);
+    const profile: ProfileDataDto = this.User2Profile(_author, following);
     const article: ArticleDataDto = {
       favorited: !!_article.favoritesCount,
       favoritesCount: _article.favoritesCount,
@@ -281,5 +300,14 @@ export class ArticleService {
     };
 
     return article;
+  }
+
+  User2Profile(user: UserEntity, following: boolean = false): ProfileDataDto {
+    return {
+      image: user.image,
+      bio: user.bio,
+      username: user.username,
+      following,
+    };
   }
 }

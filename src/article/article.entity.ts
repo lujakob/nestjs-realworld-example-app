@@ -44,7 +44,9 @@ export class ArticleEntity {
   @Column("simple-array")
   tagList: string[];
 
-  @ManyToOne((type) => UserEntity, (user) => user.articles)
+  @ManyToOne((type) => UserEntity, (user) => user.articles, {
+    eager: true,
+  })
   @JoinColumn()
   author: UserEntity;
 
