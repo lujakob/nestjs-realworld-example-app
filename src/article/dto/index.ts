@@ -1,2 +1,3 @@
-export { CreateArticleDto } from './create-article.dto';
-export { CreateCommentDto } from './create-comment';
+export * from "./create-article.dto";
+export * from "./create-comment.dto";
+export * from "./article-ro.dto";

@@ -10,7 +10,8 @@
     "start:prod": "node dist/main.js",
     "test": "jest --config=jest.json",
     "test:watch": "jest --watch --config=jest.json",
-    "test:coverage": "jest --config=jest.json --coverage --coverageDirectory=coverage"
+    "test:coverage": "jest --config=jest.json --coverage --coverageDirectory=coverage",
+    "test:postman": "./test/run-api-tests.sh"
   },
   "repository": {
     "type": "git",
@@ -53,6 +54,7 @@
     "deep-extend": ">=0.5.1",
     "extend": ">=3.0.2",
     "jest": "^25.5.3",
+    "newman": "^5.0.0",
     "nodemon": "^1.19.4",
     "supertest": "^3.4.2",
     "ts-jest": "^25.4.0",

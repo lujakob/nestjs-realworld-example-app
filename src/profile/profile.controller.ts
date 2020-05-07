@@ -1,33 +1,58 @@
-import { Get, Post, Delete, Param, Controller } from '@nestjs/common';
-import { Request } from 'express';
-import { ProfileService } from './profile.service';
-import { ProfileRO } from './profile.interface';
-import { User } from '../user/user.decorator';
+import { Get, Post, Delete, Param, Controller, HttpCode } from "@nestjs/common";
+import { ProfileService } from "./profile.service";
+import { ProfileRO } from "./profile.dto";
+import { User } from "../user/user.decorator";
 
 import {
-  ApiBearerAuth, ApiTags,
-} from '@nestjs/swagger';
+  ApiBearerAuth,
+  ApiTags,
+  ApiResponse,
+  ApiOperation,
+} from "@nestjs/swagger";
 
 @ApiBearerAuth()
-@ApiTags('profiles')
-@Controller('profiles')
+@ApiTags("profiles")
+@Controller("profiles")
+@ApiResponse({
+  type: ProfileRO,
+})
 export class ProfileController {
-
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get(':username')
-  async getProfile(@User('id') userId: number, @Param('username') username: string): Promise<ProfileRO> {
+  @Get(":username")
+  @ApiOperation({
+    summary: "Get Profile",
+    operationId: "GetProfile",
+  })
+  async getProfile(
+    @User("id") userId: number,
+    @Param("username") username: string
+  ): Promise<ProfileRO> {
     return await this.profileService.findProfile(userId, username);
   }
 
-  @Post(':username/follow')
-  async follow(@User('email') email: string, @Param('username') username: string): Promise<ProfileRO> {
+  @Post(":username/follow")
+  @HttpCode(200)
+  @ApiOperation({
+    summary: "Follow User",
+    operationId: "FollowUser",
+  })
+  async follow(
+    @User("email") email: string,
+    @Param("username") username: string
+  ): Promise<ProfileRO> {
     return await this.profileService.follow(email, username);
   }
 
-  @Delete(':username/follow')
-  async unFollow(@User('id') userId: number,  @Param('username') username: string): Promise<ProfileRO> {
+  @Delete(":username/follow")
+  @ApiOperation({
+    summary: "UnFollow User",
+    operationId: "UnFollowUser",
+  })
+  async unFollow(
+    @User("id") userId: number,
+    @Param("username") username: string
+  ): Promise<ProfileRO> {
     return await this.profileService.unFollow(userId, username);
   }
-
 }
