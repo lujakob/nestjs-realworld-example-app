@@ -242,6 +242,7 @@ export class ArticleService {
     article.slug = this.slugify(articleData.title);
     article.tagList = articleData.tagList || [];
     article.comments = [];
+    article.body = articleData.body;
 
     const newArticle = await this.articleRepository.save(article);
 
