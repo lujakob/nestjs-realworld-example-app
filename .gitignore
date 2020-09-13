@@ -22,4 +22,4 @@ src/config.ts
 coverage
 
 
-dist/*
+dist
