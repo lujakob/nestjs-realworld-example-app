@@ -8,7 +8,7 @@ import { User } from './user.decorator';
 import { ValidationPipe } from '../shared/pipes/validation.pipe';
 
 import {
-  ApiBearerAuth, ApiTags
+  ApiBearerAuth, ApiBody, ApiQuery, ApiTags, ApiParam
 } from '@nestjs/swagger';
 
 @ApiBearerAuth()
@@ -23,25 +23,29 @@ export class UserController {
     return await this.userService.findByEmail(email);
   }
 
+  @ApiBody({type: UpdateUserDto })
   @Put('user')
-  async update(@User('id') userId: number, @Body('user') userData: UpdateUserDto) {
+  async update(@User('id') userId: number, @Body() userData: UpdateUserDto) {
     return await this.userService.update(userId, userData);
   }
 
+  @ApiBody({type: CreateUserDto })
   @UsePipes(new ValidationPipe())
   @Post('users')
-  async create(@Body('user') userData: CreateUserDto) {
+  async create(@Body() userData: CreateUserDto) {
     return this.userService.create(userData);
   }
 
+  @ApiParam({name:'slug', description: 'user email'})
   @Delete('users/:slug')
   async delete(@Param() params) {
     return await this.userService.delete(params.slug);
   }
 
+  @ApiBody({type: LoginUserDto })
   @UsePipes(new ValidationPipe())
   @Post('users/login')
-  async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserRO> {
+  async login(@Body() loginUserDto: LoginUserDto): Promise<UserRO> {
     const _user = await this.userService.findOne(loginUserDto);
 
     const errors = {User: ' not found'};
