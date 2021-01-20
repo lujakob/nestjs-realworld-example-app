@@ -1,15 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { ArticleEntity } from './article.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  BeforeUpdate,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { ArticleEntity } from "./article.entity";
+import { UserEntity } from "../user/user.entity";
 
-@Entity()
-export class Comment {
-
+@Entity("comment")
+export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   body: string;
 
-  @ManyToOne(type => ArticleEntity, article => article.comments)
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @ManyToOne((type) => ArticleEntity, (article) => article.comments, {
+    cascade: true,
+  })
   article: ArticleEntity;
+
+  @ManyToOne((type) => UserEntity, (user) => user.comments, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  author: UserEntity;
 }
