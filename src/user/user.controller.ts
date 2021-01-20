@@ -1,5 +1,4 @@
 import { Get, Post, Body, Put, Delete, Param, Controller, UsePipes } from '@nestjs/common';
-import { Request } from 'express';
 import { UserService } from './user.service';
 import { UserRO } from './user.interface';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
@@ -35,8 +34,8 @@ export class UserController {
   }
 
   @Delete('users/:slug')
-  async delete(@Param() params) {
-    return await this.userService.delete(params.slug);
+  delete(@Param() params) {
+    return this.userService.delete(params.slug);
   }
 
   @UsePipes(new ValidationPipe())

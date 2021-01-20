@@ -16,8 +16,8 @@ export class ProfileService {
     private readonly followsRepository: Repository<FollowsEntity>
   ) {}
 
-  async findAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find();
+  findAll(): Promise<UserEntity[]> {
+    return this.userRepository.find();
   }
 
   async findOne(options?: DeepPartial<UserEntity>): Promise<ProfileRO> {

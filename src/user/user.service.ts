@@ -49,11 +49,10 @@ export class UserService {
     if (user) {
       const errors = {username: 'Username and email must be unique.'};
       throw new HttpException({message: 'Input data validation failed', errors}, HttpStatus.BAD_REQUEST);
-
     }
 
     // create new user
-    let newUser = new UserEntity();
+    const newUser = new UserEntity();
     newUser.username = username;
     newUser.email = email;
     newUser.password = password;
@@ -77,11 +76,11 @@ export class UserService {
     delete toUpdate.favorites;
 
     let updated = Object.assign(toUpdate, dto);
-    return await this.userRepository.save(updated);
+    return this.userRepository.save(updated);
   }
 
-  async delete(email: string): Promise<DeleteResult> {
-    return await this.userRepository.delete({ email: email});
+  delete(email: string): Promise<DeleteResult> {
+    return this.userRepository.delete({ email: email});
   }
 
   async findById(id: number): Promise<UserRO>{
