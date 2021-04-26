@@ -162,6 +162,40 @@ export class ArticleService {
     return {article};
   }
 
+  async readLater(id: number, slug: string): Promise<ArticleRO> {
+    let article = await this.articleRepository.findOne({slug});
+    const user = await this.userRepository.findOne(id);
+
+    const isReadLater = user.readLater.findIndex(_article => _article.id === article.id) < 0;
+    if (isReadLater) {
+      user.readLater.push(article);
+      article.readLaterCount++;
+
+      await this.userRepository.save(user);
+      article = await this.articleRepository.save(article);
+    }
+
+    return {article};
+  }
+
+  async unReadLater(id: number, slug: string): Promise<ArticleRO> {
+    let article = await this.articleRepository.findOne({slug});
+    const user = await this.userRepository.findOne(id);
+
+    const deleteIndex = user.readLater.findIndex(_article => _article.id === article.id);
+
+    if (deleteIndex >= 0) {
+
+      user.readLater.splice(deleteIndex, 1);
+      article.readLaterCount--;
+
+      await this.userRepository.save(user);
+      article = await this.articleRepository.save(article);
+    }
+
+    return {article};
+  }
+
   async findComments(slug: string): Promise<CommentsRO> {
     const article = await this.articleRepository.findOne({slug});
     return {comments: article.comments};
@@ -175,6 +209,7 @@ export class ArticleService {
     article.slug = this.slugify(articleData.title);
     article.tagList = articleData.tagList || [];
     article.comments = [];
+    article.isMature = articleData.isMature;
 
     const newArticle = await this.articleRepository.save(article);
 

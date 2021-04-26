@@ -103,4 +103,13 @@ export class ArticleController {
     return await this.articleService.unFavorite(userId, slug);
   }
 
+  @Post(':slug/readlater')
+  async readLater(@User('id') userId: number, @Param('slug') slug) {
+    return await this.articleService.readLater(userId, slug);
+  }
+
+  @Delete(':slug/readlater')
+  async unReadLater(@User('id') userId: number, @Param('slug') slug) {
+    return await this.articleService.unReadLater(userId, slug);
+  }
 }

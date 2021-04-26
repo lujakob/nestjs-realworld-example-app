@@ -72,12 +72,31 @@ describe("ArticleController", () => {
         description: "string",
         body: "string",
         tagList: [],
+        isMature: false
       });
 
       let results = await articleController.findAll({ author: user.username });
 
       expect(results).not.toBeNull();
       expect(results.articlesCount).toEqual(1);
+    });
+  });
+
+  describe("root", () => {
+    it("should create an article and check if isMature is present", async () => {
+      const newArticle = await articleController.create(user.id, {
+        title: "string",
+        description: "string",
+        body: "string",
+        tagList: [],
+        isMature: true
+      });
+
+      let results = await articleController.findOne(newArticle.slug);
+
+      expect(results).not.toBeNull();
+      expect(results.article).toHaveProperty('isMature');
+      expect(results.article.isMature).toEqual(true);
     });
   });
 });
