@@ -43,4 +43,10 @@ export class ArticleEntity {
 
   @Column({default: 0})
   favoriteCount: number;
+
+  @Column({default: false})
+  isMature: boolean;
+
+  @Column({default: 0})
+  readLaterCount: number;
 }
