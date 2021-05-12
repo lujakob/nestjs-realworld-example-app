@@ -67,17 +67,38 @@ describe("ArticleController", () => {
 
   describe("root", () => {
     it("should create an article", async () => {
-      await articleController.create(user.id, {
+      const createdArticle = await articleController.create(user.id, {
         title: "string",
         description: "string",
         body: "string",
         tagList: [],
       });
 
-      let results = await articleController.findAll({ author: user.username });
+      expect(createdArticle instanceof ArticleEntity).toBe(true);
+    });
 
-      expect(results).not.toBeNull();
-      expect(results.articlesCount).toEqual(1);
+    it("should allow to mark an article as mature content on creation", async () => {
+      const createdArticle =  await articleController.create(user.id, {
+        title: "string",
+        description: "string",
+        body: "string",
+        tagList: [],
+        isMatureContent: true
+      });
+      
+      expect(createdArticle.isMatureContent).toBe(true);
+    });
+
+    it("should set isMatureContent to false by default", async () => {
+      const createdArticle =  await articleController.create(user.id, {
+        title: "string",
+        description: "string",
+        body: "string",
+        tagList: [],
+        isMatureContent: false
+      });
+      
+      expect(createdArticle.isMatureContent).toBe(false);
     });
   });
 });

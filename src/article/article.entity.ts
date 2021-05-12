@@ -20,6 +20,9 @@ export class ArticleEntity {
   @Column({default: ''})
   body: string;
 
+  @Column()
+  isMatureContent: boolean;
+
   @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP"})
   created: Date;
 

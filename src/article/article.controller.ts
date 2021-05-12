@@ -1,4 +1,4 @@
-import {Get, Post, Body, Put, Delete, Query, Param, Controller} from '@nestjs/common';
+import {Get, Post, Body, Put, Delete, Query, Param, Controller, NotFoundException} from '@nestjs/common';
 import { Request } from 'express';
 import { ArticleService } from './article.service';
 import { CreateArticleDto, CreateCommentDto } from './dto';
@@ -101,6 +101,28 @@ export class ArticleController {
   @Delete(':slug/favorite')
   async unFavorite(@User('id') userId: number, @Param('slug') slug) {
     return await this.articleService.unFavorite(userId, slug);
+  }
+
+  @ApiOperation({ summary: 'Add article to "Read later" list' })
+  @ApiResponse({ status: 201, description: 'The article has been successfully added to the "Read later" list.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @Post(':slug/read-later')
+  async addReadLater(@User('id') userId: number, @Param('slug') slug) {
+    const result = await this.articleService.addReadLater(userId, slug);
+
+    if (result === null) {
+      throw new NotFoundException('Article of given slug could not be found!');
+    }
+
+    return result;
+  }
+
+  @ApiOperation({ summary: 'Remove an article from the "Read later" list' })
+  @ApiResponse({ status: 201, description: 'The article has been successfully removed from the "Read later" list.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @Delete(':slug/read-later')
+  async removeReadLater(@User('id') userId: number, @Param('slug') slug) {
+    return await this.articleService.removeReadLater(userId, slug);
   }
 
 }

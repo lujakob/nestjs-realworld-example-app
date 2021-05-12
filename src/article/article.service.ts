@@ -35,6 +35,10 @@ export class ArticleService {
       qb.andWhere("article.tagList LIKE :tag", { tag: `%${query.tag}%` });
     }
 
+    if ('title' in query) {
+      qb.andWhere("article.title = :title", { title: query.title });
+    }
+
     if ('author' in query) {
       const author = await this.userRepository.findOne({username: query.author});
       qb.andWhere("article.authorId = :id", { id: author.id });
@@ -130,7 +134,8 @@ export class ArticleService {
 
   async favorite(id: number, slug: string): Promise<ArticleRO> {
     let article = await this.articleRepository.findOne({slug});
-    const user = await this.userRepository.findOne(id);
+
+    const user = await this.userRepository.findOne(id, {relations: ["favorites"]});
 
     const isNewFavorite = user.favorites.findIndex(_article => _article.id === article.id) < 0;
     if (isNewFavorite) {
@@ -146,7 +151,7 @@ export class ArticleService {
 
   async unFavorite(id: number, slug: string): Promise<ArticleRO> {
     let article = await this.articleRepository.findOne({slug});
-    const user = await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne(id, {relations: ["favorites"]});
 
     const deleteIndex = user.favorites.findIndex(_article => _article.id === article.id);
 
@@ -154,6 +159,45 @@ export class ArticleService {
 
       user.favorites.splice(deleteIndex, 1);
       article.favoriteCount--;
+
+      await this.userRepository.save(user);
+      article = await this.articleRepository.save(article);
+    }
+
+    return {article};
+  }
+
+  async addReadLater(id: number, slug: string): Promise<ArticleRO> {
+    let article = await this.articleRepository.findOne({slug});
+    
+    if (!article) {
+      return null;
+    }
+
+    const user = await this.userRepository.findOne(id, {relations: ["readLater"]});
+
+    const isNewReadLater = !user.readLater || user.readLater.findIndex(_article => _article.id === article.id) < 0;
+    if (isNewReadLater) {
+      user.readLater.push(article);
+
+      await this.userRepository.save(user);
+      article = await this.articleRepository.save(article);
+    }
+
+    return {article};
+  }
+
+  async removeReadLater(id: number, slug: string): Promise<ArticleRO> {
+    let article = await this.articleRepository.findOne({slug});
+    const user = await this.userRepository.findOne(id, {relations: ["readLater"]});
+
+    const deleteIndex = user.readLater.findIndex(_article => _article.id === article.id);
+
+    if (deleteIndex >= 0) {
+
+      user.readLater.splice(deleteIndex, 1);
+
+      
 
       await this.userRepository.save(user);
       article = await this.articleRepository.save(article);
@@ -175,6 +219,7 @@ export class ArticleService {
     article.slug = this.slugify(articleData.title);
     article.tagList = articleData.tagList || [];
     article.comments = [];
+    article.isMatureContent = articleData.isMatureContent === true;
 
     const newArticle = await this.articleRepository.save(article);
 
