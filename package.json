@@ -28,7 +28,6 @@
     "@nestjs/microservices": "^7.0.5",
     "@nestjs/platform-express": "^7.0.5",
     "@nestjs/swagger": "^4.4.0",
-    "@nestjs/testing": "^7.0.5",
     "@nestjs/typeorm": "^7.0.0",
     "@nestjs/websockets": "^7.0.5",
     "argon2": "^0.26.2",
@@ -37,7 +36,7 @@
     "crypto": "^1.0.1",
     "crypto-js": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
@@ -47,6 +46,7 @@
     "typescript": "^3.8.3"
   },
   "devDependencies": {
+    "@nestjs/testing": "^7.6.15",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
     "atob": ">=2.1.0",
