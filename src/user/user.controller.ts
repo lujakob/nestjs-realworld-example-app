@@ -3,8 +3,11 @@ import { Request } from 'express';
 import { UserService } from './user.service';
 import { UserRO } from './user.interface';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
+// http异常过滤器，用于抛出HTTP异常
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
+// User参数装饰器
 import { User } from './user.decorator';
+// 用户验证管道
 import { ValidationPipe } from '../shared/pipes/validation.pipe';
 
 import {
@@ -28,6 +31,8 @@ export class UserController {
     return await this.userService.update(userId, userData);
   }
 
+  // 管道可以是方法范围的、控制器范围的和全局范围的。
+  // 此处为方法管道，用于验证路由参数
   @UsePipes(new ValidationPipe())
   @Post('users')
   async create(@Body('user') userData: CreateUserDto) {
