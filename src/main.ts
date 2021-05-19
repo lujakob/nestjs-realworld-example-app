@@ -4,7 +4,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const appOptions = {cors: true};
+  // 创建nest实例
   const app = await NestFactory.create(ApplicationModule, appOptions);
+  // 设置全局根路径 /api
   app.setGlobalPrefix('api');
 
   const options = new DocumentBuilder()
@@ -17,6 +19,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
