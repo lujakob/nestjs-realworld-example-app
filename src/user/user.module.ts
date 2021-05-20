@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { AuthMiddleware } from './auth.middleware';
 
 @Module({
+  // 使用 forFeature() 方法注册储存库
   imports: [TypeOrmModule.forFeature([UserEntity])],
   providers: [UserService],
   controllers: [

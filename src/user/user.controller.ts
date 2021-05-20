@@ -31,8 +31,13 @@ export class UserController {
     return await this.userService.update(userId, userData);
   }
 
-  // 管道可以是方法范围的、控制器范围的和全局范围的。
-  // 此处为方法管道，用于验证路由参数
+  /**
+   * 创建用户
+   * 管道可以是方法范围的、控制器范围的和全局范围的。 
+   * 此处为方法管道，用于验证路由参数
+   * @param userData 
+   * @returns 
+   */
   @UsePipes(new ValidationPipe())
   @Post('users')
   async create(@Body('user') userData: CreateUserDto) {

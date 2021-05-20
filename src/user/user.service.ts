@@ -17,6 +17,7 @@ import * as argon2 from 'argon2';
 @Injectable()
 export class UserService {
   constructor(
+    // 使用 @InjectRepository() 方法将储存库 userRepository 注入到Service中
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>
   ) { }
@@ -73,10 +74,10 @@ export class UserService {
       throw new HttpException({ message: '输入的数据有误', _errors }, HttpStatus.BAD_REQUEST);
 
     } else {
+      // 验证通过 向数据库中存储用户数据
       const savedUser = await this.userRepository.save(newUser);
       return this.buildUserRO(savedUser);
     }
-
   }
 
   async update(id: number, dto: UpdateUserDto): Promise<UserEntity> {
@@ -108,6 +109,11 @@ export class UserService {
     return this.buildUserRO(user);
   }
 
+  /**
+   * JWT生成
+   * @param user 
+   * @returns 
+   */
   public generateJWT(user) {
     let today = new Date();
     let exp = new Date(today);

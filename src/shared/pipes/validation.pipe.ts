@@ -28,6 +28,7 @@ export class ValidationPipe implements PipeTransform<any> {
     }
 
     const { metatype } = metadata;
+    console.log(value,metadata)
     // metatype为属性的元类型，例如 String。 如果在函数签名中省略类型声明，或者使用原生 JavaScript，则为 undefined
     // 当metatype存在时，说明不是Javascript类型验证，则跳过此步
     // 若metatype为undefined 则进行类型验证，若验证成功则直接返回参数value
@@ -38,6 +39,7 @@ export class ValidationPipe implements PipeTransform<any> {
     //使用 class-transformer 的 plainToClass() 方法来转换 JavaScript 的参数为可验证的类型对象。
     // 将接口JSON value 以metatype 转换为 CreateUserDto 的class
     const object = plainToClass(metatype, value);
+    console.log(object)
     // 对参数进行验证，若验证失败则抛出HTTP错误
     const errors = await validate(object);
     if (errors.length > 0) {
