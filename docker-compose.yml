@@ -1,0 +1,25 @@
+version: "3"
+services:
+    app:
+        build: .
+        ports:
+            - "8080:3000"
+        depends_on:
+            - db
+        environment: 
+            TYPEORM_CONNECTION: "postgres"
+            TYPEORM_HOST: "db"
+            TYPEORM_USERNAME: "postgres"
+            TYPEORM_PASSWORD: "mysecretpassword"
+            TYPEORM_DATABASE: "nestjsrealworld"
+            TYPEORM_PORT: "5432"
+            TYPEORM_SYNCHRONIZE: "true"
+            TYPEORM_LOGGING: "true"
+            TYPEORM_ENTITIES: "./**/**.entity.js"
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: "mysecretpassword"
+            POSTGRES_USER: "postgres"
+            POSTGRES_DB: "nestjsrealworld"
