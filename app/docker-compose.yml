@@ -9,18 +9,18 @@ services:
         depends_on:
             - db
         environment:
-            # TYPEORM_CONNECTION: "postgres"
-        #     TYPEORM_HOST: "db"
-        #     TYPEORM_USERNAME: "postgres"
-        #     TYPEORM_PASSWORD: "mysecretpassword"
-        #     # TYPEORM_URL: "postgres://postgres:mysecretpassword@db:5432/nestjsrealworld"
-        #     TYPEORM_URL: "${DATABASE_URL}"
-        #     TYPEORM_DATABASE: "nestjsrealworld"
-        #     TYPEORM_PORT: "5432"
-        #     TYPEORM_SYNCHRONIZE: "true"
-        #     TYPEORM_LOGGING: "true"
-        #     TYPEORM_ENTITIES: "./**/**.entity.js"
-            DATABASE_URL: "postgres://postgres:mysecretpassword@db:5432/nestjsrealworld"
+            TYPEORM_CONNECTION: "postgres"
+            TYPEORM_HOST: "db"
+            TYPEORM_USERNAME: "postgres"
+            TYPEORM_PASSWORD: "mysecretpassword"
+            # TYPEORM_URL: "postgres://postgres:mysecretpassword@db:5432/nestjsrealworld"
+            # TYPEORM_URL: "${DATABASE_URL}"
+            TYPEORM_DATABASE: "nestjsrealworld"
+            TYPEORM_PORT: "5432"
+            TYPEORM_SYNCHRONIZE: "true"
+            TYPEORM_LOGGING: "true"
+            TYPEORM_ENTITIES: "./**/**.entity.js"
+            # DATABASE_URL: "postgres://postgres:mysecretpassword@db:5432/nestjsrealworld"
     db:
         image: postgres
         restart: always

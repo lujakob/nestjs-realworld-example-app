@@ -11,10 +11,6 @@ resource "heroku_app" "default" {
   name   = "realworld-example-app"
   region = "eu"
   stack  = "container"
-
-  config_vars = {
-    FOOBAR = "baz"
-  }
 }
 
 resource "heroku_build" "build" {

@@ -7,7 +7,6 @@ COPY package*.json ./
 RUN npm install
 
 COPY ./dist .
-COPY ormconfig.js .
 
 CMD [ "node", "main.js" ]
 
