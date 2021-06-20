@@ -136,3 +136,17 @@ This applications uses JSON Web Token (JWT) to handle authentication. The token 
 # Swagger API docs
 
 This example repo uses the NestJS swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)        
+
+# Performance tests
+
+Using locust to benchmark test the application
+
+```
+docker run --network="host" -p 8089:8089 -v $PWD/tests/performance:/mnt/locust:rw locustio/locust -f /mnt/locust/locustfile.py --headless --host http://localhost:8080 -u 1 -r 2 --run-time 10
+```
+
+# Heroku Deployment
+
+```
+export HEROKU_API_KEY=<app_authorization_key> HEROKU_EMAIL=<email> 
+```
