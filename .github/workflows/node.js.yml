@@ -24,13 +24,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: docker-compose build
-    - run: docker-compose up -d
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+        
     - run: npm ci
+    - name: Compile the application
+      run: npm run prestart:prod
+
+    - run: docker-compose build
+    - run: docker-compose up -d
 #     - run: npm run build --if-present
     - run: npm run test:coverage -- --forceExit
     - run: npm run test -- --forceExit
