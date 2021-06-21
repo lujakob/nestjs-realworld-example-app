@@ -16,6 +16,8 @@ jobs:
     defaults:
       run:
         working-directory: ./app
+    env:
+      DATABASE_URL: "postgres://postgres:mysecretpassword@localhost:5432/nestjsrealworld"
 
     strategy:
       # Allow a version of node to fail and still carry on testing the others
