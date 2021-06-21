@@ -67,8 +67,11 @@ jobs:
       uses: actions/checkout@v2
     
     - name: setup heroku
-      run: heroku
-      
+      run: heroku config:get DATABASE_URL --app $APP_NAME
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+        APP_NAME: realworld-example-terraform-backend 
+
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
