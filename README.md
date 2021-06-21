@@ -1,6 +1,5 @@
 # ![Node/Express/Mongoose Example App](project-logo.png)
 
-[![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)
 
 > ### NestJS codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) API spec.
 
@@ -11,11 +10,18 @@
 
 # [GITHUB PROJECT PAGE](https://github.com/androidwiltron/nestjs-realworld-example-app/projects/1)
 
+there are two directories
+
+[terraform](terraform) This contains the terraform files for deploying on heroku see more below
+[app](app) the application files
+[performance](app/tests/performance) location of performance tests
+[github workflows](.github/workflows) the github actions cicd yaml config
+
 ## Installation
 
 Clone the repository
 
-    git clone https://github.com/lujakob/nestjs-realworld-example-app.git
+    git clone https://github.com/androidwiltron/nestjs-realworld-example-app.git
 
 Switch to the repo folder
 
@@ -35,6 +41,10 @@ Copy config file and set JsonWebToken secret key
 using `docker-compose` you can quickly start up the app and database.
 
 compile the ts to js into the `dist` folder
+
+    cd app
+
+    npm install
     
     npm run prestart:prod
 
@@ -87,75 +97,12 @@ there is some conditional logic here depending on which `NODE_ENV` environment v
 
 ##### Example Seeding the postgres database
 
-One could take the backup of a pg database after inserting some articles through the webapp
-then restore the dump to seed subsequent postgres databases with data
+The data for articles may be seeded using the file `seed_data.sql`
 
+make sure the postgres container/db is running (use docker-compose). then run:
 
-Dump contents of database:
+    cat dump.sql |  docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword psql --username postgres nestjsrealworld"
 
-    docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword pg_dump --username postgres nestjsrealworld" > dump.sql
-
-Now restore.
-
-    docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword psql --username postgres nestjsrealworld" < dump.sql
-
-
-##### TypeORM using mysql
-
-You may copy the TypeORM config example file for database settings
-
-    cp ormconfig.json.example
-    
-Set mysql database settings in ormconfig.json. refer to the options [here](https://typeorm.io/#/using-ormconfig) for other db type interfaces
-
-    {
-      "type": "mysql",
-      "host": "localhost",
-      "port": 3306,
-      "username": "your-mysql-username",
-      "password": "your-mysql-password",
-      "database": "nestjsrealworld",
-      "entities": ["src/**/**.entity{.ts,.js}"],
-      "synchronize": true
-    }
-    
-Start local mysql server and create new database 'nestjsrealworld'
-
-On application start, tables for all entities will be created.
-
-----------
-
-##### Prisma
-
-----------
-
-To run the example with Prisma checkout branch `prisma`, remove the node_modules and run `npm install`
-
-Create a new mysql database with the name `nestjsrealworld-prisma` (or the name you specified in `prisma/.env`)
-
-Copy prisma config example file for database settings
-
-    cp prisma/.env.example prisma/.env
-
-Set mysql database settings in prisma/.env
-
-    DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
-
-To create all tables in the new database make the database migration from the prisma schema defined in prisma/schema.prisma
-
-    npx prisma migrate save --experimental
-    npx prisma migrate up --experimental
-
-Now generate the prisma client from the migrated database with the following command
-
-    npx prisma generate
-
-The database tables are now set up and the prisma client is generated. For more information see the docs:
-
-- https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project-typescript-mysql
-
-
-----------
 
 ## NPM scripts
 
@@ -179,6 +126,7 @@ More information regarding the project can be found here https://github.com/goth
 ## Start application
 
 - `npm start`
+- start docker compose as above to create and start the postgres database first
 - Test api with `http://localhost:3000/api/articles` in your favourite browser
 
 ----------
