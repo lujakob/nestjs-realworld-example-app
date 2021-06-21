@@ -18,6 +18,8 @@ jobs:
         working-directory: ./app
 
     strategy:
+      # Allow a version of node to fail and still carry on testing the others
+      fail-fast: false
       matrix:
         node-version: [12.x, 14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
@@ -38,6 +40,8 @@ jobs:
 
     - run: docker-compose build
     - run: docker-compose up -d
-#     - run: npm run build --if-present
+    - name: show state of containers
+      run: docker-ps -a
+
     - run: npm run test:coverage -- --forceExit
     - run: npm run test -- --forceExit
