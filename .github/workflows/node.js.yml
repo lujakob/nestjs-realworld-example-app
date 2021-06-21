@@ -48,3 +48,6 @@ jobs:
 
     - run: npm run test:coverage -- --forceExit
     - run: npm run test -- --forceExit
+
+    - name: run a locust app performance test
+      run: docker run --network="host" -v $PWD/tests/performance:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py --headless --host http://localhost:8080 -u 1 -r 2 --run-time 30
