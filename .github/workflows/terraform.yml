@@ -72,10 +72,13 @@ jobs:
       with:
         node-version: 14.x
     - run: npm ci
+      working-directory: ./app
     - name: copy the config module
       run: cp src/config.ts.example src/config.ts
+      working-directory: ./app
     - name: Compile the application
       run: npm run prestart:prod
+      working-directory: ./app
     
     - name: get terraform backend from heroku
       id: heroku
