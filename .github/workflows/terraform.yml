@@ -50,10 +50,6 @@ on:
     - master
   pull_request:
 
-defaults:
-  run:
-    working-directory: ./terraform
-
 jobs:
   terraform:
     name: 'Terraform'
@@ -64,7 +60,7 @@ jobs:
     defaults:
       run:
         shell: bash
-
+        working-directory: ./terraform
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
