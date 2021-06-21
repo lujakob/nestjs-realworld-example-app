@@ -1,4 +1,6 @@
 terraform {
+  backend "pg" {
+  }
   required_providers {
     heroku = {
       source  = "heroku/heroku"
@@ -19,6 +21,9 @@ resource "heroku_build" "build" {
   source {
     # A local directory, changing its contents will
     # force a new build during `terraform apply`
+    # could also use a github release
+    # url     = "https://github.com/mars/cra-example-app/archive/v2.1.1.tar.gz"
+    # version = "v2.1.1"
     path = "../app"
   }
 }
