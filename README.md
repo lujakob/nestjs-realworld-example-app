@@ -159,6 +159,14 @@ docker run --network="host" -p 8089:8089 -v $PWD/tests/performance:/mnt/locust l
 
 # Terraform Heroku Deployment
 
+Heroku was chosen for the following reasons:
+
+1. ease of deployment. simple resources in terraform with very little machinery or wireing. almost 'turnkey'
+2. easily control the costs for a hobby 'dev' project like this
+3. interest on investigating how heroku works compared with more familiar AWS
+4. heroku cli already installed on github runners and very mature well documented terraform provider
+5. permissions and security model very clear, ssl out of the box, serverless control deployment via limited time api token
+
 
 Make sure you install and configure the CLI dependencies [heroku](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) and [terraform](https://www.terraform.io/downloads.html)
 
