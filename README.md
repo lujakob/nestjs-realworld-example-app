@@ -10,8 +10,6 @@
 
 # [GITHUB PROJECT PAGE](https://github.com/androidwiltron/nestjs-realworld-example-app/projects/1)
 
-there are two directories
-
 [terraform](terraform) This contains the terraform files for deploying on heroku see more below
 [app](app) the application files
 [performance](app/tests/performance) location of performance tests
@@ -58,11 +56,11 @@ run the app image container with the database
     
 show state of containers
     
-    docker ps -a
+    docker ps
 
 the app should be available at `http://localhost:8080/`
 
-when you want to clean up (after changes etc)
+when you want to clean up (after changes or when finished using the containers)
 
     docker-compose stop
     docker-compose rm -f
@@ -101,7 +99,7 @@ The data for articles may be seeded using the file `seed_data.sql`
 
 make sure the postgres container/db is running (use docker-compose). then run:
 
-    cat dump.sql |  docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword psql --username postgres nestjsrealworld"
+    cat seed_data.sql |  docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword psql --username postgres nestjsrealworld"
 
 
 ## NPM scripts
@@ -156,6 +154,9 @@ cd /app
 
 docker run --network="host" -p 8089:8089 -v $PWD/tests/performance:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py --headless --host http://localhost:8080 -u 1 -r 2 --run-time 10
 ```
+
+Note. as the locust script creates a user, subsequent tests will fail as that user exists
+use a clean container. see above docker compose cleanup instructions to restart the containers fresh
 
 # Terraform Heroku Deployment
 
@@ -213,6 +214,8 @@ to remove the app from heroku
 Note. the app name in terraform must be unique. in terraform the variable `app_name` may be set to make sure its unique this can also be set as an env var `export TF_VAR_app_name=my-cool-app`
 
 # CICD with with github actions
+
+https://github.com/androidwiltron/nestjs-realworld-example-app/actions
 
 On a Pull Request to the repo a [workflow](.github/workflows/node.js.yml) that builds the app and tests it locally via docker starts up. the performance tests are also run
 
