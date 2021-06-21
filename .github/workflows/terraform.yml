@@ -70,7 +70,8 @@ jobs:
       run: heroku config:get DATABASE_URL --app $APP_NAME
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-        APP_NAME: realworld-example-terraform-backend 
+        APP_NAME: realworld-ex-terraform-backend 
+        HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
