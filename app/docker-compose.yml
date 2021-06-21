@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile.dev
         ports:
-            - "8080:80"
+            - "8080:3000"
         depends_on:
             - db
         environment:
@@ -24,6 +24,8 @@ services:
     db:
         image: postgres
         restart: always
+        ports:
+            - "5432:5432"
         environment:
             POSTGRES_PASSWORD: "mysecretpassword"
             POSTGRES_USER: "postgres"

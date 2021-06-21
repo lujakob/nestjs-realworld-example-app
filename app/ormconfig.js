@@ -5,6 +5,8 @@ const host = process.env.TYPEORM_HOST || 'db';
 const port = parseInt(process.env.TYPEORM_PORT, 10) || 5432;
 const database = process.env.TYPEORM_DATABASE || 'data';
 
+const extraParams = process.env.NODE_ENV === 'production' ? {"ssl": {"rejectUnauthorized": false}} : undefined
+console.log(extraParams);
 module.exports = {
   type,
   url:
@@ -12,15 +14,11 @@ module.exports = {
     `${type}://${username}:${password}@${host}:${port}/${database}`,
   entities: [
     process.env.NODE_ENV === 'test'
-      ? 'src/**/*.entity.ts'
+      ? 'src/**/**.entity.ts'
       : './**/**.entity.js',
   ],
   synchronize: true,
-  extra: {
-    "ssl": {
-      "rejectUnauthorized": false
-    }
-  },
+  extra: extraParams,
   ssl:
     process.env.NODE_ENV === 'production'
       ? true
