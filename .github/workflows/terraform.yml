@@ -45,10 +45,12 @@
 name: 'Terraform'
 
 on:
+  # may use the release event to kick the terraform deploy off
+  # release:
+  #   types: [created]
   push:
     branches:
     - master
-  pull_request:
 
 jobs:
   terraform:
