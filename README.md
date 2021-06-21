@@ -241,3 +241,15 @@ On a Pull Request to the repo a [workflow](.github/workflows/node.js.yml) that b
 On merge to the `master` branch 2 workflows run. [One Workflow](.github/workflows/release.yml) tags the repo and creates a github release. [the final workflow](.github/workflows/terraform.yml) runs the `terraform plan` and `apply` then a quick smoketest to check the app is up.
 
 The github deployments API will be updated and the latest deployment URL can be found [here](https://github.com/androidwiltron/nestjs-realworld-example-app/deployments/activity_log?environment=production)
+
+dependencies:
+
+2 [secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) must be set in the repository for the above to work
+
+the heroku api token for heroku cli
+
+    HEROKU_API_TOKEN
+
+the email address of the heroku account used
+
+    HEROKU_EMAIL
