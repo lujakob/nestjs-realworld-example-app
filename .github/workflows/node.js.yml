@@ -41,7 +41,7 @@ jobs:
     - run: docker-compose build
     - run: docker-compose up -d
     - name: show state of containers
-      run: docker-ps -a
+      run: docker ps -a
 
     - run: npm run test:coverage -- --forceExit
     - run: npm run test -- --forceExit
