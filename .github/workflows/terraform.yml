@@ -66,8 +66,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    - name: setup heroku
-      run: heroku config:get DATABASE_URL --app $APP_NAME
+    - name: get terraform backend from heroku
+      id: heroku
+      run: echo ::set-output name=url::$(heroku config:get DATABASE_URL --app $APP_NAME)
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
         APP_NAME: realworld-ex-terraform-backend 
@@ -81,7 +82,7 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -backend-config="conn_str=${{ steps.heroku.outputs.url }}"
 
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
