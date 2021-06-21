@@ -29,8 +29,10 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        
+
     - run: npm ci
+    - name: copy the config module
+      run: cp src/config.ts.example src/config.ts
     - name: Compile the application
       run: npm run prestart:prod
 
