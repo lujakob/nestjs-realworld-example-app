@@ -124,3 +124,5 @@ jobs:
         # TF_APP_NAME: realworld-example-app
         HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
 
+      - name: Run smoketest against the app in prod
+        run: curl https://realworld-example-app.herokuapp.com/api --fail
