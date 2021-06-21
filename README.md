@@ -9,6 +9,7 @@
 
 # Getting started
 
+# [GITHUB PROJECT PAGE](https://github.com/androidwiltron/nestjs-realworld-example-app/projects/1)
 
 ## Installation
 
@@ -82,6 +83,21 @@ The application may be started as below and will connect to the running postgres
 
 TypeORM config is handled using the [ormconfig.js](app/ormconfig.js) method
 there is some conditional logic here depending on which `NODE_ENV` environment variable is defined on the system. use `export NODE_ENV=test` to ensure the testing config is used locally
+
+
+##### Example Seeding the postgres database
+
+One could take the backup of a pg database after inserting some articles through the webapp
+then restore the dump to seed subsequent postgres databases with data
+
+
+Dump contents of database:
+
+    docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword pg_dump --username postgres nestjsrealworld" > dump.sql
+
+Now restore.
+
+    docker exec -i app_db_1 /bin/bash -c "PGPASSWORD=mysecretpassword psql --username postgres nestjsrealworld" < dump.sql
 
 
 ##### TypeORM using mysql
@@ -188,6 +204,8 @@ A summary of the performance is output to console.
 
 
 ```
+cd /app
+
 docker run --network="host" -p 8089:8089 -v $PWD/tests/performance:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py --headless --host http://localhost:8080 -u 1 -r 2 --run-time 10
 ```
 
@@ -197,6 +215,10 @@ docker run --network="host" -p 8089:8089 -v $PWD/tests/performance:/mnt/locust l
 Make sure you install and configure the CLI dependencies [heroku](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) and [terraform](https://www.terraform.io/downloads.html)
 
 First the terraform state backend must be created in heroku with postgres. the backend is needed so state can be shared between systems/teams and retained:
+
+move to the terraform directory
+
+    cd terraform
 
 Pick a *unique* app name
     
