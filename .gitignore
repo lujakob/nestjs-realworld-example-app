@@ -40,3 +40,5 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/3.47.0/darwin_amd64/terraform-provider-aws_v3.47.0_x5
