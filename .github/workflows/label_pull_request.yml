@@ -1,0 +1,22 @@
+name: "Pull Request Labeler"
+on:
+  pull_request_target:
+   types: [opened, labeled, unlabeled, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/labeler@main
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  changelog_test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check if changelog has been updated
+        uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+        with:
+            github-token: '${{ secrets.GITHUB_TOKEN }}'
+            valid-labels: 'changelog'
+            pull-request-number: '${{ github.event.pull_request.number }}'

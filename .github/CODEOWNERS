@@ -1,0 +1,6 @@
+# These owners are the default owners for everything in
+# this repo. They will be requested for review when
+# review when someone opens a pull request.
+*       @hassanejaz
+
+# Each line is a file pattern followed by one or more owners.

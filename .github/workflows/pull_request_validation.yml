@@ -1,0 +1,17 @@
+---
+name: 'Validate Pull Request'
+
+on:
+  pull_request:
+   types: [opened, labeled, unlabeled, synchronize]
+
+jobs:
+  validate_pull_request:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: docker://agilepathway/pull-request-label-checker:latest
+        with:
+          one_of: major,minor,patch
+          any_of: bug,bugfix,fix,feature,enhancement,chore
+          none_of: invalid,wontfix,duplicate,question
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,59 @@
+---
+name: 'test'
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/test.yml'
+      - 'terraform/**'
+      - '!**.md'
+
+env:
+  AWS_DEFAULT_REGION: eu-west-2
+  TERRAFORM_VERSION: 0.13.5
+  TFSEC_VERSION: 0.36.6
+
+jobs:
+  validate:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Install terraform'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: 'Configure GitHub auth'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com".insteadOf "ssh://git@github.com"
+      - name: 'Tests'
+        run: make test_fmt_validate
+
+  SAST:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: 'Install terraform'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+      - name: 'Install tfsec'
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/bin"
+          wget -O "$GITHUB_WORKSPACE/bin/tfsec" "https://github.com/tfsec/tfsec/releases/download/v$TFSEC_VERSION/tfsec-linux-amd64"
+          chmod +x "$GITHUB_WORKSPACE/bin/tfsec"
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+      - name: 'Configure GitHub auth'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com".insteadOf "ssh://git@github.com"
+      - name: 'tfsec'
+        run: make test_sast
