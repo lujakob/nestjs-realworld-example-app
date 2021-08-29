@@ -1,0 +1,22 @@
+version: '3'
+services:
+  example-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      SECRET: secret
+    volumes:
+      - .:/app/
+      - /app/node_modules
+    working_dir: /app
+    command: "npm run start:watch"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: realworld
+      POSTGRES_PASSWORD: 3q2rzKkJ34ahszFN
+      POSTGRES_DB: nestjsrealworld

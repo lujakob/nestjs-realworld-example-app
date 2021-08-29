@@ -15,8 +15,7 @@ node_modules
 .idea
 
 #config files
-ormconfig.json
-src/config.ts
+# ormconfig.json # FIX ME: maybe is there a way to configure using environment variables.
 
 # code testing coverage
 coverage
