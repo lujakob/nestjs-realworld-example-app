@@ -1,0 +1,10 @@
+{
+  "type": "postgres",
+  "host": "realworld-postgresql",
+  "port": 5432,
+  "username": "realworld",
+  "password": "3q2rzKkJ34ahszFN",
+  "database": "nestjsrealworld",
+  "entities": ["src/**/**.entity{.ts,.js}"],
+  "synchronize": true
+}
