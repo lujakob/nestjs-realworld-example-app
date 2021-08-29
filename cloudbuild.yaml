@@ -1,0 +1,24 @@
+steps:
+# build and push the docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/realworld:$SHORT_SHA', '.' ]
+
+# fetch GKE cluster credentials to be used for helm step
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=europe-west3'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=k8s-cainelli-dev'
+  - 'KUBECONFIG=/workspace/.kube/config'
+  args: ['cluster-info']
+
+# run helm command to install/upgrade realworld
+- name: 'gcr.io/$PROJECT_ID/helm'
+  args: ['upgrade', '--install', 'realworld', '--namespace', 'realworld','--create-namespace', 'charts/realworld',
+    "--set", "image.repository=gcr.io/$PROJECT_ID/realworld",
+    "--set", "image.tag=$SHORT_SHA",
+  ]
+  env:
+  - 'DEBUG=true'
+  - 'KUBECONFIG=/workspace/.kube/config'
+images:
+- 'gcr.io/$PROJECT_ID/realworld:$SHORT_SHA'
