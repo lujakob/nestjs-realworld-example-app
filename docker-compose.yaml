@@ -13,7 +13,7 @@ services:
       - /app/node_modules
     working_dir: /app
     command: "npm run start:watch"
-  db:
+  realworld-postgresql:
     image: postgres
     restart: always
     environment:
