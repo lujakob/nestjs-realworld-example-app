@@ -13,10 +13,11 @@ steps:
 
 # run helm command to install/upgrade realworld
 - name: 'gcr.io/$PROJECT_ID/helm'
-  args: ['upgrade', '--install', 'realworld', '--namespace', 'realworld','--create-namespace', 'charts/realworld',
-    "--set", "image.repository=gcr.io/$PROJECT_ID/realworld",
-    "--set", "image.tag=$SHORT_SHA",
-  ]
+  entrypoint: bash
+  args:
+  - '-c'
+  - |
+    [[ "$BRANCH_NAME" == "master" ]] && /builder/kubectl.bash upgrade --install realworld --namespace realworld --create-namespacecharts/realworld --set image.repository=gcr.io/$PROJECT_ID/realworld --set image.tag=$SHORT_SHA || echo "skipping..."
   env:
   - 'DEBUG=true'
   - 'KUBECONFIG=/workspace/.kube/config'
