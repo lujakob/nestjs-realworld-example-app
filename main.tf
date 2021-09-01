@@ -102,12 +102,8 @@ resource "aws_instance" "vpn" {
     connection {
       host        = self.public_dns
       user        = "admin"
-      private_key = file("${path.module}/files/mine2.pem")
+      private_key = data.aws_kms_secrets.example.plaintext["secret_key"]
     }
-  }
-
-  provisioner "local-exec" {
-    command = "echo ssh -fND 9060 -i files/mine2.pem admin@${self.public_ip}"
   }
 }
 
