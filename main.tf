@@ -97,6 +97,8 @@ resource "aws_instance" "vpn" {
   }
   provisioner "remote-exec" {
     inline = [
+      "docker-compose stop",
+      "docker-compose rm -f",
       "docker-compose up -d",
     ]
     connection {

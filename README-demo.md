@@ -1,3 +1,7 @@
+## my repo
+
+https://github.com/ichtar/nestjs-realworld-example-app
+
 ## What is done so far
 
 - Built project docker image based on node docker container
@@ -42,3 +46,10 @@
 - improve test by running something more meaningful
 - check API endpoint
 - seed script
+
+## Why AWS
+
+- this is the most easy to use cloud
+- more tutorial
+- easier integration with github/terraform
+- I still think google is better from an engineering point of view but bit more complicated to use

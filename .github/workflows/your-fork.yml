@@ -1,0 +1,15 @@
+name: Your Fork
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: superbrothers/close-pull-request@v3
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        # Optional. Post a issue comment just before closing a pull request.
+        comment: "Hi! If you are following the Terraform GitHub Actions tutorial, please open the PR against [your personal fork](https://learn.hashicorp.com/tutorials/terraform/github-actions?in=terraform/automation#set-up-a-github-repository) of this repository. We will automatically close this PR, but if you intended to edit the example itself please feel free to re-open it."
