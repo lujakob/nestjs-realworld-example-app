@@ -14,7 +14,13 @@ export class AuthMiddleware implements NestMiddleware {
     const authHeaders = req.headers.authorization;
     if (authHeaders && (authHeaders as string).split(' ')[1]) {
       const token = (authHeaders as string).split(' ')[1];
-      const decoded: any = jwt.verify(token, SECRET);
+      let decoded: any
+      try{
+        decoded = jwt.verify(token, SECRET);
+      }
+      catch(e){
+        throw new HttpException('Invalid token.', HttpStatus.BAD_REQUEST); 
+      }
       const user = await this.userService.findById(decoded.id);
 
       if (!user) {
