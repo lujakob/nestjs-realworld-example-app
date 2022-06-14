@@ -3,6 +3,9 @@ logs
 *.log
 .DS_Store
 
+# ignore file with exercise body
+exercise.md
+
 npm-debug.log*
 
 # Dependency directory
@@ -16,6 +19,7 @@ node_modules
 
 #config files
 ormconfig.json
+ormconfig.json.bck
 src/config.ts
 
 # code testing coverage
