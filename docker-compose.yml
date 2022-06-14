@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=nodeapi
+      - DB_PASS=mysecretpass
+      - DB_NAME=nodeapi
+    command: npm start
+
+  postgres:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=mysecretpass
+      - POSTGRES_USER=nodeapi
