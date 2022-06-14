@@ -10,7 +10,8 @@
     "start:prod": "node dist/main.js",
     "test": "jest --config=jest.json",
     "test:watch": "jest --watch --config=jest.json",
-    "test:coverage": "jest --config=jest.json --coverage --coverageDirectory=coverage"
+    "test:coverage": "jest --config=jest.json --coverage --coverageDirectory=coverage",
+    "db:seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/lujakob/nestjs-realworld-example-app#readme",
   "dependencies": {
+    "@faker-js/faker": "^7.2.0",
     "@nestjs/common": "^7.0.5",
     "@nestjs/core": "^7.0.5",
     "@nestjs/microservices": "^7.0.5",
@@ -39,14 +41,17 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
     "slug": "^1.1.0",
     "swagger-ui-express": "^4.1.4",
     "typeorm": "^0.2.24",
+    "typeorm-seeding": "^1.6.1",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
+    "@types/faker": "^6.6.9",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
     "atob": ">=2.1.0",
