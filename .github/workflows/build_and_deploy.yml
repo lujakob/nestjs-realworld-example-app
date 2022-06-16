@@ -1,0 +1,38 @@
+name: build-and-deploy
+
+on: [push,pull_request]
+
+concurrency:
+  group: ${{ github.action == 'build-and-deploy' }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  build-and-push-to-gcr:
+    name: 'Build and push docker image'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup GCP Service Account creds
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: 'latest'
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - uses: RafikFarhad/push-to-gcr-github-action@v4
+        with:
+          gcloud_service_key: ${{ secrets.GCP_SA_KEY }}
+          registry: gcr.io
+          project_id: takehomeproject-tomtar
+          image_name: nestjs-realworld-example-app
+          image_tag: latest
+          dockerfile: ./Dockerfile
