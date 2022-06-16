@@ -10,6 +10,8 @@ services:
       - DB_USER=nodeapi
       - DB_PASS=mysecretpass
       - DB_NAME=nodeapi
+    depends_on:
+      - postgres
     command: npm start
 
   postgres:
