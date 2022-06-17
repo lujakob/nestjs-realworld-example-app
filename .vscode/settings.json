@@ -1,0 +1,5 @@
+{
+  "sonarlint.connectedMode.project": {
+    "projectKey": "amateurobot_nestjs-realworld-example-app"
+  }
+}
