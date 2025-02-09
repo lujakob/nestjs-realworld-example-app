@@ -23,6 +23,7 @@ export class ArticleController {
   @ApiResponse({ status: 200, description: 'Return all articles.'})
   @Get()
   async findAll(@Query() query): Promise<ArticlesRO> {
+    console.log('hello test webhook')
     return await this.articleService.findAll(query);
   }
 
