@@ -1,0 +1,10 @@
+{
+  "type": "mysql",
+  "host": "painel.eduardoabrito.com.br",
+  "port": 3031,
+  "username": "mysql",
+  "password": "f9f6cff4c6c4071a9b5c",
+  "database": "nestjsrealworld",
+  "entities": ["src/**/*.entity.ts", "dist/**/*.entity.js"],
+  "synchronize": true
+} 

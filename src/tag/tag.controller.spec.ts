@@ -1,40 +1,44 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {TagEntity} from "./tag.entity";
+import { TagEntity } from './tag.entity';
 
 describe('TagController', () => {
-  let tagController: TagController;
-  let tagService: TagService;
+  let controller: TagController;
+  let service: TagService;
+
+  const mockTagService = {
+    findAll: jest.fn(),
+  };
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([TagEntity])],
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [TagController],
-      providers: [TagService],
+      providers: [
+        { provide: TagService, useValue: mockTagService },
+      ],
     }).compile();
 
-    tagService = module.get<TagService>(TagService);
-    tagController = module.get<TagController>(TagController);
+    controller = module.get<TagController>(TagController);
+    service = module.get<TagService>(TagService);
   });
 
-  describe('findAll', () => {
-    it('should return an array of tags', async () => {
-      const tags : TagEntity[] = [];
-      const createTag = (id, name) => {
-        const tag = new TagEntity();
-        tag.id = id;
-        tag.tag = name;
-        return tag;
-      }
-      tags.push(createTag(1, 'angularjs'));
-      tags.push(createTag(2, 'reactjs'));
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-      jest.spyOn(tagService, 'findAll').mockImplementation(() => Promise.resolve(tags));
-      
-      const findAllResult = await tagController.findAll();
-      expect(findAllResult).toBe(tags);
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  it('should return all tags', async () => {
+    const tags: TagEntity[] = [
+      { id: 1, tag: 'nestjs' },
+      { id: 2, tag: 'testing' },
+    ];
+    mockTagService.findAll.mockResolvedValue(tags);
+    const result = await controller.findAll();
+    expect(result).toBe(tags);
+    expect(service.findAll).toHaveBeenCalled();
   });
 });

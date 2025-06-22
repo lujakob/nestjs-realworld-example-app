@@ -136,3 +136,89 @@ This applications uses JSON Web Token (JWT) to handle authentication. The token 
 # Swagger API docs
 
 This example repo uses the NestJS swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)        
+
+# Como rodar o projeto localmente
+
+## Pré-requisitos
+
+- Node.js 16.x ou superior
+- npm ou yarn
+- Docker e Docker Compose (opcional, mas recomendado)
+
+## 1. Rodando com Docker (recomendado)
+
+1. **Clone o repositório:**
+   ```bash
+   git clone <url-do-repositorio>
+   cd nestjs-realworld-example-app
+   ```
+
+2. **Suba os containers:**
+   ```bash
+   docker-compose up --build
+   ```
+   Isso irá:
+   - Subir o banco de dados MySQL já configurado
+   - Subir a aplicação em modo desenvolvimento (hot reload)
+
+3. **Acesse a aplicação:**
+   - API: http://localhost:3000/api
+   - Documentação Swagger: http://localhost:3000/api/docs (se habilitado)
+
+4. **Parar os containers:**
+   ```bash
+   docker-compose down
+   ```
+
+## 2. Rodando sem Docker (apenas Node.js)
+
+1. **Instale as dependências:**
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
+
+2. **Configure o banco de dados:**
+   - Crie um banco MySQL local ou use um banco externo.
+   - Copie o arquivo de exemplo:
+     ```bash
+     cp src/config.ts.example src/config.ts
+     ```
+   - Edite `src/config.ts` com as credenciais do seu banco.
+
+3. **Rode as migrations (se necessário):**
+   - O projeto está configurado para sincronizar as entidades automaticamente (`synchronize: true`), mas em produção recomenda-se usar migrations.
+
+4. **Inicie a aplicação:**
+   ```bash
+   npm run start:dev
+   # ou
+   yarn start:dev
+   ```
+
+5. **Acesse a aplicação:**
+   - API: http://localhost:3000/api
+
+## 3. Rodando os testes de aceitação
+
+- **Com Docker:**
+  ```bash
+  docker-compose run --rm app npm run test:acceptance
+  ```
+- **Localmente:**
+  ```bash
+  npm run test:acceptance
+  ```
+
+## 4. Gerando relatório visual dos testes de aceitação
+
+Após rodar os testes de aceitação, gere o relatório:
+```bash
+node scripts/generate-acceptance-report.js
+```
+O relatório estará em `coverage/acceptance-report.html`.
+
+---
+
+Dúvidas? Abra uma issue ou consulte os scripts e exemplos no repositório.

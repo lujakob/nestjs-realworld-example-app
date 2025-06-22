@@ -1,0 +1,141 @@
+name: continuous-integration
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: nestjsrealworld
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: using node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Ignore SSL errors (insecure)
+        run: npm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm install
+
+      - name: Criar ormconfig.json
+        run: |
+          cat <<EOF > ormconfig.json
+          {
+            "type": "mysql",
+            "host": "painel.eduardoabrito.com.br",
+            "port": 3031,
+            "username": "mysql",
+            "password": "f9f6cff4c6c4071a9b5c",
+            "database": "nestjsrealworld",
+            "entities": ["src/*/*.entity{.ts,.js}"],
+            "synchronize": true
+          }
+          EOF
+
+      - name: Build
+        run: npm run build
+
+  unit-test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: using node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run test:coverage
+
+  integration-test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: using node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run integration tests
+        run: npm run test:integration
+
+  acceptance-test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: using node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run acceptance tests
+        run: npm run test:acceptance
+  deploy:
+    needs: 
+      - unit-test
+      - integration-test
+      - acceptance-test
+    runs-on: ubuntu-latest
+    environment: DOCKER_PIPELINE
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t deployconfig/nestjs-realworld-app:latest .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push Docker image to Docker Hub
+        run: docker push deployconfig/nestjs-realworld-app:latest
+

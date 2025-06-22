@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=nestjsuser
+      - DB_PASSWORD=nestjspassword
+      - DB_DATABASE=nestjsrealworld 

@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model article {
+  id                     Int                      @id @default(autoincrement())
+  slug                   String                   @db.VarChar(255)
+  title                  String                   @db.VarChar(255)
+  description            String                   @default("") @db.VarChar(255)
+  body                   String                   @default("") @db.VarChar(255)
+  created                DateTime                 @default(now()) @db.Timestamp(0)
+  updated                DateTime                 @default(now()) @db.Timestamp(0)
+  tagList                String                   @db.Text
+  favoriteCount          Int                      @default(0)
+  authorId               Int?
+  user                   user?                    @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a9c5f4ec6cceb1604b4a3c84c87")
+  comment                comment[]
+  user_favorites_article user_favorites_article[]
+
+  @@index([authorId], map: "FK_a9c5f4ec6cceb1604b4a3c84c87")
+}
+
+model comment {
+  id        Int      @id @default(autoincrement())
+  body      String   @db.VarChar(255)
+  articleId Int?
+  article   article? @relation(fields: [articleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c20404221e5c125a581a0d90c0e")
+
+  @@index([articleId], map: "FK_c20404221e5c125a581a0d90c0e")
+}
+
+model follows {
+  id          Int @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+}
+
+model tag {
+  id  Int    @id @default(autoincrement())
+  tag String @db.VarChar(255)
+}
+
+model user {
+  id                     Int                      @id @default(autoincrement())
+  username               String                   @db.VarChar(255)
+  email                  String                   @db.VarChar(255)
+  bio                    String                   @default("") @db.VarChar(255)
+  image                  String                   @default("") @db.VarChar(255)
+  password               String                   @db.VarChar(255)
+  article                article[]
+  user_favorites_article user_favorites_article[]
+}
+
+model user_favorites_article {
+  userId    Int
+  articleId Int
+  user      user    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_3b80ae56288924ab30cc9e70435")
+  article   article @relation(fields: [articleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9ea0140751b603ea826c19e1a33")
+
+  @@id([userId, articleId])
+  @@index([userId], map: "IDX_3b80ae56288924ab30cc9e7043")
+  @@index([articleId], map: "IDX_9ea0140751b603ea826c19e1a3")
+}

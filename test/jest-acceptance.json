@@ -1,0 +1,18 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": "..",
+  "testEnvironment": "node",
+  "testRegex": ".*/test/acceptance\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverage": true,
+  "coverageDirectory": "coverage/acceptance",
+  "coverageReporters": ["text", "lcov", "html"],
+  "coverageCollectors": ["text-summary", "lcov", "html"],
+  "verbose": true
+} 
