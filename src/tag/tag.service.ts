@@ -1,17 +1,31 @@
-import { Injectable} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TagEntity } from './tag.entity';
+import { Injectable } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class TagService {
-  constructor(
-    @InjectRepository(TagEntity)
-    private readonly tagRepository: Repository<TagEntity>
-  ) {}
+  private prisma: any;
 
-  async findAll(): Promise<TagEntity[]> {
-    return await this.tagRepository.find();
+  constructor() {
+    this.prisma = new PrismaClient();
   }
 
+  async findAll() {
+    // Отримуємо всі унікальні теги з статей
+    const articles = await this.prisma.article.findMany({
+      select: {
+        tagList: true,
+      },
+    });
+
+    const allTags = articles.flatMap((article) => {
+      try {
+        return JSON.parse(article.tagList);
+      } catch {
+        return [];
+      }
+    });
+
+    const uniqueTags = [...new Set(allTags)];
+    return uniqueTags.map((tag) => ({ tag }));
+  }
 }

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "start:dev": "nodemon -r tsconfig-paths/register src/main.ts",
     "start:watch": "nodemon",
     "prestart:prod": "tsc",
     "start:prod": "node dist/main.js",
@@ -29,8 +30,8 @@
     "@nestjs/platform-express": "^7.0.5",
     "@nestjs/swagger": "^4.4.0",
     "@nestjs/testing": "^7.0.5",
-    "@nestjs/typeorm": "^7.0.0",
     "@nestjs/websockets": "^7.0.5",
+    "@prisma/client": "^6.17.1",
     "argon2": "^0.26.2",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.1",
@@ -39,11 +40,11 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "passport-jwt": "^4.0.0",
+    "prisma": "^6.17.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
     "slug": "^1.1.0",
     "swagger-ui-express": "^4.1.4",
-    "typeorm": "^0.2.24",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
