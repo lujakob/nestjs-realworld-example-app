@@ -47,7 +47,7 @@
     "typescript": "^3.8.3"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
+    "@types/mysql": "^2.15.21",
     "@types/node": "^13.13.4",
     "atob": ">=2.1.0",
     "deep-extend": ">=0.5.1",

@@ -12,10 +12,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -67,7 +68,7 @@ __decorate([
 ], ProfileController.prototype, "unFollow", null);
 ProfileController = __decorate([
     swagger_1.ApiBearerAuth(),
-    swagger_1.ApiUseTags('profiles'),
+    swagger_1.ApiTags('profiles'),
     common_1.Controller('profiles'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService])
 ], ProfileController);
