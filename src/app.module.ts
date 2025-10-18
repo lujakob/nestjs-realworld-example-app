@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { ArticleModule } from './article/article.module';
-import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection } from 'typeorm';
-import { ProfileModule } from './profile/profile.module';
-import { TagModule } from './tag/tag.module';
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { ArticleModule } from "./article/article.module";
+import { UserModule } from "./user/user.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Connection } from "typeorm";
+import { ProfileModule } from "./profile/profile.module";
+import { TagModule } from "./tag/tag.module";
 
 @Module({
   imports: [
@@ -13,13 +13,11 @@ import { TagModule } from './tag/tag.module';
     ArticleModule,
     UserModule,
     ProfileModule,
-    TagModule
+    TagModule,
   ],
-  controllers: [
-    AppController
-  ],
-  providers: []
+  controllers: [AppController],
+  providers: [],
 })
-export class ApplicationModule {
+export class AppModule {
   constructor(private readonly connection: Connection) {}
 }

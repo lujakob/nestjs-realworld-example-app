@@ -9,24 +9,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Comment = void 0;
 const typeorm_1 = require("typeorm");
 const article_entity_1 = require("./article.entity");
+const user_entity_1 = require("../user/user.entity");
 let Comment = class Comment {
 };
 __decorate([
-    typeorm_1.PrimaryGeneratedColumn(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Comment.prototype, "id", void 0);
 __decorate([
-    typeorm_1.Column(),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Comment.prototype, "body", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => article_entity_1.ArticleEntity, article => article.comments),
+    (0, typeorm_1.ManyToOne)((type) => article_entity_1.ArticleEntity, (article) => article.comments),
     __metadata("design:type", article_entity_1.ArticleEntity)
 ], Comment.prototype, "article", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)((type) => user_entity_1.UserEntity),
+    __metadata("design:type", user_entity_1.UserEntity)
+], Comment.prototype, "author", void 0);
 Comment = __decorate([
-    typeorm_1.Entity()
+    (0, typeorm_1.Entity)()
 ], Comment);
 exports.Comment = Comment;
 //# sourceMappingURL=comment.entity.js.map

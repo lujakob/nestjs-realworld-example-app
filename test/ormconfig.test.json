@@ -1,0 +1,13 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "password",
+  "database": "nestjsrealworld_test",
+  "entities": ["src/**/**.entity{.ts,.js}"],
+  "synchronize": true,
+  "logging": false,
+  "charset": "utf8mb4",
+  "timezone": "Z"
+}

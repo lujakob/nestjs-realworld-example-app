@@ -6,14 +6,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ValidationPipe = void 0;
 const common_1 = require("@nestjs/common");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
@@ -28,8 +30,8 @@ let ValidationPipe = class ValidationPipe {
             if (!metatype || !this.toValidate(metatype)) {
                 return value;
             }
-            const object = class_transformer_1.plainToClass(metatype, value);
-            const errors = yield class_validator_1.validate(object);
+            const object = (0, class_transformer_1.plainToClass)(metatype, value);
+            const errors = yield (0, class_validator_1.validate)(object);
             if (errors.length > 0) {
                 throw new http_exception_1.HttpException({ message: 'Input data validation failed', errors: this.buildError(errors) }, common_1.HttpStatus.BAD_REQUEST);
             }
@@ -52,7 +54,7 @@ let ValidationPipe = class ValidationPipe {
     }
 };
 ValidationPipe = __decorate([
-    common_1.Injectable()
+    (0, common_1.Injectable)()
 ], ValidationPipe);
 exports.ValidationPipe = ValidationPipe;
 //# sourceMappingURL=validation.pipe.js.map

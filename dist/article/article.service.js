@@ -12,14 +12,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ArticleService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
@@ -27,38 +29,61 @@ const article_entity_1 = require("./article.entity");
 const comment_entity_1 = require("./comment.entity");
 const user_entity_1 = require("../user/user.entity");
 const follows_entity_1 = require("../profile/follows.entity");
-const slug = require('slug');
+const user_block_entity_1 = require("../user/user-block.entity");
+const slug = require("slug");
 let ArticleService = class ArticleService {
-    constructor(articleRepository, commentRepository, userRepository, followsRepository) {
+    constructor(articleRepository, commentRepository, userRepository, followsRepository, userBlockRepository) {
         this.articleRepository = articleRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.followsRepository = followsRepository;
+        this.userBlockRepository = userBlockRepository;
     }
-    findAll(query) {
+    getBlockedUserIds(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const qb = yield typeorm_2.getRepository(article_entity_1.ArticleEntity)
-                .createQueryBuilder('article')
-                .leftJoinAndSelect('article.author', 'author');
+            const blockedUsers = yield this.userBlockRepository.find({
+                where: { blocker: { id: userId } },
+                relations: ["blocked"],
+            });
+            return blockedUsers.map((block) => block.blocked.id);
+        });
+    }
+    findAll(query, currentUserId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const qb = yield (0, typeorm_2.getRepository)(article_entity_1.ArticleEntity)
+                .createQueryBuilder("article")
+                .leftJoinAndSelect("article.author", "author");
             qb.where("1 = 1");
-            if ('tag' in query) {
+            if (currentUserId) {
+                const blockedUserIds = yield this.getBlockedUserIds(currentUserId);
+                if (blockedUserIds.length > 0) {
+                    qb.andWhere("article.author.id NOT IN (:...blockedUserIds)", {
+                        blockedUserIds,
+                    });
+                }
+            }
+            if ("tag" in query) {
                 qb.andWhere("article.tagList LIKE :tag", { tag: `%${query.tag}%` });
             }
-            if ('author' in query) {
-                const author = yield this.userRepository.findOne({ username: query.author });
+            if ("author" in query) {
+                const author = yield this.userRepository.findOne({
+                    username: query.author,
+                });
                 qb.andWhere("article.authorId = :id", { id: author.id });
             }
-            if ('favorited' in query) {
-                const author = yield this.userRepository.findOne({ username: query.favorited });
-                const ids = author.favorites.map(el => el.id);
+            if ("favorited" in query) {
+                const author = yield this.userRepository.findOne({
+                    username: query.favorited,
+                });
+                const ids = author.favorites.map((el) => el.id);
                 qb.andWhere("article.authorId IN (:ids)", { ids });
             }
-            qb.orderBy('article.created', 'DESC');
+            qb.orderBy("article.created", "DESC");
             const articlesCount = yield qb.getCount();
-            if ('limit' in query) {
+            if ("limit" in query) {
                 qb.limit(query.limit);
             }
-            if ('offset' in query) {
+            if ("offset" in query) {
                 qb.offset(query.offset);
             }
             const articles = yield qb.getMany();
@@ -71,16 +96,16 @@ let ArticleService = class ArticleService {
             if (!(Array.isArray(_follows) && _follows.length > 0)) {
                 return { articles: [], articlesCount: 0 };
             }
-            const ids = _follows.map(el => el.followingId);
-            const qb = yield typeorm_2.getRepository(article_entity_1.ArticleEntity)
-                .createQueryBuilder('article')
-                .where('article.authorId IN (:ids)', { ids });
-            qb.orderBy('article.created', 'DESC');
+            const ids = _follows.map((el) => el.followingId);
+            const qb = yield (0, typeorm_2.getRepository)(article_entity_1.ArticleEntity)
+                .createQueryBuilder("article")
+                .where("article.authorId IN (:ids)", { ids });
+            qb.orderBy("article.created", "DESC");
             const articlesCount = yield qb.getCount();
-            if ('limit' in query) {
+            if ("limit" in query) {
                 qb.limit(query.limit);
             }
-            if ('offset' in query) {
+            if ("offset" in query) {
                 qb.offset(query.offset);
             }
             const articles = yield qb.getMany();
@@ -93,11 +118,13 @@ let ArticleService = class ArticleService {
             return { article };
         });
     }
-    addComment(slug, commentData) {
+    addComment(slug, commentData, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             let article = yield this.articleRepository.findOne({ slug });
+            const author = yield this.userRepository.findOne(userId);
             const comment = new comment_entity_1.Comment();
             comment.body = commentData.body;
+            comment.author = author;
             article.comments.push(comment);
             yield this.commentRepository.save(comment);
             article = yield this.articleRepository.save(article);
@@ -108,7 +135,7 @@ let ArticleService = class ArticleService {
         return __awaiter(this, void 0, void 0, function* () {
             let article = yield this.articleRepository.findOne({ slug });
             const comment = yield this.commentRepository.findOne(id);
-            const deleteIndex = article.comments.findIndex(_comment => _comment.id === comment.id);
+            const deleteIndex = article.comments.findIndex((_comment) => _comment.id === comment.id);
             if (deleteIndex >= 0) {
                 const deleteComments = article.comments.splice(deleteIndex, 1);
                 yield this.commentRepository.delete(deleteComments[0].id);
@@ -124,7 +151,7 @@ let ArticleService = class ArticleService {
         return __awaiter(this, void 0, void 0, function* () {
             let article = yield this.articleRepository.findOne({ slug });
             const user = yield this.userRepository.findOne(id);
-            const isNewFavorite = user.favorites.findIndex(_article => _article.id === article.id) < 0;
+            const isNewFavorite = user.favorites.findIndex((_article) => _article.id === article.id) < 0;
             if (isNewFavorite) {
                 user.favorites.push(article);
                 article.favoriteCount++;
@@ -138,7 +165,7 @@ let ArticleService = class ArticleService {
         return __awaiter(this, void 0, void 0, function* () {
             let article = yield this.articleRepository.findOne({ slug });
             const user = yield this.userRepository.findOne(id);
-            const deleteIndex = user.favorites.findIndex(_article => _article.id === article.id);
+            const deleteIndex = user.favorites.findIndex((_article) => _article.id === article.id);
             if (deleteIndex >= 0) {
                 user.favorites.splice(deleteIndex, 1);
                 article.favoriteCount--;
@@ -148,9 +175,16 @@ let ArticleService = class ArticleService {
             return { article };
         });
     }
-    findComments(slug) {
+    findComments(slug, currentUserId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const article = yield this.articleRepository.findOne({ slug });
+            const article = yield this.articleRepository.findOne({
+                where: { slug },
+                relations: ["comments", "comments.author"],
+            });
+            if (currentUserId) {
+                const blockedUserIds = yield this.getBlockedUserIds(currentUserId);
+                article.comments = article.comments.filter((comment) => !blockedUserIds.includes(comment.author.id));
+            }
             return { comments: article.comments };
         });
     }
@@ -163,13 +197,11 @@ let ArticleService = class ArticleService {
             article.tagList = articleData.tagList || [];
             article.comments = [];
             const newArticle = yield this.articleRepository.save(article);
-            const author = yield this.userRepository.findOne({ where: { id: userId } });
-            if (Array.isArray(author.articles)) {
-                author.articles.push(article);
-            }
-            else {
-                author.articles = [article];
-            }
+            const author = yield this.userRepository.findOne({
+                where: { id: userId },
+                relations: ["articles"],
+            });
+            author.articles.push(article);
             yield this.userRepository.save(author);
             return newArticle;
         });
@@ -188,16 +220,20 @@ let ArticleService = class ArticleService {
         });
     }
     slugify(title) {
-        return slug(title, { lower: true }) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
+        return (slug(title, { lower: true }) +
+            "-" +
+            ((Math.random() * Math.pow(36, 6)) | 0).toString(36));
     }
 };
 ArticleService = __decorate([
-    common_1.Injectable(),
-    __param(0, typeorm_1.InjectRepository(article_entity_1.ArticleEntity)),
-    __param(1, typeorm_1.InjectRepository(comment_entity_1.Comment)),
-    __param(2, typeorm_1.InjectRepository(user_entity_1.UserEntity)),
-    __param(3, typeorm_1.InjectRepository(follows_entity_1.FollowsEntity)),
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(article_entity_1.ArticleEntity)),
+    __param(1, (0, typeorm_1.InjectRepository)(comment_entity_1.Comment)),
+    __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
+    __param(3, (0, typeorm_1.InjectRepository)(follows_entity_1.FollowsEntity)),
+    __param(4, (0, typeorm_1.InjectRepository)(user_block_entity_1.UserBlockEntity)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])

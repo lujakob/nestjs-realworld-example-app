@@ -1,0 +1,22 @@
+# Прості команди для MySQL у Docker
+
+# 🚀 ЗАПУСК (одна команда - і все працює!)
+docker run -d --name nestjs-mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=nestjsrealworld -p 3306:3306 mysql:8.0 --default-authentication-plugin=mysql_native_password
+
+# 📊 ПЕРЕГЛЯД СТАТУСУ
+docker ps
+
+# 📝 ПЕРЕГЛЯД ЛОГІВ
+docker logs nestjs-mysql
+
+# 🔌 ПІДКЛЮЧЕННЯ ДО MySQL
+docker exec -it nestjs-mysql mysql -u root -ppassword nestjsrealworld
+
+# ⏹️ ЗУПИНКА
+docker stop nestjs-mysql
+
+# ▶️ ЗАПУСК (якщо вже створений)
+docker start nestjs-mysql
+
+# 🗑️ ВИДАЛЕННЯ (якщо потрібно перестворити)
+docker rm nestjs-mysql

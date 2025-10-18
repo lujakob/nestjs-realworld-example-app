@@ -12,14 +12,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const dto_1 = require("./dto");
@@ -65,46 +67,47 @@ let UserController = class UserController {
     }
 };
 __decorate([
-    common_1.Get('user'),
-    __param(0, user_decorator_1.User('email')),
+    (0, common_1.Get)('user'),
+    __param(0, (0, user_decorator_1.User)('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "findMe", null);
 __decorate([
-    common_1.Put('user'),
-    __param(0, user_decorator_1.User('id')), __param(1, common_1.Body('user')),
+    (0, common_1.Put)('user'),
+    __param(0, (0, user_decorator_1.User)('id')),
+    __param(1, (0, common_1.Body)('user')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, dto_1.UpdateUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "update", null);
 __decorate([
-    common_1.UsePipes(new validation_pipe_1.ValidationPipe()),
-    common_1.Post('users'),
-    __param(0, common_1.Body('user')),
+    (0, common_1.UsePipes)(new validation_pipe_1.ValidationPipe()),
+    (0, common_1.Post)('users'),
+    __param(0, (0, common_1.Body)('user')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "create", null);
 __decorate([
-    common_1.Delete('users/:slug'),
-    __param(0, common_1.Param()),
+    (0, common_1.Delete)('users/:slug'),
+    __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "delete", null);
 __decorate([
-    common_1.UsePipes(new validation_pipe_1.ValidationPipe()),
-    common_1.Post('users/login'),
-    __param(0, common_1.Body('user')),
+    (0, common_1.UsePipes)(new validation_pipe_1.ValidationPipe()),
+    (0, common_1.Post)('users/login'),
+    __param(0, (0, common_1.Body)('user')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.LoginUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "login", null);
 UserController = __decorate([
-    swagger_1.ApiBearerAuth(),
-    swagger_1.ApiUseTags('user'),
-    common_1.Controller(),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiTags)('user'),
+    (0, common_1.Controller)(),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 exports.UserController = UserController;

@@ -4,8 +4,7 @@
 
 > ### NestJS codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) API spec.
 
-
-----------
+---
 
 # Getting started
 
@@ -18,30 +17,30 @@ Clone the repository
 Switch to the repo folder
 
     cd nestjs-realworld-example-app
-    
+
 Install dependencies
-    
+
     npm install
 
 Copy config file and set JsonWebToken secret key
 
     cp src/config.ts.example src/config.ts
-    
-----------
+
+---
 
 ## Database
 
-The codebase contains examples of two different database abstractions, namely [TypeORM](http://typeorm.io/) and [Prisma](https://www.prisma.io/). 
-    
+The codebase contains examples of two different database abstractions, namely [TypeORM](http://typeorm.io/) and [Prisma](https://www.prisma.io/).
+
 The branch `master` implements TypeORM with a mySQL database.
 
 The branch `prisma` implements Prisma with a mySQL database.
 
-----------
+---
 
 ##### TypeORM
 
-----------
+---
 
 Create a new mysql database with the name `nestjsrealworld`\
 (or the name you specified in the ormconfig.json)
@@ -49,7 +48,7 @@ Create a new mysql database with the name `nestjsrealworld`\
 Copy TypeORM config example file for database settings
 
     cp ormconfig.json.example
-    
+
 Set mysql database settings in ormconfig.json
 
     {
@@ -62,16 +61,16 @@ Set mysql database settings in ormconfig.json
       "entities": ["src/**/**.entity{.ts,.js}"],
       "synchronize": true
     }
-    
+
 Start local mysql server and create new database 'nestjsrealworld'
 
 On application start, tables for all entities will be created.
 
-----------
+---
 
 ##### Prisma
 
-----------
+---
 
 To run the example with Prisma checkout branch `prisma`, remove the node_modules and run `npm install`
 
@@ -98,17 +97,16 @@ The database tables are now set up and the prisma client is generated. For more 
 
 - https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project-typescript-mysql
 
-
-----------
+---
 
 ## NPM scripts
 
 - `npm start` - Start application
 - `npm run start:watch` - Start application in watch mode
-- `npm run test` - run Jest test runner 
+- `npm run test` - run Jest test runner
 - `npm run start:prod` - Build application
 
-----------
+---
 
 ## API Specification
 
@@ -118,21 +116,101 @@ This application adheres to the api specifications set by the [Thinkster](https:
 
 More information regarding the project can be found here https://github.com/gothinkster/realworld
 
-----------
+---
 
 ## Start application
 
 - `npm start`
 - Test api with `http://localhost:3000/api/articles` in your favourite browser
 
-----------
+---
+
+# User Blocking
+
+The application supports user blocking functionality that allows users to block other users and filter out their content.
+
+### Block a User
+
+`POST /api/profiles/:username/block`
+
+Blocks a user with the specified username.
+
+Authentication required, returns the blocked user Profile.
+
+```JSON
+{
+  "profile": {
+    "username": "blocked_user",
+    "bio": "I write about technology",
+    "image": "https://...",
+    "following": false,
+    "blocked": true
+  }
+}
+```
+
+### Unblock a User
+
+`DELETE /api/profiles/:username/block`
+
+Unblocks a user with the specified username.
+
+Authentication required, returns the unblocked user Profile.
+
+```JSON
+{
+  "profile": {
+    "username": "unblocked_user",
+    "bio": "I write about technology",
+    "image": "https://...",
+    "following": false,
+    "blocked": false
+  }
+}
+```
+
+### Get Blocked Users
+
+`GET /api/profiles/blocked`
+
+Get the list of users that the current user has blocked.
+
+Authentication required, returns array of Profiles.
+
+```JSON
+{
+  "profiles": [{
+    "username": "blocked_user1",
+    "bio": "I write about technology",
+    "image": "https://...",
+    "following": false,
+    "blocked": true
+  }, {
+    "username": "blocked_user2",
+    "bio": "I write about startups",
+    "image": "https://...",
+    "following": false,
+    "blocked": true
+  }]
+}
+```
+
+### Effects of Blocking
+
+When a user blocks another user:
+
+- The blocked user's articles will not appear in the blocker's article feed
+- The blocked user's comments will not appear under articles
+- The blocked user's profile will be marked with `blocked: true` when viewed by the blocker
+
+---
 
 # Authentication
- 
+
 This applications uses JSON Web Token (JWT) to handle authentication. The token is passed with each request using the `Authorization` header with `Token` scheme. The JWT authentication middleware handles the validation and authentication of the token. Please check the following sources to learn more about JWT.
 
-----------
- 
+---
+
 # Swagger API docs
 
-This example repo uses the NestJS swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)        
+This example repo uses the NestJS swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)

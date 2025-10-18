@@ -9,18 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserEntity = void 0;
 const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const argon2 = require("argon2");
 const article_entity_1 = require("../article/article.entity");
+const user_block_entity_1 = require("./user-block.entity");
 let UserEntity = class UserEntity {
     hashPassword() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,47 +32,55 @@ let UserEntity = class UserEntity {
     }
 };
 __decorate([
-    typeorm_1.PrimaryGeneratedColumn(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], UserEntity.prototype, "id", void 0);
 __decorate([
-    typeorm_1.Column(),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "username", void 0);
 __decorate([
-    typeorm_1.Column(),
-    class_validator_1.IsEmail(),
+    (0, typeorm_1.Column)(),
+    (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "email", void 0);
 __decorate([
-    typeorm_1.Column({ default: '' }),
+    (0, typeorm_1.Column)({ default: "" }),
     __metadata("design:type", String)
 ], UserEntity.prototype, "bio", void 0);
 __decorate([
-    typeorm_1.Column({ default: '' }),
+    (0, typeorm_1.Column)({ default: "" }),
     __metadata("design:type", String)
 ], UserEntity.prototype, "image", void 0);
 __decorate([
-    typeorm_1.Column(),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "password", void 0);
 __decorate([
-    typeorm_1.BeforeInsert(),
+    (0, typeorm_1.BeforeInsert)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserEntity.prototype, "hashPassword", null);
 __decorate([
-    typeorm_1.ManyToMany(type => article_entity_1.ArticleEntity),
-    typeorm_1.JoinTable(),
+    (0, typeorm_1.ManyToMany)((type) => article_entity_1.ArticleEntity),
+    (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], UserEntity.prototype, "favorites", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => article_entity_1.ArticleEntity, article => article.author),
+    (0, typeorm_1.OneToMany)((type) => article_entity_1.ArticleEntity, (article) => article.author),
     __metadata("design:type", Array)
 ], UserEntity.prototype, "articles", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => user_block_entity_1.UserBlockEntity, (userBlock) => userBlock.blocker),
+    __metadata("design:type", Array)
+], UserEntity.prototype, "blockedUsers", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => user_block_entity_1.UserBlockEntity, (userBlock) => userBlock.blocked),
+    __metadata("design:type", Array)
+], UserEntity.prototype, "blockedByUsers", void 0);
 UserEntity = __decorate([
-    typeorm_1.Entity('user')
+    (0, typeorm_1.Entity)("user")
 ], UserEntity);
 exports.UserEntity = UserEntity;
 //# sourceMappingURL=user.entity.js.map

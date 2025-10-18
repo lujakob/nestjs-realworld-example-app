@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("../config");
 const jwt = require("jsonwebtoken");
-exports.User = common_1.createParamDecorator((data, req) => {
+exports.User = (0, common_1.createParamDecorator)((data, ctx) => {
+    const req = ctx.switchToHttp().getRequest();
     if (!!req.user) {
         return !!data ? req.user[data] : req.user;
     }

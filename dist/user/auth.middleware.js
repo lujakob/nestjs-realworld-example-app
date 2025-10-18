@@ -9,14 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthMiddleware = void 0;
 const http_exception_1 = require("@nestjs/common/exceptions/http.exception");
 const common_1 = require("@nestjs/common");
 const jwt = require("jsonwebtoken");
@@ -46,7 +48,7 @@ let AuthMiddleware = class AuthMiddleware {
     }
 };
 AuthMiddleware = __decorate([
-    common_1.Injectable(),
+    (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], AuthMiddleware);
 exports.AuthMiddleware = AuthMiddleware;

@@ -9,19 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TagEntity = void 0;
 const typeorm_1 = require("typeorm");
 let TagEntity = class TagEntity {
 };
 __decorate([
-    typeorm_1.PrimaryGeneratedColumn(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], TagEntity.prototype, "id", void 0);
 __decorate([
-    typeorm_1.Column(),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], TagEntity.prototype, "tag", void 0);
 TagEntity = __decorate([
-    typeorm_1.Entity('tag')
+    (0, typeorm_1.Entity)('tag')
 ], TagEntity);
 exports.TagEntity = TagEntity;
 //# sourceMappingURL=tag.entity.js.map
